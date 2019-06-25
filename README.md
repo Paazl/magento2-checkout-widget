@@ -24,16 +24,16 @@ Run your SSH Console to connect to your Magento 2 store.
 ## Step 2. Go to root ##
 Go to the root directory of your Magento 2 store.
 ## Step 3. Install ##
-Execute the following command in your root directory:
+Execute the following commands in your root directory:
    ```
-composer require paazl/magento2-checkoutWidget
+composer config repositories.paazl-magento2-checkout-widget vcs git@github.com:paazl/magento2-checkout-widget.git
+composer require paazl/magento2-checkout-widget
    ```
 ## Step 4. Cache and Deploy ##
-Activate the extension, clean the caches, and deploy the content to your Magento 2 environment by executing the following commands in root in the order shown:
+Activate the extension and run setup by executing the following commands in root in the order shown:
    ```
    php bin/magento module:enable Paazl_CheckoutWidget
    php bin/magento setup:upgrade
-   php bin/magento cache:clean 
   ```
 If Magento 2 is running in production modus, run compiltation and deploy static content:
    ```
