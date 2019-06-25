@@ -1,5 +1,5 @@
 {
-  "name": "Paazl/magento2-checkoutWidget",
+  "name": "paazl/magento2-checkout-widget",
   "description": "Paazl checkoutWidget for Magento 2",
   "type": "magento2-module",
   "version": "1.0.5",
@@ -9,7 +9,7 @@
     "checkoutWidget",
     "checkout widget"
   ],
-  "homepage": "https://github.com/Paazl/magento2-checkoutWidget",
+  "homepage": "https://github.com/paazl/magento2-checkout-widget",
   "require": {
     "magento/framework": ">=100.1.0",
     "ext-json": "*"
