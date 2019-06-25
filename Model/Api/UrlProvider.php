@@ -14,8 +14,8 @@ class UrlProvider
     /**#@+
      * @var string
      */
-    private const BASE_URL_LIVE = 'https://api.paazl.com/v1/';
-    private const BASE_URL_TEST = 'https://api-acc.paazl.com/v1/';
+    const BASE_URL_LIVE = 'https://api.paazl.com/v1/';
+    const BASE_URL_TEST = 'https://api-acc.paazl.com/v1/';
     /**#@- */
 
     /**
@@ -36,7 +36,7 @@ class UrlProvider
     /**
      * @return string
      */
-    public function getBaseUrl(): string
+    public function getBaseUrl()
     {
         $result = self::BASE_URL_TEST;
         if ($this->config->isProductionApiMode()) {
@@ -49,7 +49,7 @@ class UrlProvider
     /**
      * @return string
      */
-    public function getCheckoutUrl(): string
+    public function getCheckoutUrl()
     {
         return $this->getBaseUrl() . 'checkout/';
     }
@@ -57,7 +57,7 @@ class UrlProvider
     /**
      * @return string
      */
-    public function getCheckoutTokenUrl(): string
+    public function getCheckoutTokenUrl()
     {
         return $this->getBaseUrl() . 'checkout/token/';
     }
@@ -65,7 +65,7 @@ class UrlProvider
     /**
      * @return string
      */
-    public function getOrderUrl(): string
+    public function getOrderUrl()
     {
         return $this->getBaseUrl() . 'order/';
     }
