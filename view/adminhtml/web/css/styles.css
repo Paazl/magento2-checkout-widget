@@ -1,0 +1,85 @@
+/*
+ * Copyright © 2019 Paazl. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+.comment-paazl {
+    padding: 5px 10px;
+}
+
+.mm-heading-paazl {
+    color: #c62b46;
+    text-align: left;
+    margin: 20px 0 0;
+    padding: 5px 5px 5px 10px;
+    background: #F1F1F1;
+    font-weight: bold;
+    border-left: 5px solid #c62b46;
+}
+
+#carriers_paazlshipping-head:after {
+    content: '';
+    background: url(../images/paazl_icon.png) no-repeat 5px 0px #FFFFFF;
+    background-size: 30px;
+    width: 40px;
+    height: 40px;
+    display: block;
+    float: left;
+    margin-right: 10px;
+}
+
+#row_carriers_paazlshipping_version {
+    background-color: #F8F8F8;
+    background-size: 130px;
+    border: 1px solid #E3E3E3;
+}
+
+#row_carriers_paazlshipping_version .note {
+    font-size: 14px;
+}
+
+#row_carriers_paazlshipping_version .button_1 {
+    padding: 10px;
+    margin-top: 10px;
+    font-size: 12px;
+    font-weight: 700;
+    background: #702F57;
+    border-radius: 4px;
+    color: white;
+    display: inline-block;
+    margin-bottom: 10px;
+}
+
+#row_carriers_paazlshipping_version .button_2 {
+    padding: 10px;
+    margin-top: 10px;
+    font-size: 12px;
+    font-weight: 700;
+    background: #FF463C;
+    border-radius: 4px;
+    color: white;
+    display: inline-block;
+    margin-left: 20px;
+    margin-bottom: 10px;
+}
+
+#row_carriers_paazlshipping_version:before {
+    display: block;
+}
+
+#row_carriers_paazlshipping_version .label {
+    padding-right: 10px;
+    background: url(../images/paazl_brand.png) no-repeat 15px 15px #F8F8F8;
+    background-size: 190px;
+}
+
+#row_carriers_paazlshipping_version td {
+    padding: 0px;
+    vertical-align: baseline;
+}
+
+#row_carriers_paazlshipping_version .admin__field-value {
+    padding-top: 30px;
+    display: block;
+    color: #303030;
+}

@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<!--
+  ~ Copyright © 2019 Paazl. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+
+    <preference for="Paazl\CheckoutWidget\Api\OrderReferenceRepositoryInterface"
+                type="Paazl\CheckoutWidget\Model\ResourceModel\Order\OrderReferenceRepository"/>
+
+    <type name="Magento\Quote\Model\Cart\ShippingMethodConverter">
+        <plugin name="add_infotext_to_carrier" type="Paazl\CheckoutWidget\Plugin\Carrier\Infotext" disabled="false"
+                sortOrder="70"/>
+    </type>
+
+    <type name="Paazl\CheckoutWidget\Logger\PaazlHandler">
+        <arguments>
+            <argument name="filesystem" xsi:type="object">Magento\Framework\Filesystem\Driver\File</argument>
+        </arguments>
+    </type>
+
+    <type name="Paazl\CheckoutWidget\Logger\PaazlLogger">
+        <arguments>
+            <argument name="name" xsi:type="string">Magento2</argument>
+            <argument name="handlers" xsi:type="array">
+                <item name="system" xsi:type="object">Paazl\CheckoutWidget\Logger\PaazlHandler</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Magento\Checkout\Model\ShippingInformationManagement">
+        <plugin name="paazl_shipping_information_manager"
+                type="Paazl\CheckoutWidget\Plugin\Checkout\ShippingInformationManagementPlugin"/>
+    </type>
+
+    <type name="Magento\Sales\Model\OrderRepository">
+        <plugin name="paazl_order_repository"
+                type="Paazl\CheckoutWidget\Plugin\Sales\OrderRepositoryPlugin"/>
+    </type>
+
+    <type name="Magento\Framework\Console\CommandListInterface">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="commandOrderSend"
+                      xsi:type="object">Paazl\CheckoutWidget\Console\Command\OrderSendCommand</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Magento\Framework\View\Asset\Minification">
+        <plugin name="paazl-minification-plugin" type="Paazl\CheckoutWidget\Plugin\ExcludeFromMinification"/>
+    </type>
+</config>
