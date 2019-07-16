@@ -51,4 +51,21 @@
     <type name="Magento\Framework\View\Asset\Minification">
         <plugin name="paazl-minification-plugin" type="Paazl\CheckoutWidget\Plugin\ExcludeFromMinification"/>
     </type>
+
+    <type name="Magento\Config\Model\Config\TypePool">
+        <arguments>
+            <argument name="sensitive" xsi:type="array">
+                <item name="carriers/paazlshipping/api_key" xsi:type="string">1</item>
+                <item name="carriers/paazlshipping/api_secret" xsi:type="string">1</item>
+            </argument>
+            <argument name="environment" xsi:type="array">
+                <item name="carriers/paazlshipping/api_key" xsi:type="string">1</item>
+                <item name="carriers/paazlshipping/api_secret" xsi:type="string">1</item>
+                <item name="carriers/paazlshipping/api_modus" xsi:type="string">1</item>
+                <item name="carriers/paazlshipping/api_timeout" xsi:type="string">1</item>
+                <item name="carriers/paazlshipping/reference_prefix" xsi:type="string">1</item>
+                <item name="carriers/paazlshipping/debug" xsi:type="string">1</item>
+            </argument>
+        </arguments>
+    </type>
 </config>
