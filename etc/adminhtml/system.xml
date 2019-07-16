@@ -54,7 +54,6 @@
                 <field id="custom_css" translate="label comment" type="textarea" sortOrder="22" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Custom CSS</label>
                     <depends>
-                        <field id="active">1</field>
                         <field id="widget_theme">CUSTOM</field>
                     </depends>
                 </field>
