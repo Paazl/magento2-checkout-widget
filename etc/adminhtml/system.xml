@@ -37,11 +37,6 @@
                     <source_model>Paazl\CheckoutWidget\Model\System\Config\Source\ApiMode</source_model>
                     <comment>Choose whether you want to use the Paazl Checkout Widget in Paazl's staging or production environment.</comment>
                 </field>
-                <field id="api_timeout" translate="label" type="text" sortOrder="16" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>API Timeout</label>
-                    <comment>Time threshold in seconds after which API is treated as not responding.</comment>
-                    <validate>validate-not-negative-number integer</validate>
-                </field>
                 <field id="heading_widget" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Widget</label>
                     <frontend_model>Paazl\CheckoutWidget\Block\Adminhtml\Paazl\Heading</frontend_model>
@@ -185,21 +180,13 @@
                     </depends>
                 </field>
                 <field id="heading_fallback" translate="label comment" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Fallback &amp; debug</label>
+                    <label>Advanced Settings</label>
                     <frontend_model>Paazl\CheckoutWidget\Block\Adminhtml\Paazl\Heading</frontend_model>
                 </field>
-                <field id="fallback_shipping" translate="label" type="select" sortOrder="61" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Use Shipping Option Fallback</label>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <comment>Display a fallback shipping option if your connection with Paazl fails.</comment>
-                </field>
-                <field id="fallback_method" translate="label" type="select" sortOrder="62" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Select Fallback Shipping Method</label>
-                    <source_model>Paazl\CheckoutWidget\Model\System\Config\Source\FallbackMethod</source_model>
-                    <depends>
-                        <field id="fallback_shipping">1</field>
-                    </depends>
-                    <comment>Select the shipping option which you want to use as fallback.</comment>
+                <field id="api_timeout" translate="label" type="text" sortOrder="62" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>API Timeout</label>
+                    <comment>Time threshold in seconds after which API is treated as not responding.</comment>
+                    <validate>validate-not-negative-number integer</validate>
                 </field>
                 <field id="googlemaps" translate="label" type="select" sortOrder="63" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Use Custom Google API Key</label>
