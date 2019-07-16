@@ -188,7 +188,7 @@ class WidgetConfigProvider implements ConfigProviderInterface
      */
     public function formatPrice($price)
     {
-        return number_format($price, 2);
+        return number_format($price, 2, ',', '');
     }
 
     /**
