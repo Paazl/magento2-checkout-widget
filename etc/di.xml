@@ -9,6 +9,12 @@
     <preference for="Paazl\CheckoutWidget\Api\OrderReferenceRepositoryInterface"
                 type="Paazl\CheckoutWidget\Model\ResourceModel\Order\OrderReferenceRepository"/>
 
+    <preference for="Paazl\CheckoutWidget\Api\QuoteReferenceRepositoryInterface"
+                type="Paazl\CheckoutWidget\Model\ResourceModel\Quote\QuoteReferenceRepository"/>
+
+    <preference for="Paazl\CheckoutWidget\Api\Data\Quote\QuoteReferenceInterface"
+                type="Paazl\CheckoutWidget\Model\Quote\QuoteReference"/>
+
     <type name="Magento\Quote\Model\Cart\ShippingMethodConverter">
         <plugin name="add_infotext_to_carrier" type="Paazl\CheckoutWidget\Plugin\Carrier\Infotext" disabled="false"
                 sortOrder="70"/>

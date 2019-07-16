@@ -11,7 +11,9 @@ use Magento\Framework\DB\Ddl\Table;
 use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\SchemaSetupInterface;
 use Magento\Framework\Setup\UpgradeSchemaInterface;
+use Magento\Quote\Api\Data\CartInterface;
 use Paazl\CheckoutWidget\Api\Data\Order\OrderReferenceInterface;
+use Paazl\CheckoutWidget\Api\Data\Quote\QuoteReferenceInterface;
 
 class UpgradeSchema implements UpgradeSchemaInterface
 {
@@ -31,6 +33,10 @@ class UpgradeSchema implements UpgradeSchemaInterface
 
         if (version_compare($currentVersion, '1.0.1', '<')) {
             $this->createOrderTable($setup);
+        }
+
+        if (version_compare($currentVersion, '1.0.6', '<')) {
+            $this->createQuoteTable($setup);
         }
     }
 
@@ -94,6 +100,78 @@ class UpgradeSchema implements UpgradeSchemaInterface
                     AdapterInterface::FK_ACTION_CASCADE
                 );
 
+            $connection->createTable($table);
+        }
+    }
+
+    /**
+     * @param SchemaSetupInterface $setup
+     *
+     * @throws \Zend_Db_Exception
+     */
+    private function createQuoteTable(SchemaSetupInterface $setup)
+    {
+        $tableName = $setup->getTable(SetupSchema::TABLE_QUOTE);
+        $connection = $setup->getConnection();
+        if ($connection->isTableExists($tableName)) {
+            $connection->dropTable($tableName);
+        }
+        if (!$connection->isTableExists($tableName)) {
+            $table = $connection->newTable($tableName);
+            $table
+                ->addColumn(
+                    QuoteReferenceInterface::ENTITY_ID,
+                    Table::TYPE_INTEGER,
+                    null,
+                    ['identity' => true, 'unsigned' => true, 'nullable' => false, 'primary' => true],
+                    'Entity Id'
+                )
+                ->addColumn(
+                    QuoteReferenceInterface::QUOTE_ID,
+                    Table::TYPE_INTEGER,
+                    null,
+                    ['unsigned' => true, 'nullable' => false,],
+                    'Quote Id'
+                )
+                ->addColumn(
+                    QuoteReferenceInterface::EXT_SHIPPING_INFO,
+                    Table::TYPE_TEXT,
+                    null,
+                    ['nullable' => true,],
+                    'Shipping information'
+                )
+                ->addColumn(
+                    QuoteReferenceInterface::TOKEN,
+                    Table::TYPE_TEXT,
+                    255,
+                    ['nullable' => true,],
+                    'Token'
+                )
+                ->addColumn(
+                    QuoteReferenceInterface::TOKEN_EXPIRES_AT,
+                    Table::TYPE_DATETIME,
+                    null,
+                    ['nullable' => true,],
+                    'Token expires at'
+                )
+                ->addIndex(
+                    $setup->getIdxName($tableName, [QuoteReferenceInterface::QUOTE_ID]),
+                    [QuoteReferenceInterface::QUOTE_ID],
+                    ['type' => AdapterInterface::INDEX_TYPE_UNIQUE]
+                )
+                ->addForeignKey(
+                    $setup->getFkName(
+                        $tableName,
+                        QuoteReferenceInterface::QUOTE_ID,
+                        $setup->getTable('quote'),
+                        CartInterface::KEY_ENTITY_ID
+                    ),
+                    QuoteReferenceInterface::QUOTE_ID,
+                    $setup->getTable('quote'),
+                    CartInterface::KEY_ENTITY_ID,
+                    AdapterInterface::FK_ACTION_CASCADE
+                );
+            ;
             $connection->createTable($table);
         }
     }

@@ -12,8 +12,10 @@ use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Model\OrderRepository;
 use Paazl\CheckoutWidget\Api\Data\Order\OrderReferenceInterface;
 use Paazl\CheckoutWidget\Api\OrderReferenceRepositoryInterface;
+use Paazl\CheckoutWidget\Api\QuoteReferenceRepositoryInterface;
 use Paazl\CheckoutWidget\Model\Api\Processor\SendToService;
 use Paazl\CheckoutWidget\Model\Carrier\Paazlshipping;
+use Paazl\CheckoutWidget\Model\Order\OrderReference;
 use Paazl\CheckoutWidget\Model\Order\OrderReferenceFactory;
 use Paazl\CheckoutWidget\Helper\General as GeneralHelper;
 
@@ -51,6 +53,11 @@ class OrderRepositoryPlugin
     private $orderReferenceRepository;
 
     /**
+     * @var QuoteReferenceRepositoryInterface
+     */
+    private $quoteReferenceRepository;
+
+    /**
      * OrderRepositoryPlugin constructor.
      *
      * @param OrderReferenceFactory             $orderReferenceFactory
@@ -58,19 +65,22 @@ class OrderRepositoryPlugin
      * @param SendToService                     $sendToService
      * @param GeneralHelper                     $generalHelper
      * @param OrderReferenceRepositoryInterface $orderReferenceRepository
+     * @param QuoteReferenceRepositoryInterface $quoteReferenceRepository
      */
     public function __construct(
         OrderReferenceFactory $orderReferenceFactory,
         CartRepositoryInterface $cartRepository,
         SendToService $sendToService,
         GeneralHelper $generalHelper,
-        OrderReferenceRepositoryInterface $orderReferenceRepository
+        OrderReferenceRepositoryInterface $orderReferenceRepository,
+        QuoteReferenceRepositoryInterface $quoteReferenceRepository
     ) {
         $this->orderReferenceFactory = $orderReferenceFactory;
         $this->cartRepository = $cartRepository;
         $this->sendToService = $sendToService;
         $this->generalHelper = $generalHelper;
         $this->orderReferenceRepository = $orderReferenceRepository;
+        $this->quoteReferenceRepository = $quoteReferenceRepository;
     }
 
     /**
@@ -94,6 +104,7 @@ class OrderRepositoryPlugin
             return $order;
         } catch (NoSuchEntityException $e) {
             // Reference not found
+            /** @var OrderReference $orderReference */
             $orderReference = $this->orderReferenceFactory->create(['data' => [
                 OrderReferenceInterface::ORDER_ID => $order->getId(),
             ]]);
@@ -101,11 +112,13 @@ class OrderRepositoryPlugin
 
         try {
             $quote = $this->cartRepository->get($order->getQuoteId());
+
+            $quoteReference = $this->quoteReferenceRepository->getByQuoteId($quote->getId());
         } catch (NoSuchEntityException $e) {
             return $order;
         }
 
-        $orderReference->setExtShippingInfo($quote->getData('ext_shipping_info'));
+        $orderReference->setExtShippingInfo($quoteReference->getExtShippingInfo());
 
         try {
             $this->orderReferenceRepository->save($orderReference);

@@ -70,6 +70,11 @@ class PaazlConfigProvider implements ConfigProviderInterface
         $config['widgetConfig'] = $this->widgetConfigProvider->getConfig();
         $config['mode'] = $this->config->isProductionApiMode() ? 'live' : 'test';
 
+        if (empty($config['widgetConfig']['token'])) {
+            // We were unable to obtain a token - enabling other methods if they're available
+            $config['hideOtherMethods'] = false;
+        }
+
         return [
             'paazlshipping' => $config
         ];

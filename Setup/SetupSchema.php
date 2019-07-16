@@ -15,4 +15,5 @@ class SetupSchema
 {
 
     const TABLE_ORDER = 'mm_paazl_order';
+    const TABLE_QUOTE = 'mm_paazl_quote';
 }
