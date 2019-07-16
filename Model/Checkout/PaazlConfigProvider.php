@@ -68,6 +68,7 @@ class PaazlConfigProvider implements ConfigProviderInterface
         $config['baseApiUrl'] = $this->urlProvider->getBaseUrl();
         $config['googleMapKey'] = $this->config->getGoogleMapKey();
         $config['widgetConfig'] = $this->widgetConfigProvider->getConfig();
+        $config['mode'] = $this->config->isProductionApiMode() ? 'live' : 'test';
 
         return [
             'paazlshipping' => $config

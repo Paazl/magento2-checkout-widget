@@ -11,6 +11,8 @@ var config = {
             'Magento_Checkout/template/shipping-address/shipping-method-item.html': 'Paazl_CheckoutWidget/template/checkout/shipping-method-item.html',
             'Magento_Checkout/template/shipping-address/shipping-method-list.html': 'Paazl_CheckoutWidget/template/checkout/shipping-method-list.html',
             customJs: 'Paazl_CheckoutWidget/js/custom',
+            checkoutjs_test: "https://widget-acc.paazl.com/v1/checkout.js",
+            checkoutjs_live: "https://widget.paazl.com/v1/checkout.js"
         }
     },
     paths: {
