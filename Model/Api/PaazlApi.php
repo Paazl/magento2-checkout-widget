@@ -6,8 +6,8 @@
 
 namespace Paazl\CheckoutWidget\Model\Api;
 
-use Magento\Framework\HTTP\Adapter\CurlFactory;
 use Magento\Framework\HTTP\ClientFactory;
+use Magento\Framework\HTTP\ClientInterface;
 use Paazl\CheckoutWidget\Helper\General as GeneralHelper;
 use Paazl\CheckoutWidget\Model\Api\Response\Data\Token;
 use Paazl\CheckoutWidget\Model\Api\Response\Data\TokenBuilder;
@@ -25,11 +25,6 @@ class PaazlApi
      * @var Config
      */
     private $scopeConfig;
-
-    /**
-     * @var CurlFactory
-     */
-    private $adapter;
 
     /**
      * @var array
@@ -61,7 +56,6 @@ class PaazlApi
      *
      * @param Config        $scopeConfig
      * @param GeneralHelper $generalHelper
-     * @param CurlFactory   $adapter
      * @param ClientFactory $httpClientFactory
      * @param TokenBuilder  $tokenBuilder
      * @param UrlProvider   $urlProvider
@@ -69,13 +63,11 @@ class PaazlApi
     public function __construct(
         Config $scopeConfig,
         GeneralHelper $generalHelper,
-        CurlFactory $adapter,
         ClientFactory $httpClientFactory,
         TokenBuilder $tokenBuilder,
         UrlProvider $urlProvider
     ) {
         $this->scopeConfig = $scopeConfig;
-        $this->adapter = $adapter;
         $this->generalHelper = $generalHelper;
         $this->httpClientFactory = $httpClientFactory;
         $this->tokenBuilder = $tokenBuilder;
@@ -93,26 +85,19 @@ class PaazlApi
     {
         $url = $this->urlProvider->getCheckoutTokenUrl();
 
-        $httpAdapter = $this->adapter->create();
+        $httpClient = $this->getAuthorizedClient();
 
         try {
             $this->request['reference'] = $reference;
             $this->generalHelper->addTolog('Token request', $this->request);
-            $httpAdapter->write(
-                \Zend_Http_Client::POST,
-                $url,
-                '1.1',
-                [
-                    'Content-Type: application/json;charset=UTF-8',
-                    'Accept: application/json;charset=UTF-8',
-                    'Authorization: ' . $this->buildAuthorizationHeader()
-                ],
-                json_encode($this->request)
-            );
 
-            $response = $httpAdapter->read();
-            $body = \Zend_Http_Response::extractBody($response);
-            $status = \Zend_Http_Response::extractCode($response);
+            $httpClient->addHeader('Content-Type', 'application/json;charset=UTF-8');
+            $httpClient->addHeader('Accept', 'application/json;charset=UTF-8');
+
+            $httpClient->post($url, json_encode($this->request));
+            $body = $httpClient->getBody();
+            $status = $httpClient->getStatus();
+
             $this->generalHelper->addTolog('Token response', $body);
             if ($status >= 200 && $status < 300) {
                 /** @var Token $token */
@@ -137,22 +122,17 @@ class PaazlApi
     {
         $url = $this->urlProvider->getOrderUrl();
 
-        $httpAdapter = $this->adapter->create();
+        $httpClient = $this->getAuthorizedClient();
+
         $this->generalHelper->addTolog('Order request', $orderData);
-        $httpAdapter->write(
-            \Zend_Http_Client::POST,
-            $url,
-            '1.1',
-            [
-                'Content-Type: application/json;charset=UTF-8',
-                'Accept: application/json;charset=UTF-8',
-                'Authorization: ' . $this->buildAuthorizationHeader()
-            ],
-            json_encode($orderData)
-        );
-        $response = $httpAdapter->read();
-        $body = \Zend_Http_Response::extractBody($response);
-        $status = \Zend_Http_Response::extractCode($response);
+
+        $httpClient->addHeader('Content-Type', 'application/json;charset=UTF-8');
+        $httpClient->addHeader('Accept', 'application/json;charset=UTF-8');
+
+        $httpClient->post($url, json_encode($orderData));
+        $body = $httpClient->getBody();
+        $status = $httpClient->getStatus();
+
         $this->generalHelper->addTolog('debug', $body);
         if ($status >= 400 && $status < 500) {
             throw ApiException::fromErrorResponse($body, $status);
@@ -175,16 +155,15 @@ class PaazlApi
     {
         $url = $this->urlProvider->getCheckoutUrl();
 
-        $httpClient = $this->httpClientFactory->create();
+        $httpClient = $this->getAuthorizedClient();
         $result = null;
         try {
             $url .= '?' . http_build_query([
                     'reference' => $reference
                 ]);
-            $httpClient->setHeaders([
-                'Accept' => 'application/json;charset=UTF-8',
-                'Authorization' => $this->buildAuthorizationHeader()
-            ]);
+
+            $httpClient->addHeader('Accept', 'application/json;charset=UTF-8');
+
             $httpClient->get($url);
             $status = $httpClient->getStatus();
             $body = $httpClient->getBody();
@@ -224,5 +203,23 @@ class PaazlApi
     public function getApiSecret()
     {
         return $this->scopeConfig->getApiSecret();
+    }
+
+    /**
+     * @return ClientInterface
+     */
+    private function getAuthorizedClient()
+    {
+        $httpClient = $this->httpClientFactory->create();
+        $httpClient->setHeaders([
+            'Authorization' => $this->buildAuthorizationHeader()
+        ]);
+
+        $timeout = $this->scopeConfig->getApiTimeout();
+        if ($timeout > 0) {
+            $httpClient->setTimeout($timeout);
+        }
+
+        return $httpClient;
     }
 }

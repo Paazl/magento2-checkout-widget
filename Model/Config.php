@@ -89,6 +89,19 @@ class Config
     }
 
     /**
+     * @return int
+     */
+    public function getApiTimeout()
+    {
+        $result = (int)$this->getValue(self::API_CONFIG_PATH . '/api_timeout');
+        if ($result <= 0) {
+            $result = 300;
+        }
+
+        return $result;
+    }
+
+    /**
      * @return mixed
      */
     public function getDefaultCountry()

@@ -37,6 +37,11 @@
                     <source_model>Paazl\CheckoutWidget\Model\System\Config\Source\ApiMode</source_model>
                     <comment>Choose whether you want to use the Paazl Checkout Widget in Paazl's staging or production environment.</comment>
                 </field>
+                <field id="api_timeout" translate="label" type="text" sortOrder="16" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>API Timeout</label>
+                    <comment>Time threshold in seconds after which API is treated as not responding.</comment>
+                    <validate>validate-not-negative-number integer</validate>
+                </field>
                 <field id="heading_widget" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Widget</label>
                     <frontend_model>Paazl\CheckoutWidget\Block\Adminhtml\Paazl\Heading</frontend_model>
