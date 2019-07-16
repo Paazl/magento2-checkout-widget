@@ -7,11 +7,10 @@ define(
     [
         'ko',
         'uiComponent',
-        'paazlCheckout',
         'jquery',
         'domReady'
     ],
-    function (ko, Component, paazlCheckout, $, domReady) {
+    function (ko, Component, $, domReady) {
         'use strict';
         var shippingConfig = window.checkoutConfig.paazlshipping || {};
         var widgetConfig = shippingConfig.widgetConfig || {};
@@ -59,14 +58,33 @@ define(
             isHideOtherMethods: function () {
                 return shippingConfig.hideOtherMethods;
             },
+
             getCarrierCode: function () {
                 return shippingConfig.carrierCode;
             },
+
             getMethodCode: function () {
                 return shippingConfig.methodCode;
             },
+
+            /**
+             *
+             * @return {string}
+             */
+            getJsName: function () {
+                var name = 'checkoutjs';
+                if (shippingConfig.mode === 'test') {
+                    name += '_test';
+                } else {
+                    name += '_live';
+                }
+
+                return name;
+            },
+
             loadWidget: function (postcode, country) {
-                var data = this.configJson();
+                var data = this.configJson(),
+                    self = this;
                 if (!data) {
                     return;
                 }
@@ -74,24 +92,29 @@ define(
                 if (!container.length) {
                     return;
                 }
-                if (!container.data('paazlactive')) {
-                    data.consigneePostalCode = postcode || data.consigneePostalCode;
-                    data.consigneeCountryCode = country || data.consigneeCountryCode;
-                    paazlCheckout.init(data);
-                    container.data('paazlactive', true);
-                    this.state.postcode = data.consigneePostalCode;
-                    this.state.country = data.consigneeCountryCode;
-                } else {
-                    if (postcode != '' && (postcode != this.state.postcode)) {
-                        paazlCheckout.setConsigneePostalCode(postcode);
-                        this.state.postcode = postcode;
-                    }
 
-                    if (country != '' && (country != this.state.country)) {
-                        paazlCheckout.setConsigneeCountryCode(country);
-                        this.state.country = country;
+                var infoUpdate = function (paazlCheckout) {
+                    if (!container.data('paazlactive')) {
+                        data.consigneePostalCode = postcode || data.consigneePostalCode;
+                        data.consigneeCountryCode = country || data.consigneeCountryCode;
+                        paazlCheckout.init(data);
+                        container.data('paazlactive', true);
+                        self.state.postcode = data.consigneePostalCode;
+                        self.state.country = data.consigneeCountryCode;
+                    } else {
+                        if (postcode != '' && (postcode != self.state.postcode)) {
+                            paazlCheckout.setConsigneePostalCode(postcode);
+                            self.state.postcode = postcode;
+                        }
+
+                        if (country != '' && (country != self.state.country)) {
+                            paazlCheckout.setConsigneeCountryCode(country);
+                            self.state.country = country;
+                        }
                     }
-                }
+                };
+
+                require([this.getJsName()], infoUpdate);
             }
         });
     }

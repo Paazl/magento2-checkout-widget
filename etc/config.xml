@@ -13,6 +13,7 @@
                 <price>0</price>
                 <api_key backend_model="Magento\Config\Model\Config\Backend\Encrypted" />
                 <api_secret backend_model="Magento\Config\Model\Config\Backend\Encrypted" />
+                <api_timeout>300</api_timeout>
                 <model>Paazl\CheckoutWidget\Model\Carrier\Paazlshipping</model>
                 <name>Paazl</name>
                 <title>Paazl Shipping</title>

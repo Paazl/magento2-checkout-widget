@@ -7,6 +7,7 @@
 namespace Paazl\CheckoutWidget\Model;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Store\Model\ScopeInterface;
 use Paazl\CheckoutWidget\Model\Carrier\Paazlshipping;
 
 /**
@@ -53,7 +54,7 @@ class Config
      */
     public function getValue($key)
     {
-        return $this->scopeConfig->getValue($key);
+        return $this->scopeConfig->getValue($key, ScopeInterface::SCOPE_STORE);
     }
 
     /**
@@ -86,6 +87,19 @@ class Config
     public function getApiMode()
     {
         return $this->getValue(self::API_CONFIG_PATH . '/api_modus');
+    }
+
+    /**
+     * @return int
+     */
+    public function getApiTimeout()
+    {
+        $result = (int)$this->getValue(self::API_CONFIG_PATH . '/api_timeout');
+        if ($result <= 0) {
+            $result = 300;
+        }
+
+        return $result;
     }
 
     /**

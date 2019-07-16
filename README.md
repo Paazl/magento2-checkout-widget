@@ -26,7 +26,6 @@ Go to the root directory of your Magento 2 store.
 ## Step 3. Install ##
 Execute the following commands in your root directory:
    ```
-composer config repositories.paazl-magento2-checkout-widget vcs git@github.com:paazl/magento2-checkout-widget.git
 composer require paazl/magento2-checkout-widget
    ```
 ## Step 4. Cache and Deploy ##

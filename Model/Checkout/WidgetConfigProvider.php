@@ -61,15 +61,21 @@ class WidgetConfigProvider implements ConfigProviderInterface
     private $urlProvider;
 
     /**
+     * @var LanguageProvider
+     */
+    private $languageProvider;
+
+    /**
      * Widget constructor.
      *
-     * @param Config          $scopeConfig
-     * @param Data            $checkoutHelper
-     * @param OrderFactory    $order
-     * @param PaazlApiFactory $paazlApi
-     * @param GeneralHelper   $generalHelper
-     * @param TokenRetriever  $tokenRetriever
-     * @param UrlProvider     $urlProvider
+     * @param Config           $scopeConfig
+     * @param Data             $checkoutHelper
+     * @param OrderFactory     $order
+     * @param PaazlApiFactory  $paazlApi
+     * @param GeneralHelper    $generalHelper
+     * @param TokenRetriever   $tokenRetriever
+     * @param UrlProvider      $urlProvider
+     * @param LanguageProvider $languageProvider
      */
     public function __construct(
         Config $scopeConfig,
@@ -78,7 +84,8 @@ class WidgetConfigProvider implements ConfigProviderInterface
         PaazlApiFactory $paazlApi,
         GeneralHelper $generalHelper,
         TokenRetriever $tokenRetriever,
-        UrlProvider $urlProvider
+        UrlProvider $urlProvider,
+        LanguageProvider $languageProvider
     ) {
         $this->scopeConfig = $scopeConfig;
         $this->checkoutHelper = $checkoutHelper;
@@ -87,6 +94,7 @@ class WidgetConfigProvider implements ConfigProviderInterface
         $this->generalHelper = $generalHelper;
         $this->tokenRetriever = $tokenRetriever;
         $this->urlProvider = $urlProvider;
+        $this->languageProvider = $languageProvider;
     }
 
     /**
@@ -130,7 +138,6 @@ class WidgetConfigProvider implements ConfigProviderInterface
                 "startDate"    => date("Y-m-d"),
                 "numberOfDays" => 10
             ],
-            "language"                   => "eng",
             "currency"                   => "EUR",
             "deliveryOptionDateFormat"   => "ddd DD MMM",
             "deliveryEstimateDateFormat" => "dddd DD MMMM",
@@ -151,6 +158,8 @@ class WidgetConfigProvider implements ConfigProviderInterface
             "pickupLocationsLimit"       => $this->getPickupLocationsLimit(),
             "initialPickupLocations"     => $this->getInitialPickupLocations()
         ];
+
+        $config = array_merge($config, $this->languageProvider->getConfig());
 
         $this->generalHelper->addTolog('request', $config);
 
@@ -188,7 +197,7 @@ class WidgetConfigProvider implements ConfigProviderInterface
      */
     public function formatPrice($price)
     {
-        return number_format($price, 2);
+        return number_format($price, 2, '.', '');
     }
 
     /**
