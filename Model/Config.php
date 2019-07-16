@@ -7,6 +7,7 @@
 namespace Paazl\CheckoutWidget\Model;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Store\Model\ScopeInterface;
 use Paazl\CheckoutWidget\Model\Carrier\Paazlshipping;
 
 /**
@@ -53,7 +54,7 @@ class Config
      */
     public function getValue($key)
     {
-        return $this->scopeConfig->getValue($key);
+        return $this->scopeConfig->getValue($key, ScopeInterface::SCOPE_STORE);
     }
 
     /**
