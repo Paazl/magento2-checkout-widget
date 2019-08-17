@@ -23,7 +23,7 @@ define([
      */
     function initWidget()
     {
-        if (quote.shippingMethod() && (quote.shippingMethod()['method_code'] === 'paazlshipping')) {
+        if (quote.shippingMethod() && quote.shippingAddress() && (quote.shippingMethod()['method_code'] === 'paazlshipping')) {
             var shippingAddress = quote.shippingAddress();
             widgetConfig.prototype.loadWidget(shippingAddress.postcode, shippingAddress.countryId);
         }
