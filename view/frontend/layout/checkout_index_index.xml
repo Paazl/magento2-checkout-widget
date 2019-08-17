@@ -36,6 +36,10 @@
                                                     </item>
                                                 </item>
                                                 <item name="shippingAddress" xsi:type="array">
+                                                    <item name="config" xsi:type="array">
+                                                        <item name="shippingMethodListTemplate" xsi:type="string">Paazl_CheckoutWidget/checkout/shipping-method-list</item>
+                                                        <item name="shippingMethodItemTemplate" xsi:type="string">Paazl_CheckoutWidget/checkout/shipping-method-item</item>
+                                                    </item>
                                                     <item name="children" xsi:type="array">
                                                         <item name="shippingAdditional" xsi:type="array">
                                                             <item name="children" xsi:type="array">

@@ -31,6 +31,11 @@ define([
 
     return function (target) {
         return target.extend({
+            defaults: {
+                shippingMethodListTemplate: 'Paazl_CheckoutWidget/checkout/shipping-method-list',
+                shippingMethodItemTemplate: 'Paazl_CheckoutWidget/checkout/shipping-method-item'
+            },
+
             /**
              * @return {*}
              */
