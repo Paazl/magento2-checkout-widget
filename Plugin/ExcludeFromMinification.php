@@ -29,6 +29,8 @@ class ExcludeFromMinification
     {
         if ($contentType == 'js') {
             $result[] = 'Paazl_CheckoutWidget/js/checkout';
+            $result[] = 'https://widget-acc.paazl.com/v1/checkout.js';
+            $result[] = 'https://widget.paazl.com/v1/checkout.js';
         }
 
         return $result;
