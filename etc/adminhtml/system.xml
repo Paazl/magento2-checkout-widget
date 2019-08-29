@@ -79,13 +79,13 @@
                     <validate>validate-not-negative-number</validate>
                 </field>
                 <field id="widget_initial_pickup_locations" translate="label comment" type="text" sortOrder="28" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-                    <label>Max # Locations Shown On Map</label>
-                    <comment><![CDATA[Limits the number of pickup locations initially displayed on the widget's "pickup" and "store" map.]]></comment>
+                    <label>Max # Max Locations Initially Displayed</label>
+                    <comment><![CDATA[Limits the number of pickup locations initially displayed on the widget's "pickup" and "store" maps.]]></comment>
                     <validate>validate-not-negative-number</validate>
                 </field>
                 <field id="widget_pickup_locations_limit" translate="label comment" type="text" sortOrder="29" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-                    <label>Max # Max Locations Shown On Map</label>
-                    <comment><![CDATA[Limits the maximum number of pickup locations displayed on the widget's pickup location map.]]></comment>
+                    <label>Max # Max Locations Displayed</label>
+                    <comment><![CDATA[Limits the maximum number of pickup locations displayed on the widget's pickup location maps.]]></comment>
                     <validate>validate-not-negative-number</validate>
                 </field>
                 <field id="hide_method_select" translate="label" type="select" sortOrder="30" showInDefault="2" showInWebsite="1" showInStore="0">
