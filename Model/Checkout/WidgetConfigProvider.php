@@ -8,6 +8,7 @@ namespace Paazl\CheckoutWidget\Model\Checkout;
 
 use Magento\Checkout\Helper\Data;
 use Magento\Checkout\Model\ConfigProviderInterface;
+use Magento\Directory\Model\Currency;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Quote\Model\Quote;
 use Magento\Sales\Model\OrderFactory;
@@ -138,7 +139,7 @@ class WidgetConfigProvider implements ConfigProviderInterface
                 "startDate"    => date("Y-m-d"),
                 "numberOfDays" => 10
             ],
-            "currency"                   => "EUR",
+            "currency"                   => $this->scopeConfig->getValue(Currency::XML_PATH_CURRENCY_DEFAULT),
             "deliveryOptionDateFormat"   => "ddd DD MMM",
             "deliveryEstimateDateFormat" => "dddd DD MMMM",
             "pickupOptionDateFormat"     => "ddd DD MMM",
