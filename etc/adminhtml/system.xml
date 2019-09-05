@@ -117,6 +117,11 @@
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment><![CDATA[If you use the second 'street' field as a separate house-number field, enable this option.]]></comment>
                 </field>
+                <field id="housenumber_addition_third_street" translate="label" type="select" sortOrder="45" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Use third street as housenumber addition</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment><![CDATA[If you use the third 'street' field as a separate house-number-addition field, enable this option.]]></comment>
+                </field>
                 <field id="reference_prefix" translate="label comment" type="text" sortOrder="47" showInDefault="1"
                        showInWebsite="1" showInStore="1">
                     <label>Order reference prefix</label>

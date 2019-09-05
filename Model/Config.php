@@ -235,6 +235,14 @@ class Config
     }
 
     /**
+     * @return mixed
+     */
+    public function housenumberAdditionOnThridStreet()
+    {
+        return (bool)$this->getValue(self::API_CONFIG_PATH . '/housenumber_addition_third_street');
+    }
+
+    /**
      * @return mixed|null
      */
     public function getCustomDescription()
