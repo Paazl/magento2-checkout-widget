@@ -18,10 +18,12 @@ use Paazl\CheckoutWidget\Model\Carrier\Paazlshipping;
 class Config
 {
     /**#@+
-     * @var string
+     * Constants
      */
     const API_CONFIG_PATH = 'carriers/paazlshipping';
-    /**#@- */
+    const MIN_NUMBER_OF_PROCESSING_DAYS = 1;
+    const MAX_NUMBER_OF_PROCESSING_DAYS = 99;
+    /**#@-*/
 
     /**
      * @var ScopeConfigInterface
@@ -268,6 +270,14 @@ class Config
     public function getProductAttributeHeight()
     {
         return $this->getValue(self::API_CONFIG_PATH . '/height_attribute');
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getProductAttributeNumberOfProcessingDays()
+    {
+        return $this->getValue(self::API_CONFIG_PATH . '/number_of_processing_days_attribute');
     }
 
     /**

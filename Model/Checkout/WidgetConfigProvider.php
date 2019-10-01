@@ -11,7 +11,9 @@ use Magento\Checkout\Model\ConfigProviderInterface;
 use Magento\Directory\Model\Currency;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Quote\Model\Quote;
+use Magento\Quote\Model\Quote\Item\AbstractItem;
 use Magento\Sales\Model\OrderFactory;
+use Magento\Catalog\Model\ProductRepository;
 use Paazl\CheckoutWidget\Helper\General as GeneralHelper;
 use Paazl\CheckoutWidget\Model\Api\PaazlApiFactory;
 use Paazl\CheckoutWidget\Model\Api\UrlProvider;
@@ -66,6 +68,9 @@ class WidgetConfigProvider implements ConfigProviderInterface
      */
     private $languageProvider;
 
+    /** @var ProductRepository */
+    private $productRepository;
+
     /**
      * Widget constructor.
      *
@@ -77,6 +82,7 @@ class WidgetConfigProvider implements ConfigProviderInterface
      * @param TokenRetriever   $tokenRetriever
      * @param UrlProvider      $urlProvider
      * @param LanguageProvider $languageProvider
+     * @param ProductRepository $productRepository
      */
     public function __construct(
         Config $scopeConfig,
@@ -86,7 +92,8 @@ class WidgetConfigProvider implements ConfigProviderInterface
         GeneralHelper $generalHelper,
         TokenRetriever $tokenRetriever,
         UrlProvider $urlProvider,
-        LanguageProvider $languageProvider
+        LanguageProvider $languageProvider,
+        ProductRepository $productRepository
     ) {
         $this->scopeConfig = $scopeConfig;
         $this->checkoutHelper = $checkoutHelper;
@@ -96,6 +103,7 @@ class WidgetConfigProvider implements ConfigProviderInterface
         $this->tokenRetriever = $tokenRetriever;
         $this->urlProvider = $urlProvider;
         $this->languageProvider = $languageProvider;
+        $this->productRepository = $productRepository;
     }
 
     /**
@@ -115,11 +123,16 @@ class WidgetConfigProvider implements ConfigProviderInterface
 
         $goods = [];
         foreach ($this->getQuote()->getAllVisibleItems() as $item) {
-            $goods[] = [
+            $goodsItem = [
                 "quantity" => (int)$item->getQty(),
                 "weight"   => doubleval($item->getWeight()),
                 "price"    => $this->formatPrice($item->getPrice())
             ];
+
+            if ($numberOfProcessingDays = $this->getProductNumberOfProcessingDays($item)) {
+                $goodsItem["numberOfProcessingDays"] = (int)$numberOfProcessingDays;
+            }
+            $goods[] = $goodsItem;
         }
 
         $config = [
@@ -134,7 +147,6 @@ class WidgetConfigProvider implements ConfigProviderInterface
             "nominatedDateEnabled"       => $this->getNominatedDateEnabled(),
             "consigneeCountryCode"       => $countryId,
             "consigneePostalCode"        => $postcode,
-            "numberOfProcessingDays"     => 0,
             "deliveryDateOptions"        => [
                 "startDate"    => date("Y-m-d"),
                 "numberOfDays" => 10
@@ -280,6 +292,28 @@ class WidgetConfigProvider implements ConfigProviderInterface
             $count += $_item->getQty();
         }
         return $count;
+    }
+
+    /**
+     * @param AbstractItem $item
+     * @return int|mixed|null
+     */
+    public function getProductNumberOfProcessingDays(AbstractItem $item)
+    {
+        $product = $this->productRepository->getById($item->getProduct()->getId());
+
+        if ($attribute = $this->scopeConfig->getProductAttributeNumberOfProcessingDays()) {
+            if (($numberOfProcessingDays = $product->getData($attribute)) !== null) {
+                if (is_numeric($numberOfProcessingDays)
+                    && $numberOfProcessingDays >= Config::MIN_NUMBER_OF_PROCESSING_DAYS
+                    && $numberOfProcessingDays <= Config::MAX_NUMBER_OF_PROCESSING_DAYS
+                ) {
+                    return $numberOfProcessingDays;
+                }
+            }
+        }
+
+        return null;
     }
 
     /**

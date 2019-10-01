@@ -155,31 +155,36 @@
                     <source_model>Paazl\CheckoutWidget\Model\System\Config\Source\Attributes</source_model>
                     <comment>The height specified in the selected product definition.</comment>
                 </field>
-                <field id="country_of_manufacture_attribute" translate="label" type="select" sortOrder="56" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="number_of_processing_days_attribute" translate="label" type="select" sortOrder="56" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>NumberOfProcessingDays Attribute</label>
+                    <source_model>Paazl\CheckoutWidget\Model\System\Config\Source\Attributes</source_model>
+                    <comment>The "Number of Processing Days" specified in the selected product definition.</comment>
+                </field>
+                <field id="country_of_manufacture_attribute" translate="label" type="select" sortOrder="57" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Country of Manufacture</label>
                     <source_model>Paazl\CheckoutWidget\Model\System\Config\Source\AttributesWithStatic</source_model>
                     <comment>This setting is only required for international shipments.</comment>
                 </field>
-                <field id="country_of_manufacture_static" translate="label" type="text" sortOrder="57" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="country_of_manufacture_static" translate="label" type="text" sortOrder="58" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Country of Manufacture - Static</label>
                     <comment>This value applies to all products.</comment>
                     <depends>
                         <field id="country_of_manufacture_attribute">paazl-static-option</field>
                     </depends>
                 </field>
-                <field id="hs_tariff_code_attribute" translate="label" type="select" sortOrder="58" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="hs_tariff_code_attribute" translate="label" type="select" sortOrder="59" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>HS Code</label>
                     <source_model>Paazl\CheckoutWidget\Model\System\Config\Source\AttributesWithStatic</source_model>
                     <comment>This setting is only required for international shipments</comment>
                 </field>
-                <field id="hs_tariff_code_static" translate="label" type="text" sortOrder="59" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="hs_tariff_code_static" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>HS Code - Static</label>
                     <comment>This value applies to all products.</comment>
                     <depends>
                         <field id="hs_tariff_code_attribute">paazl-static-option</field>
                     </depends>
                 </field>
-                <field id="heading_fallback" translate="label comment" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="heading_fallback" translate="label comment" type="text" sortOrder="61" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Advanced Settings</label>
                     <frontend_model>Paazl\CheckoutWidget\Block\Adminhtml\Paazl\Heading</frontend_model>
                 </field>
