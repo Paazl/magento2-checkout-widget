@@ -322,4 +322,12 @@ class Config
         }
         return null;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getProductAttributeDeliveryMatrix()
+    {
+        return $this->getValue(self::API_CONFIG_PATH . '/delivery_matrix_attribute');
+    }
 }

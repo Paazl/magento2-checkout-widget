@@ -58,7 +58,7 @@
                     <comment>Select the widget tabs that you want to display.</comment>
                     <validate>required-entry</validate>
                 </field>
-                   <field id="widget_default_tab" translate="label" type="select" sortOrder="24" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="widget_default_tab" translate="label" type="select" sortOrder="24" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Widget Default Tab</label>
                     <source_model>Paazl\CheckoutWidget\Model\System\Config\Source\AvailableTabs</source_model>
                     <comment>Select which tab the Paazl widget should display first.</comment>
@@ -183,6 +183,11 @@
                     <depends>
                         <field id="hs_tariff_code_attribute">paazl-static-option</field>
                     </depends>
+                </field>
+                <field id="delivery_matrix_attribute" translate="label" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Delivery Matrix Code Attribute</label>
+                    <source_model>Paazl\CheckoutWidget\Model\System\Config\Source\Attributes</source_model>
+                    <comment>The Paazl Delivery Matrix specified in the selected product definition.</comment>
                 </field>
                 <field id="heading_fallback" translate="label comment" type="text" sortOrder="61" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Advanced Settings</label>

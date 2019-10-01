@@ -14,6 +14,7 @@ use Magento\Quote\Model\Quote;
 use Magento\Quote\Model\Quote\Item\AbstractItem;
 use Magento\Sales\Model\OrderFactory;
 use Magento\Catalog\Model\ProductRepository;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Paazl\CheckoutWidget\Helper\General as GeneralHelper;
 use Paazl\CheckoutWidget\Model\Api\PaazlApiFactory;
 use Paazl\CheckoutWidget\Model\Api\UrlProvider;
@@ -131,6 +132,9 @@ class WidgetConfigProvider implements ConfigProviderInterface
 
             if ($numberOfProcessingDays = $this->getProductNumberOfProcessingDays($item)) {
                 $goodsItem["numberOfProcessingDays"] = (int)$numberOfProcessingDays;
+            }
+            if ($deliveryMatrixCode = $this->getProductDeliveryMatrix($item)) {
+                $goodsItem["startMatrix"] = $deliveryMatrixCode;
             }
             $goods[] = $goodsItem;
         }
@@ -295,8 +299,11 @@ class WidgetConfigProvider implements ConfigProviderInterface
     }
 
     /**
+     * Gets number of processing days from product
+     *
      * @param AbstractItem $item
      * @return int|mixed|null
+     * @throws NoSuchEntityException
      */
     public function getProductNumberOfProcessingDays(AbstractItem $item)
     {
@@ -370,5 +377,40 @@ class WidgetConfigProvider implements ConfigProviderInterface
     public function getApiBaseUrl()
     {
         return $this->urlProvider->getBaseUrl();
+    }
+
+    /**
+     * Gets delivery matrix from product
+     *
+     * @param AbstractItem $item
+     * @return int|mixed|null
+     * @throws NoSuchEntityException
+     */
+    public function getProductDeliveryMatrix(AbstractItem $item)
+    {
+        $product = $this->productRepository->getById($item->getProduct()->getId());
+
+        if ($attribute = $this->scopeConfig->getProductAttributeDeliveryMatrix()) {
+            if (($deliveryMatrixCode = $product->getData($attribute)) !== null
+                && $this->validateDeliveryMatrixCode($deliveryMatrixCode)
+            ) {
+                return $deliveryMatrixCode;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Validates matrix code according to Paazl instructions
+     *
+     * @param string $value
+     * @return bool
+     */
+    protected function validateDeliveryMatrixCode(string $value)
+    {
+        preg_match('/^[A-Z]{1,2}$/', $value, $matches);
+
+        return count($matches) === 1;
     }
 }
