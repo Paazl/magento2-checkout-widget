@@ -131,7 +131,7 @@ class Config
      */
     public function getNominatedDateEnabled()
     {
-        return $this->getValue(self::API_CONFIG_PATH . '/widget_nominated_date') ? 'true' : 'false';
+        return $this->scopeConfig->isSetFlag(self::API_CONFIG_PATH . '/widget_nominated_date');
     }
 
     /**
