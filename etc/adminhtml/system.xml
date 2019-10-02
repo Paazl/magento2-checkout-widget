@@ -156,9 +156,9 @@
                     <comment>The height specified in the selected product definition.</comment>
                 </field>
                 <field id="number_of_processing_days_attribute" translate="label" type="select" sortOrder="56" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>NumberOfProcessingDays Attribute</label>
+                    <label>Processing Days</label>
                     <source_model>Paazl\CheckoutWidget\Model\System\Config\Source\Attributes</source_model>
-                    <comment>The "Number of Processing Days" specified in the selected product definition.</comment>
+                    <comment>The number of days a warehouse needs to get an order ready for pick-up by a carrier.</comment>
                 </field>
                 <field id="country_of_manufacture_attribute" translate="label" type="select" sortOrder="57" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Country of Manufacture</label>
@@ -185,9 +185,9 @@
                     </depends>
                 </field>
                 <field id="delivery_matrix_attribute" translate="label" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Delivery Matrix Code Attribute</label>
+                    <label>Delivery Matrix</label>
                     <source_model>Paazl\CheckoutWidget\Model\System\Config\Source\Attributes</source_model>
-                    <comment>The Paazl Delivery Matrix specified in the selected product definition.</comment>
+                    <comment><![CDATA[One- or two-letter code identifying <a href="https://support.paazl.com/hc/en-us/articles/360007580074-About-delivery-matrices" target="_blank">delivery matrix</a> column used to determine shipping option.]]></comment>
                 </field>
                 <field id="heading_fallback" translate="label comment" type="text" sortOrder="61" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Advanced Settings</label>
