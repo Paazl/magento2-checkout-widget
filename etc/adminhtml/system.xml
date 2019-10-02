@@ -58,7 +58,7 @@
                     <comment>Select the widget tabs that you want to display.</comment>
                     <validate>required-entry</validate>
                 </field>
-                   <field id="widget_default_tab" translate="label" type="select" sortOrder="24" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="widget_default_tab" translate="label" type="select" sortOrder="24" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Widget Default Tab</label>
                     <source_model>Paazl\CheckoutWidget\Model\System\Config\Source\AvailableTabs</source_model>
                     <comment>Select which tab the Paazl widget should display first.</comment>
@@ -155,31 +155,41 @@
                     <source_model>Paazl\CheckoutWidget\Model\System\Config\Source\Attributes</source_model>
                     <comment>The height specified in the selected product definition.</comment>
                 </field>
-                <field id="country_of_manufacture_attribute" translate="label" type="select" sortOrder="56" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="number_of_processing_days_attribute" translate="label" type="select" sortOrder="56" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Processing Days</label>
+                    <source_model>Paazl\CheckoutWidget\Model\System\Config\Source\Attributes</source_model>
+                    <comment>The number of days a warehouse needs to get an order ready for pick-up by a carrier.</comment>
+                </field>
+                <field id="country_of_manufacture_attribute" translate="label" type="select" sortOrder="57" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Country of Manufacture</label>
                     <source_model>Paazl\CheckoutWidget\Model\System\Config\Source\AttributesWithStatic</source_model>
                     <comment>This setting is only required for international shipments.</comment>
                 </field>
-                <field id="country_of_manufacture_static" translate="label" type="text" sortOrder="57" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="country_of_manufacture_static" translate="label" type="text" sortOrder="58" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Country of Manufacture - Static</label>
                     <comment>This value applies to all products.</comment>
                     <depends>
                         <field id="country_of_manufacture_attribute">paazl-static-option</field>
                     </depends>
                 </field>
-                <field id="hs_tariff_code_attribute" translate="label" type="select" sortOrder="58" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="hs_tariff_code_attribute" translate="label" type="select" sortOrder="59" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>HS Code</label>
                     <source_model>Paazl\CheckoutWidget\Model\System\Config\Source\AttributesWithStatic</source_model>
                     <comment>This setting is only required for international shipments</comment>
                 </field>
-                <field id="hs_tariff_code_static" translate="label" type="text" sortOrder="59" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="hs_tariff_code_static" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>HS Code - Static</label>
                     <comment>This value applies to all products.</comment>
                     <depends>
                         <field id="hs_tariff_code_attribute">paazl-static-option</field>
                     </depends>
                 </field>
-                <field id="heading_fallback" translate="label comment" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="delivery_matrix_attribute" translate="label" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Delivery Matrix</label>
+                    <source_model>Paazl\CheckoutWidget\Model\System\Config\Source\Attributes</source_model>
+                    <comment><![CDATA[One- or two-letter code identifying <a href="https://support.paazl.com/hc/en-us/articles/360007580074-About-delivery-matrices" target="_blank">delivery matrix</a> column used to determine shipping option.]]></comment>
+                </field>
+                <field id="heading_fallback" translate="label comment" type="text" sortOrder="61" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Advanced Settings</label>
                     <frontend_model>Paazl\CheckoutWidget\Block\Adminhtml\Paazl\Heading</frontend_model>
                 </field>

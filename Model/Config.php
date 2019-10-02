@@ -18,10 +18,12 @@ use Paazl\CheckoutWidget\Model\Carrier\Paazlshipping;
 class Config
 {
     /**#@+
-     * @var string
+     * Constants
      */
     const API_CONFIG_PATH = 'carriers/paazlshipping';
-    /**#@- */
+    const MIN_NUMBER_OF_PROCESSING_DAYS = 1;
+    const MAX_NUMBER_OF_PROCESSING_DAYS = 99;
+    /**#@-*/
 
     /**
      * @var ScopeConfigInterface
@@ -131,7 +133,7 @@ class Config
      */
     public function getNominatedDateEnabled()
     {
-        return $this->getValue(self::API_CONFIG_PATH . '/widget_nominated_date') ? 'true' : 'false';
+        return $this->scopeConfig->isSetFlag(self::API_CONFIG_PATH . '/widget_nominated_date');
     }
 
     /**
@@ -271,6 +273,14 @@ class Config
     }
 
     /**
+     * @return int|null
+     */
+    public function getProductAttributeNumberOfProcessingDays()
+    {
+        return $this->getValue(self::API_CONFIG_PATH . '/number_of_processing_days_attribute');
+    }
+
+    /**
      * @return mixed
      */
     public function getProductAttributeCountyOfManufacture()
@@ -311,5 +321,13 @@ class Config
             return $this->getValue(self::API_CONFIG_PATH . '/googlemaps_key');
         }
         return null;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getProductAttributeDeliveryMatrix()
+    {
+        return $this->getValue(self::API_CONFIG_PATH . '/delivery_matrix_attribute');
     }
 }
