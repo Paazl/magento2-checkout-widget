@@ -107,6 +107,7 @@
 
 #paazl-order-status {
     margin-left: 5px;
+    display: block;
 }
 
 .shipping-and-handling-info.paazl-order-status {
