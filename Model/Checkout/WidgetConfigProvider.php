@@ -15,6 +15,7 @@ use Magento\Quote\Model\Quote\Item\AbstractItem;
 use Magento\Sales\Model\OrderFactory;
 use Magento\Catalog\Model\ProductRepository;
 use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Catalog\Model\Product\Attribute\Repository as AttributeRepository;
 use Paazl\CheckoutWidget\Helper\General as GeneralHelper;
 use Paazl\CheckoutWidget\Model\Api\PaazlApiFactory;
 use Paazl\CheckoutWidget\Model\Api\UrlProvider;
@@ -74,21 +75,29 @@ class WidgetConfigProvider implements ConfigProviderInterface
      */
     private $languageProvider;
 
-    /** @var ProductRepository */
+    /**
+     * @var ProductRepository
+     */
     private $productRepository;
 
     /**
-     * Widget constructor.
+     * @var AttributeRepository
+     */
+    private $attributeRepository;
+
+    /**
+     * WidgetConfigProvider constructor.
      *
-     * @param Config           $scopeConfig
-     * @param Data             $checkoutHelper
-     * @param OrderFactory     $order
-     * @param PaazlApiFactory  $paazlApi
-     * @param GeneralHelper    $generalHelper
-     * @param TokenRetriever   $tokenRetriever
-     * @param UrlProvider      $urlProvider
-     * @param LanguageProvider $languageProvider
-     * @param ProductRepository $productRepository
+     * @param Config              $scopeConfig
+     * @param Data                $checkoutHelper
+     * @param OrderFactory        $order
+     * @param PaazlApiFactory     $paazlApi
+     * @param GeneralHelper       $generalHelper
+     * @param TokenRetriever      $tokenRetriever
+     * @param UrlProvider         $urlProvider
+     * @param LanguageProvider    $languageProvider
+     * @param ProductRepository   $productRepository
+     * @param AttributeRepository $attributeRepository
      */
     public function __construct(
         Config $scopeConfig,
@@ -99,7 +108,8 @@ class WidgetConfigProvider implements ConfigProviderInterface
         TokenRetriever $tokenRetriever,
         UrlProvider $urlProvider,
         LanguageProvider $languageProvider,
-        ProductRepository $productRepository
+        ProductRepository $productRepository,
+        AttributeRepository $attributeRepository
     ) {
         $this->scopeConfig = $scopeConfig;
         $this->checkoutHelper = $checkoutHelper;
@@ -110,6 +120,7 @@ class WidgetConfigProvider implements ConfigProviderInterface
         $this->urlProvider = $urlProvider;
         $this->languageProvider = $languageProvider;
         $this->productRepository = $productRepository;
+        $this->attributeRepository = $attributeRepository;
     }
 
     /**
@@ -397,10 +408,10 @@ class WidgetConfigProvider implements ConfigProviderInterface
      */
     public function getProductDeliveryMatrix(AbstractItem $item)
     {
-        $product = $this->productRepository->getById($item->getProduct()->getId());
+        $product = $this->productRepository->get($item->getSku());
 
         if ($attribute = $this->scopeConfig->getProductAttributeDeliveryMatrix()) {
-            if (($deliveryMatrixCode = $product->getData($attribute)) !== null
+            if (($deliveryMatrixCode = $product->getData($attribute->getAttributeCode())) !== null
                 && $this->validateDeliveryMatrixCode($deliveryMatrixCode)
             ) {
                 return $deliveryMatrixCode;
