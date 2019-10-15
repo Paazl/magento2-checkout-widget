@@ -114,35 +114,37 @@ class TokenRetriever
     public function retrieve(Quote $quote)
     {
         if (!$this->token) {
-            try {
-                $reference = $this->quoteReferenceRepository->getByQuoteId($quote->getId());
-            } catch (NoSuchEntityException $e) {
-                $reference = $this->quoteReferenceInterfaceFactory->create(
-                    ['data' => [
-                        QuoteReferenceInterface::QUOTE_ID => $quote->getId(),
-                    ]]
-                );
-            }
+            $reference = $this->getQuoteReference($quote);
 
             if ($reference->getToken()) {
+                try {
+                    $api = $this->apiFactory->create();
+                    // Check if token is expired
+                    if (($token = $api->getApiToken($this->referenceBuilder->getQuoteReference($quote)))
+                        && $token->getToken() !== $reference->getToken()
+                    ) {
+                        // ... and refresh it in QuoteReference
+                        $this->refreshQuoteReferenceApiToken($reference, $token->getToken());
+                    }
+                } catch (\Exception $exception) {
+                    throw new LocalizedException(__($exception->getMessage()), $exception);
+                }
                 $this->token = $reference->getToken();
+
                 return $this->token;
             }
 
             try {
                 $api = $this->apiFactory->create();
-
                 $token = $api->getApiToken($this->referenceBuilder->getQuoteReference($quote));
-                $this->token = $token->getToken();
-
                 $gmtNow = $this->timezone->date(null, null, false);
                 // @codingStandardsIgnoreLine
                 $gmtNow->add(new \DateInterval('P30D'));
                 $reference
                     ->setToken($token->getToken())
                     ->setTokenExpiresAt($this->dateTime->gmtDate(null, $gmtNow));
-
                 $this->quoteReferenceRepository->save($reference);
+                $this->token = $reference->getToken();
             } catch (\Exception $exception) {
                 throw new LocalizedException(__($exception->getMessage()), $exception);
             }
@@ -170,5 +172,49 @@ class TokenRetriever
         }
 
         return $this->token;
+    }
+
+    /**
+     * Refreshes API token in quote reference
+     *
+     * @param QuoteReferenceInterface $reference
+     * @param $token
+     * @throws LocalizedException
+     */
+    protected function refreshQuoteReferenceApiToken(QuoteReferenceInterface $reference, $token)
+    {
+        try {
+            $gmtNow = $this->timezone->date(null, null, false);
+            // @codingStandardsIgnoreLine
+            $gmtNow->add(new \DateInterval('P30D'));
+            $reference
+                ->setToken($token)
+                ->setTokenExpiresAt($this->dateTime->gmtDate(null, $gmtNow));
+
+            $this->quoteReferenceRepository->save($reference);
+        } catch (\Exception $exception) {
+            throw new LocalizedException(__($exception->getMessage()), $exception);
+        }
+    }
+
+    /**
+     * Retrieves Quote Reference
+     *
+     * @param Quote $quote
+     * @return QuoteReferenceInterface
+     */
+    protected function getQuoteReference(Quote $quote)
+    {
+        try {
+            $reference = $this->quoteReferenceRepository->getByQuoteId($quote->getId());
+        } catch (NoSuchEntityException $e) {
+            $reference = $this->quoteReferenceInterfaceFactory->create(
+                ['data' => [
+                    QuoteReferenceInterface::QUOTE_ID => $quote->getId(),
+                ]]
+            );
+        }
+
+        return $reference;
     }
 }
