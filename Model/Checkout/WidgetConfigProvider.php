@@ -327,7 +327,7 @@ class WidgetConfigProvider implements ConfigProviderInterface
      */
     public function getProductNumberOfProcessingDays(AbstractItem $item)
     {
-        $product = $this->productRepository->get($item->getSku());
+        $product = $this->productRepository->getById($item->getProduct()->getId());
 
         if ($attribute = $this->scopeConfig->getProductAttributeNumberOfProcessingDays()) {
             if (($numberOfProcessingDays = $product->getData($attribute)) !== null) {
@@ -411,7 +411,7 @@ class WidgetConfigProvider implements ConfigProviderInterface
         $product = $this->productRepository->get($item->getSku());
 
         if ($attribute = $this->scopeConfig->getProductAttributeDeliveryMatrix()) {
-            if (($deliveryMatrixCode = $product->getData($attribute->getAttributeCode())) !== null
+            if (($deliveryMatrixCode = $product->getData($attribute)) !== null
                 && $this->validateDeliveryMatrixCode($deliveryMatrixCode)
             ) {
                 return $deliveryMatrixCode;
