@@ -28,6 +28,11 @@ use Paazl\CheckoutWidget\Model\TokenRetriever;
  */
 class WidgetConfigProvider implements ConfigProviderInterface
 {
+    /**#@+
+     * Constants
+     */
+    const DEFAULT_NUMBER_OF_PROCESSING_DAYS = 0;
+    /**#@-*/
 
     /**
      * @var Config
@@ -122,6 +127,7 @@ class WidgetConfigProvider implements ConfigProviderInterface
             $postcode = $shippingAddress->getPostcode();
         }
 
+        $numberOfProcessingDays = self::DEFAULT_NUMBER_OF_PROCESSING_DAYS;
         $goods = [];
         foreach ($this->getQuote()->getAllVisibleItems() as $item) {
             $goodsItem = [
@@ -130,9 +136,11 @@ class WidgetConfigProvider implements ConfigProviderInterface
                 "price"    => $this->formatPrice($item->getPrice())
             ];
 
-            if ($numberOfProcessingDays = $this->getProductNumberOfProcessingDays($item)) {
-                $goodsItem["numberOfProcessingDays"] = (int)$numberOfProcessingDays;
+            if (($itemNumberOfProcessingDays = $this->getProductNumberOfProcessingDays($item))
+                && $itemNumberOfProcessingDays > $numberOfProcessingDays) {
+                $numberOfProcessingDays = (int)$itemNumberOfProcessingDays;
             }
+
             if ($deliveryMatrixCode = $this->getProductDeliveryMatrix($item)) {
                 $goodsItem["startMatrix"] = $deliveryMatrixCode;
             }
@@ -151,6 +159,7 @@ class WidgetConfigProvider implements ConfigProviderInterface
             "nominatedDateEnabled"       => $this->getNominatedDateEnabled(),
             "consigneeCountryCode"       => $countryId,
             "consigneePostalCode"        => $postcode,
+            "numberOfProcessingDays"     => $numberOfProcessingDays,
             "deliveryDateOptions"        => [
                 "startDate"    => date("Y-m-d"),
                 "numberOfDays" => 10
@@ -307,7 +316,7 @@ class WidgetConfigProvider implements ConfigProviderInterface
      */
     public function getProductNumberOfProcessingDays(AbstractItem $item)
     {
-        $product = $this->productRepository->getById($item->getProduct()->getId());
+        $product = $this->productRepository->get($item->getSku());
 
         if ($attribute = $this->scopeConfig->getProductAttributeNumberOfProcessingDays()) {
             if (($numberOfProcessingDays = $product->getData($attribute)) !== null) {
