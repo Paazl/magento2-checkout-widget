@@ -28,4 +28,3 @@ class Order
         return $shippingMethod == Paazlshipping::CODE . '_' . Paazlshipping::CODE;
     }
 }
-

@@ -8,13 +8,13 @@
 }
 
 .mm-heading-paazl {
-    color: #c62b46;
+    color: #C62B46;
     text-align: left;
     margin: 20px 0 0;
     padding: 5px 5px 5px 10px;
     background: #F1F1F1;
     font-weight: bold;
-    border-left: 5px solid #c62b46;
+    border-left: 5px solid #C62B46;
 }
 
 #carriers_paazlshipping-head:after {
@@ -82,4 +82,59 @@
     padding-top: 30px;
     display: block;
     color: #303030;
+}
+
+.paazl-status {
+    -webkit-font-smoothing: antialiased;
+    font-family: 'Admin Icons';
+    font-style: normal;
+    font-weight: normal;
+    line-height: 1;
+    speak: none;
+    font-size: 1.2rem;
+    text-align: center;
+}
+
+.paazl-status.successfully-updated:before {
+    content: '\e614';
+    color: #3CB371;
+}
+
+.paazl-status.need-to-be-update:before {
+    content: '\e638';
+    color: #CD5C5C;
+}
+
+#paazl-order-status {
+    margin-left: 5px;
+}
+
+.shipping-and-handling-info.paazl-order-status {
+    margin: 1rem 6rem 0 0;
+    background-color: #F8F8F8;
+    padding: 2rem;
+    border: solid 1px #C1C1C1;
+}
+
+.paazl-order-status-label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.paazl-status-actions {
+    margin-top: 1.5rem;
+    display: inline-flex;
+}
+
+#paazl_edit_button {
+    margin-left: 20px;
+}
+
+.paazl_order_data_form_modal .modal-inner-wrap {
+    padding: 20px;
+}
+
+.paazl_order_data_form_modal .modal-inner-wrap .modal-header {
+    padding: 10px;
 }

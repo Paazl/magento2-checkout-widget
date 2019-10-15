@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<form xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd"
+      component="Paazl_CheckoutWidget/js/components/paazl-order-data-form">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">paazl_order_data_form.paazl_order_data_form_data_source</item>
+            <item name="namespace" xsi:type="string">paazl_order_data_form</item>
+        </item>
+        <item name="template" xsi:type="string">templates/form/collapsible</item>
+    </argument>
+    <settings>
+        <buttons>
+            <button name="cancel" class="Paazl\CheckoutWidget\Block\Adminhtml\Order\View\PaazlModal\Button\Cancel"/>
+            <button name="save" class="Paazl\CheckoutWidget\Block\Adminhtml\Order\View\PaazlModal\Button\SaveChange"/>
+            <button name="saveAndPush"
+                    class="Paazl\CheckoutWidget\Block\Adminhtml\Order\View\PaazlModal\Button\SaveAndPush"/>
+        </buttons>
+        <namespace>paazl_order_data_form</namespace>
+        <ajaxSave>true</ajaxSave>
+        <ajaxSaveType>simple</ajaxSaveType>
+        <dataScope>data</dataScope>
+        <deps>
+            <dep>paazl_order_data_form.paazl_order_data_form_data_source</dep>
+        </deps>
+    </settings>
+    <dataSource name="paazl_order_data_form_data_source">
+        <argument name="data" xsi:type="array">
+            <item name="js_config" xsi:type="array">
+                <item name="component" xsi:type="string">Magento_Ui/js/form/provider</item>
+            </item>
+        </argument>
+        <settings>
+            <validateUrl path="paazl_checkoutwidget/order_data/validate"/>
+            <submitUrl path="paazl_checkoutwidget/order_data/save"/>
+        </settings>
+        <dataProvider class="Paazl\CheckoutWidget\Ui\DataProvider\Order\View\PaazlOrderDataDataProvider"
+                      name="paazl_order_data_form_data_source">
+            <settings>
+                <requestFieldName/>
+                <primaryFieldName/>
+            </settings>
+        </dataProvider>
+    </dataSource>
+    <fieldset name="delivery">
+        <settings>
+            <collapsible>false</collapsible>
+            <label/>
+        </settings>
+        <field name="shipping_option" sortOrder="10" formElement="radioset">
+            <settings>
+                <validation>
+                    <rule name="checked" xsi:type="boolean">true</rule>
+                </validation>
+                <label translate="true"/>
+            </settings>
+            <formElements>
+                <radioset>
+                    <settings>
+                        <options class="Paazl\CheckoutWidget\Ui\Component\Order\View\PaazlModal\AvailableShippingMethods\Options"/>
+                    </settings>
+                </radioset>
+            </formElements>
+        </field>
+    </fieldset>
+</form>

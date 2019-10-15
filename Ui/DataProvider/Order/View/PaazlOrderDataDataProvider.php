@@ -1,0 +1,185 @@
+<?php
+/**
+ * Copyright © 2019 Paazl. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+namespace Paazl\CheckoutWidget\Ui\DataProvider\Order\View;
+
+use Magento\Framework\View\Element\UiComponent\DataProvider\DataProviderInterface;
+
+/**
+ * DataProvider for Paazl order data form
+ *
+ * @api
+ */
+class PaazlOrderDataDataProvider implements DataProviderInterface
+{
+    /**
+     * @var string
+     */
+    private $requestFieldName;
+
+    /**
+     * @var string
+     */
+    private $name;
+
+    /**
+     * @var string
+     */
+    private $primaryFieldName;
+
+    /**
+     * @var array
+     */
+    private $meta;
+
+    /**
+     * @var array
+     */
+    private $data;
+
+    /**
+     * Constructor
+     *
+     * @param string $name
+     * @param string $primaryFieldName
+     * @param string $requestFieldName
+     * @param array $meta
+     * @param array $data
+     */
+    public function __construct(
+        $name,
+        $primaryFieldName,
+        $requestFieldName,
+        array $meta = [],
+        array $data = []
+    ) {
+        $this->name = $name;
+        $this->primaryFieldName = $primaryFieldName;
+        $this->requestFieldName = $requestFieldName;
+        $this->meta = $meta;
+        $this->data = $data;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getConfigData()
+    {
+        return [];
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setConfigData($config)
+    {
+        // TODO: Implement setConfigData() method.
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getMeta()
+    {
+        return $this->meta;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getFieldMetaInfo($fieldSetName, $fieldName)
+    {
+        return [];
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getFieldSetMetaInfo($fieldSetName)
+    {
+        return [];
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getFieldsMetaInfo($fieldSetName)
+    {
+        return [];
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getPrimaryFieldName()
+    {
+        return $this->primaryFieldName;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getRequestFieldName()
+    {
+        return $this->requestFieldName;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getData()
+    {
+        return [];
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function addFilter(\Magento\Framework\Api\Filter $filter)
+    {
+        // TODO: Implement addFilter() method.
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function addOrder($field, $direction)
+    {
+        // TODO: Implement addOrder() method.
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setLimit($offset, $size)
+    {
+        // TODO: Implement setLimit() method.
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getSearchCriteria()
+    {
+        // TODO: Implement getSearchCriteria() method.
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getSearchResult()
+    {
+        // TODO: Implement getSearchResult() method.
+    }
+}

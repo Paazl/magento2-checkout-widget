@@ -8,9 +8,11 @@ namespace Paazl\CheckoutWidget\Model\Api;
 
 use Paazl\CheckoutWidget\Model\Config;
 
+/**
+ * UrlProvider
+ */
 class UrlProvider
 {
-
     /**#@+
      * @var string
      */
@@ -68,5 +70,15 @@ class UrlProvider
     public function getOrderUrl()
     {
         return $this->getBaseUrl() . 'order/';
+    }
+
+    /**
+     * Retrieves shipping options API endpoint
+     *
+     * @return string
+     */
+    public function getShippingOptionsUrl()
+    {
+        return $this->getBaseUrl() . 'shippingoptions/';
     }
 }

@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!--
+  ~ Copyright © 2019 Paazl. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceBlock name="order_shipping_view">
+            <action method="setTemplate">
+                <argument name="template"
+                          xsi:type="string">Paazl_CheckoutWidget::order/view/shipping-and-handling-info.phtml</argument>
+            </action>
+            <container name="extra_shipping_info">
+                <block class="Paazl\CheckoutWidget\Block\Adminhtml\Order\View\ShippingAndHandling\PaazlStatus"
+                       name="shipping_and_handling_info.paazl_status">
+                </block>
+            </container>
+        </referenceBlock>
+    </body>
+</page>

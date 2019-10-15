@@ -1,0 +1,100 @@
+<?php
+/**
+ * Copyright © 2019 Paazl. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+
+?>
+<?php /** @var $block Paazl\CheckoutWidget\Block\Adminhtml\Order\View\ShippingAndHandling\PaazlEdit */ ?>
+<div id="paazl_edit_button" data-bind="scope:'paazl_edit_button'">
+    <!-- ko template: getTemplate() --><!-- /ko -->
+</div>
+<script type="text/x-magento-init">
+{
+    "#paazl_edit_button": {
+        "Magento_Ui/js/core/app": {
+            "components": {
+                "paazl_edit_button": {
+                    "title": "<?= /* @escapeNotVerified */  __('Edit') ?>",
+                    "formElement": "container",
+                    "componentType": "container",
+                    "component": "Magento_Ui/js/form/components/button",
+                    "template": "ui/form/components/button/simple",
+                    "actions": [
+                        {
+                            "targetName" : "paazl_order_data_form_modal",
+                            "actionName" : "toggleModal"
+                        },
+                        {
+                            "targetName" : "paazl_order_data_form_modal.paazl_order_data_form",
+                            "actionName" : "destroyInserted"
+                        },
+                        {
+                            "targetName" : "paazl_order_data_form_modal.paazl_order_data_form",
+                            "actionName" : "render"
+                        },
+                        {
+                            "targetName" : "paazl_order_data_form_modal.paazl_order_data_form",
+                            "actionName" : "resetForm"
+                        }
+                    ],
+                    "provider": false,
+                    "dataScope": ""
+                }
+            }
+        }
+    }
+}
+</script>
+<div id="paazl_order_data_form_modal" data-bind="scope:'paazl_order_data_form_modal'">
+    <!-- ko template: getTemplate() --><!-- /ko -->
+</div>
+<script type="text/x-magento-init">
+{
+    "#paazl_order_data_form_modal": {
+        "Magento_Ui/js/core/app": {
+            "components": {
+                "paazl_order_data_form_modal": {
+                    "componentType": "modal",
+                    "type": "modal",
+                    "name": "paazl_order_data_form_modal",
+                    "config": {
+                        "isTemplate" : false,
+                        "component" : "Magento_Ui/js/modal/modal-component",
+                        "options": {
+                            "title" : "<?= /* @escapeNotVerified */  __('Available Paazl Methods') ?>"
+                        }
+                    },
+                    "children": {
+                        "paazl_order_data_form": {
+                            "componentType" : "container",
+                            "type" : "container",
+                            "name": "paazl_order_data_form",
+                            "config": {
+                                "component" : "Paazl_CheckoutWidget/js/components/paazl-order-data-insert-form",
+                                "dataScope" : "",
+                                "update_url" : "<?= /* @noEscape */ $block->getUpdateUrl(); ?>",
+                                "render_url" : "<?= /* @noEscape */ $block->getRenderUrl(); ?>",
+                                "autoRender" : false,
+                                "ns" : "paazl_order_data_form",
+                                "externalProvider" : "paazl_order_data_form.paazl_order_data_form_data_source",
+                                "toolbarContainer" : "${ $.parentName }",
+                                "formSubmitType" : "ajax",
+                                "saveUrl" : "<?= /* @noEscape */ $block->getSaveUrl(); ?>",
+                                "validateUrl" : "<?= /* @noEscape */ $block->getValidateUrl(); ?>",
+                                "exports" : {
+                                    "saveUrl" : "${ $.externalProvider }:client.urls.save",
+                                    "validateUrl" : "${ $.externalProvider }:client.urls.beforeSave"
+                                }
+                            },
+                            "modalComponent": "paazl_order_data_form_modal"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+</script>

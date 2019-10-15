@@ -6,10 +6,12 @@
 
 namespace Paazl\CheckoutWidget\Cron;
 
+use Exception;
+use Zend_Db_Expr;
 use Magento\Sales\Model\ResourceModel\Order\Collection\Factory;
 use Magento\Sales\Model\ResourceModel\Order\CollectionFactory;
 use Paazl\CheckoutWidget\Model\Api\Processor\SendToService;
-use Paazl\CheckoutWidget\Setup\SetupSchema;
+use Paazl\CheckoutWidget\Model\ResourceModel\Order\OrderReference;
 use Paazl\CheckoutWidget\Helper\General as GeneralHelper;
 
 /**
@@ -67,19 +69,19 @@ class SendOrders
         $collection = $this->orderCollectionFactory->create();
         $collection->getSelect()
             ->joinInner(
-                ['mpo' => $collection->getTable(SetupSchema::TABLE_ORDER)],
+                ['mpo' => $collection->getTable(OrderReference::MAIN_TABLE)],
                 'mpo.order_id = main_table.entity_id',
                 []
             )
             ->where('mpo.ext_sent_at IS NULL')
-            ->where(new \Zend_Db_Expr(
+            ->where(new Zend_Db_Expr(
                 'TIME_TO_SEC(TIMEDIFF(CURRENT_TIMESTAMP, `updated_at`)) < ' . self::RETRY_TIME_SECONDS
             ));
 
         foreach ($collection as $item) {
             try {
                 $this->sendToService->process($item);
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $this->generalHelper->addTolog('exception', $e->getMessage());
             }
         }

@@ -145,6 +145,33 @@ class PaazlApi
         throw ApiException::error();
     }
 
+    public function getShippingOptions(array $orderData)
+    {
+        $url = $this->urlProvider->getShippingOptionsUrl();
+
+        $httpClient = $this->getAuthorizedClient();
+
+        $this->generalHelper->addTolog('Order request', $orderData);
+
+        $httpClient->addHeader('Content-Type', 'application/json;charset=UTF-8');
+        $httpClient->addHeader('Accept', 'application/json;charset=UTF-8');
+
+        $httpClient->post($url, json_encode($orderData));
+        $body = $httpClient->getBody();
+        $status = $httpClient->getStatus();
+
+        $this->generalHelper->addTolog('debug', $body);
+        if ($status >= 400 && $status < 500) {
+            throw ApiException::fromErrorResponse($body, $status);
+        }
+
+        if ($status >= 200 && $status < 300) {
+            return $body;
+        }
+
+        throw ApiException::error();
+    }
+
     /**
      * @param $reference
      *
