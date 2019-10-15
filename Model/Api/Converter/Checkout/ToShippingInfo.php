@@ -84,6 +84,7 @@ class ToShippingInfo
         $info->setOptionTitle($this->arrayManager->get('shippingOption/name', $result));
 
         if ($info->getType() === DeliveryType::PICKUP) {
+            $info->setPickupDate($this->arrayManager->get('pickupDate', $result));
             $info->setLocationCode($this->arrayManager->get('pickupLocation/code', $result));
             $info->setLocationAccountNumber($this->arrayManager->get('pickupLocation/accountNumber', $result));
             $info->setLocationName($this->arrayManager->get('pickupLocation/name', $result));
