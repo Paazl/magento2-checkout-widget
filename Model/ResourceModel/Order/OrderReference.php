@@ -8,7 +8,6 @@ namespace Paazl\CheckoutWidget\Model\ResourceModel\Order;
 
 use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
 use Paazl\CheckoutWidget\Api\Data\Order\OrderReferenceInterface;
-use Paazl\CheckoutWidget\Setup\SetupSchema;
 
 /**
  * Class OrderReference
@@ -17,6 +16,7 @@ use Paazl\CheckoutWidget\Setup\SetupSchema;
  */
 class OrderReference extends AbstractDb
 {
+    const MAIN_TABLE = 'mm_paazl_order';
 
     /**
      * Resource initialization
@@ -25,6 +25,6 @@ class OrderReference extends AbstractDb
      */
     protected function _construct()
     {
-        $this->_init(SetupSchema::TABLE_ORDER, OrderReferenceInterface::ENTITY_ID);
+        $this->_init(self::MAIN_TABLE, OrderReferenceInterface::ENTITY_ID);
     }
 }

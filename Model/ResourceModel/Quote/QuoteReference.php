@@ -8,7 +8,6 @@ namespace Paazl\CheckoutWidget\Model\ResourceModel\Quote;
 
 use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
 use Paazl\CheckoutWidget\Api\Data\Quote\QuoteReferenceInterface;
-use Paazl\CheckoutWidget\Setup\SetupSchema;
 
 /**
  * Class OrderReference
@@ -17,6 +16,7 @@ use Paazl\CheckoutWidget\Setup\SetupSchema;
  */
 class QuoteReference extends AbstractDb
 {
+    const MAIN_TABLE = 'mm_paazl_quote';
 
     /**
      * Resource initialization
@@ -25,6 +25,6 @@ class QuoteReference extends AbstractDb
      */
     protected function _construct()
     {
-        $this->_init(SetupSchema::TABLE_QUOTE, QuoteReferenceInterface::ENTITY_ID);
+        $this->_init(self::MAIN_TABLE, QuoteReferenceInterface::ENTITY_ID);
     }
 }

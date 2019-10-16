@@ -14,7 +14,12 @@ use Magento\Framework\Setup\UpgradeSchemaInterface;
 use Magento\Quote\Api\Data\CartInterface;
 use Paazl\CheckoutWidget\Api\Data\Order\OrderReferenceInterface;
 use Paazl\CheckoutWidget\Api\Data\Quote\QuoteReferenceInterface;
+use Paazl\CheckoutWidget\Model\ResourceModel\Order\OrderReference;
+use Paazl\CheckoutWidget\Model\ResourceModel\Quote\QuoteReference;
 
+/**
+ * Class UpgradeSchema
+ */
 class UpgradeSchema implements UpgradeSchemaInterface
 {
 
@@ -47,7 +52,7 @@ class UpgradeSchema implements UpgradeSchemaInterface
      */
     private function createOrderTable(SchemaSetupInterface $setup)
     {
-        $tableName = $setup->getTable(SetupSchema::TABLE_ORDER);
+        $tableName = $setup->getTable(OrderReference::MAIN_TABLE);
         $connection = $setup->getConnection();
         if ($connection->isTableExists($tableName)) {
             $connection->dropTable($tableName);
@@ -111,7 +116,7 @@ class UpgradeSchema implements UpgradeSchemaInterface
      */
     private function createQuoteTable(SchemaSetupInterface $setup)
     {
-        $tableName = $setup->getTable(SetupSchema::TABLE_QUOTE);
+        $tableName = $setup->getTable(QuoteReference::MAIN_TABLE);
         $connection = $setup->getConnection();
         if ($connection->isTableExists($tableName)) {
             $connection->dropTable($tableName);

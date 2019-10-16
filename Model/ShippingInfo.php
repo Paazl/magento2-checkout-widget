@@ -23,6 +23,7 @@ class ShippingInfo extends DataObject
     const IDENTIFIER = 'identifier';
     const PICKUP_CODE = 'pickup_code';
     const PICKUP_ACCOUNT_NUMBER = 'pickup_account_number';
+    const PICKUP_DATE = 'pickup_date';
     const PICKUP_NAME = 'pickup_name';
     const PRICE = 'price';
     const TITLE = 'title';
@@ -99,6 +100,23 @@ class ShippingInfo extends DataObject
     public function getLocationAccountNumber()
     {
         return $this->getData(self::PICKUP_ACCOUNT_NUMBER);
+    }
+
+    /**
+     * @param string $value
+     * @return $this
+     */
+    public function setPickupDate($value)
+    {
+        return $this->setData(self::PICKUP_DATE, $value);
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getPickupDate()
+    {
+        return $this->getData(self::PICKUP_DATE);
     }
 
     /**

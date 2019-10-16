@@ -1,0 +1,36 @@
+<?php
+/**
+ * Copyright © 2019 Paazl. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+
+use Paazl\CheckoutWidget\Block\Adminhtml\Order\View\PaazlStatus;
+use Paazl\CheckoutWidget\Ui\Component\Order\Listing\Column\Status\Options;
+?>
+
+<?php /* Paazl Info Block */ ?>
+<?php /** @var $block PaazlStatus|false */ ?>
+<?php if ($paazlOrder = $block->getPaazlOrder()): ?>
+<div class="admin__page-section-item-content">
+    <div class="shipping-and-handling-info paazl-order-status">
+        <span class="paazl-order-status-label">
+        <?= /* @escapeNotVerified */ __('Paazl Order Status: '); ?>
+        </span>
+        <span id="paazl-order-status">
+        <?php if ($paazlOrder->isSent()) : ?>
+            <span class="paazl-status successfully-updated"></span>
+            <?= /* @escapeNotVerified */ __(Options::LABEL_SUCCESSFULLY_UPDATED . ' at %1', $paazlOrder->getExtSentAt()); ?>
+        <?php else: ?>
+            <span class="paazl-status need-to-be-update"></span>
+            <?= /* @escapeNotVerified */ __(Options::LABEL_NEED_TO_BE_UPDATED); ?>
+        <?php endif; ?>
+        </span>
+        <div class="paazl-status-actions">
+            <?= $block->getChildHtml('send_button') ?>
+        </div>
+    </div>
+</div>
+<?php endif; ?>
+

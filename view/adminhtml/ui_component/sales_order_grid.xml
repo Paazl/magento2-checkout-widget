@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright © 2019 Paazl. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <columns name="sales_order_columns">
+        <column name="paazl_status" class="Paazl\CheckoutWidget\Ui\Component\Order\Listing\Column\Status">
+            <settings>
+                <label translate="true">Paazl Status</label>
+                <bodyTmpl>ui/grid/cells/html</bodyTmpl>
+                <options class="Paazl\CheckoutWidget\Ui\Component\Order\Listing\Column\Status\Options"/>
+                <filter>select</filter>
+                <dataType>select</dataType>
+            </settings>
+        </column>
+    </columns>
+</listing>

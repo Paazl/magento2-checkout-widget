@@ -5,11 +5,11 @@
  */
 ?>
 <div class="mm-block-paazl">
-    <a class="helpbutton" href="<?php echo $block->escapeUrl($block->getSupportLink()); ?>" target="_blank">
-        <?php echo __('Extension Manual'); ?>
+    <a class="helpbutton" href="<?= /* @escapeNotVerified */ $block->escapeUrl($block->getSupportLink()); ?>" target="_blank">
+        <?= /* @escapeNotVerified */ __('Extension Manual'); ?>
     </a>
     <p>
-        <strong><?php echo __('Paazl Checkout Widget.'); ?></strong><br>
-        <?php echo __('We make shipping easy & fun.'); ?>
+        <strong><?= /* @escapeNotVerified */ __('Paazl Checkout Widget.'); ?></strong><br>
+        <?= /* @escapeNotVerified */ __('We make shipping easy & fun.'); ?>
     </p>
 </div>

@@ -330,4 +330,12 @@ class Config
     {
         return $this->getValue(self::API_CONFIG_PATH . '/delivery_matrix_attribute');
     }
+
+    /**
+     * @return mixed
+     */
+    public function getCarrierTitle()
+    {
+        return $this->getValue(self::API_CONFIG_PATH . '/title');
+    }
 }
