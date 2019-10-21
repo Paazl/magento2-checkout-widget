@@ -6,7 +6,7 @@
 
 namespace Paazl\CheckoutWidget\Controller\Adminhtml\Order\Data;
 
-use Magento\Framework\App\Action\HttpPostActionInterface;
+use Magento\Framework\App\ActionInterface;
 use Magento\Framework\Exception\InputException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Sales\Api\OrderRepositoryInterface;
@@ -23,7 +23,7 @@ use Paazl\CheckoutWidget\Model\Api\ApiException;
 /**
  * Controller Send
  */
-class Send extends Action implements HttpPostActionInterface
+class Send extends Action implements ActionInterface
 {
     /** @var JsonFactory */
     protected $resultJsonFactory;
