@@ -6,7 +6,13 @@
 
 
 <h2>About Paazl</h2>
-Paazl is a multi-carrier platform that also offers a superior delivery experience. The Paazl platform offers functionality for generating shipping labels, sending pro-active track and trace updates, and managing returns. It combines this with this with an attractive, customizable, delivery option display whose shopper friendliness helps maximize webshop conversion.
+Paazl enables international brands and retailers to create the ultimate last mile experience.
+
+Paazl connects you to delivery methods worldwide. From any type of home delivery to thousands of carrier collection points. We even help you with your stores to achieve a truly, omnichannel approach.
+
+Our extensions power customer experience in your webshop. Paazl determines the right delivery methods, displaying these seamlessly and intuitively in your checkout. Clear information on when to expect delivery maximizes conversion.
+
+Paazl track & trace allows you to engage customers with your own look & feel. We help you make delivery a really branded experience, building trust with pro-active communication. So your customers will keep coming back for more.
 
 <h2>Installation using Composer</h2>
 Magento 2 uses Composer to manage the module package and the library. Composer is a dependency manager for PHP. Composer declares the libraries your project depends on and installs them for you.
