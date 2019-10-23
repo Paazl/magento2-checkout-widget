@@ -6,7 +6,8 @@
 
 
 <h2>About Paazl</h2>
-Paazl enables international brands and retailers to create the ultimate last mile experience.                                             
+Paazl enables international brands and retailers to create the ultimate last mile experience. 
+
 Paazl you to delivery methods worldwide. From any type of home delivery to thousands of carrier collection points. We even help you with your stores to achieve a truly, omnichannel approach.
 
 Our extensions power customer experience in your webshop. Paazl determines the right delivery methods, displaying these seamlessly and intuitively in your checkout. Clear information on when to expect delivery maximizes conversion.
