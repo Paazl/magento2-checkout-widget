@@ -162,15 +162,14 @@ class Order
     private function parseAddress(Address $shippingAddress)
     {
         if ($this->config->housenumberOnSecondStreet() && trim($shippingAddress->getStreetLine(2) != '')) {
-            $extraStreet = $shippingAddress->getStreetLine(2) . $shippingAddress->getStreetLine(3);
-            $houseNumber = (int)filter_var($extraStreet, FILTER_SANITIZE_NUMBER_INT);
-            // This only return nummeric values for house additions
-            // Housenumber additions with letters are not working
-            $houseNumberExtension = preg_replace('/[^0-9]/', '', $extraStreet);
-
-            if ($this->config->housenumberAdditionOnThridStreet()) {
-                $houseNumberExtension = $shippingAddress->getStreetLine(3);
+            if (! $this->config->housenumberAdditionOnThridStreet()) {
+                $extraStreet = $shippingAddress->getStreetLine(2) . $shippingAddress->getStreetLine(3);
+                $houseNumber = (int)filter_var($extraStreet, FILTER_SANITIZE_NUMBER_INT);
+                $houseNumberExtension = preg_replace('/^[0-9\-]+/', '', $extraStreet);
             }
+
+            $houseNumber = $shippingAddress->getStreetLine(2);
+            $houseNumberExtension = $shippingAddress->getStreetLine(3);
 
             return [
                 'street'               => $shippingAddress->getStreetLine(1),
