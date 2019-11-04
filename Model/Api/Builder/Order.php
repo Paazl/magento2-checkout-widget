@@ -171,7 +171,6 @@ class Order
                 $houseNumberExtension = preg_replace('/^[0-9\-]+/', '', $extraStreet);
             }
 
-
             return [
                 'street'               => $shippingAddress->getStreetLine(1),
                 'houseNumber'          => $houseNumber,
