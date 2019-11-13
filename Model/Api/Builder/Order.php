@@ -198,7 +198,7 @@ class Order
 
         /** @var Item $item */
         foreach ($order->getItems() as $item) {
-            if ($item->getProductType() != 'simple') {
+            if ($item->getProductType() != 'simple' AND $item->getProductType() != 'grouped') {
                 continue;
             }
 
@@ -235,8 +235,10 @@ class Order
     private function getItemPrice(Item $item)
     {
         if ($item->getParentItemId() > 0) {
+          if($item->getParentItem()->getPriceInclTax() <= 0.01) return 0.01;
             return $item->getParentItem()->getPriceInclTax();
         } else {
+          if($item->getPriceInclTax() <= 0.01) return 0.01;
             return $item->getPriceInclTax();
         }
     }
