@@ -15,13 +15,11 @@ Use our extensions to power customer experience in your webshop. Paazl personali
 
 Connect your warehouse to our platform to automate the shipping process. We facilitate shipping labels of broad range of local, national and global e-commerce carriers. We offer a flexible solution and speed up your go-to-market.  
 
-Our track & trace allows you to engage customers with your own look & feel. We help you make delivery a really branded experience, building trust with pro-active communication. So your customers will keep coming back for more.
+Paazl track & trace allows you to engage customers with your own look & feel. We help you make delivery a really branded experience, building trust with pro-active communication.
 
 <h2>The Paazl Magento2 extension</h2>
 
-The new Paazl Magento2 extension is all about the delivery experience of consumers. It comes with the brand new Paazl Checkout Widget that helps you display any type delivery method in your Magento checkout. Think of any type of home delivery (e.g. same-day, next-day, nominated-day) and thousands of carrier pickup points. With our checkout widget we even support click & collect @your store ([See more here](https://vimeo.com/362771849/)).  
-
-The typical Magento2 customer for this extension has international ambitions, high volume delivery and processes its shipments via an ERP/OMS/WMS. Paazl shipping capabilities from the backend of Magento itself are therefore limited. See also our [Wiki](https://github.com/Paazl/magento2-checkout-widget/wiki) for the differences with our Magento1 extension
+The new Paazl Magento2 extension is all about the delivery experience of consumers. It comes with the brand new Paazl Checkout Widget that helps you display any type delivery method in your Magento checkout ([See more here](https://vimeo.com/362771849/)). The typical Magento2 customer for this extension has international ambitions, high volume delivery and processes its shipments via an ERP/OMS/WMS. See also our [Wiki](https://github.com/Paazl/magento2-checkout-widget/wiki) for the differences with our Magento1 extension.
 
 Note that the Paazl Magento2 extension offers the basics for integrating Paazl in your checkout. Always make sure to align with other extensions and/or existing customisation.
 
