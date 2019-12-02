@@ -11,7 +11,9 @@ Paazl enables international brands and retailers to create the ultimate last mil
 
 Our platform connects you to delivery methods worldwide. From any type of home delivery to thousands of carrier collection points. Paazl even helps you with your stores to achieve a truly, omnichannel approach.
 
-Our extensions power customer experience in your webshop. Paazl determines the right delivery methods, displaying these seamlessly and intuitively in your checkout. Clear information on when to expect delivery maximizes conversion.
+Our extensions power customer experience in your webshop. Paazl personalizes delivery methods, displaying these seamlessly and intuitively in your checkout. And with clear information on when to expect delivery we help maximizing conversion.
+
+Connect your warehouse to our platform to automate the shipping process. We facilitate shipping labels of broad range of local, national and global e-commerce carriers. We offer a flexible solution and speed up your go-to-market.  
 
 Our track & trace allows you to engage customers with your own look & feel. We help you make delivery a really branded experience, building trust with pro-active communication. So your customers will keep coming back for more.
 
