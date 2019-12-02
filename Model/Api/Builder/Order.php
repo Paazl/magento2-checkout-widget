@@ -6,17 +6,20 @@
 
 namespace Paazl\CheckoutWidget\Model\Api\Builder;
 
+use Magento\Catalog\Model\Product\Type;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Exception\NotFoundException;
+use Magento\GroupedProduct\Model\Product\Type\Grouped;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Model\Order\Address;
 use Magento\Sales\Model\Order\Item;
 use Paazl\CheckoutWidget\Api\OrderReferenceRepositoryInterface;
 use Paazl\CheckoutWidget\Model\Api\Builder\Reference as Reference;
 use Paazl\CheckoutWidget\Model\Api\Field\DeliveryType;
-use Paazl\CheckoutWidget\Model\ExtInfoHandler;
-use Paazl\CheckoutWidget\Model\Order\OrderReferenceFactory;
 use Paazl\CheckoutWidget\Model\Config;
+use Paazl\CheckoutWidget\Model\ExtInfoHandler;
+use Paazl\CheckoutWidget\Model\Handler\Item as ItemHandler;
 
 /**
  * Class Order
@@ -25,7 +28,6 @@ use Paazl\CheckoutWidget\Model\Config;
  */
 class Order
 {
-
     /**
      * @var ExtInfoHandler
      */
@@ -47,23 +49,31 @@ class Order
     private $orderReferenceRepository;
 
     /**
+     * @var ItemHandler
+     */
+    private $itemHandler;
+
+    /**
      * Order constructor.
      *
      * @param ExtInfoHandler                    $extInfoHandler
      * @param Reference                         $referenceBuilder
      * @param Config                            $config
      * @param OrderReferenceRepositoryInterface $orderReferenceRepository
+     * @param ItemHandler                       $itemHandler
      */
     public function __construct(
         ExtInfoHandler $extInfoHandler,
         Reference $referenceBuilder,
         Config $config,
-        OrderReferenceRepositoryInterface $orderReferenceRepository
+        OrderReferenceRepositoryInterface $orderReferenceRepository,
+        ItemHandler $itemHandler
     ) {
         $this->extInfoHandler = $extInfoHandler;
         $this->referenceBuilder = $referenceBuilder;
         $this->config = $config;
         $this->orderReferenceRepository = $orderReferenceRepository;
+        $this->itemHandler = $itemHandler;
     }
 
     /**
@@ -72,6 +82,7 @@ class Order
      * @param OrderInterface $order
      *
      * @return array
+     * @throws LocalizedException
      * @throws NotFoundException
      */
     public function getCreateOrderData(OrderInterface $order)
@@ -82,9 +93,12 @@ class Order
             throw new NotFoundException(__('Reference information not found'));
         }
 
+        $extInformation = $this->extInfoHandler->getInfoFromOrderReference($reference);
         /** @var Address $shippingAddress */
         $shippingAddress = $order->getShippingAddress();
-        $extInformation = $this->extInfoHandler->getInfoFromOrderReference($reference);
+        if ($extInformation->getType() === DeliveryType::PICKUP) {
+            $shippingAddress = $order->getBillingAddress();
+        }
         $address = $this->parseAddress($shippingAddress);
 
         $result = [
@@ -101,7 +115,7 @@ class Order
                     'province'             => $shippingAddress->getRegionCode(),
                     'street'               => $address['street'],
                     'houseNumber'          => $address['houseNumber'],
-                    'houseNumberExtension' => $address['houseNumberExtension'],
+                    'houseNumberExtension' => $address['houseNumberExtension'] ?? '',
                 ]
             ],
             'customsValue'          => [
@@ -162,9 +176,32 @@ class Order
     private function parseAddress(Address $shippingAddress)
     {
         if ($this->config->housenumberOnSecondStreet() && trim($shippingAddress->getStreetLine(2) != '')) {
-            $extraStreet = $shippingAddress->getStreetLine(2) . $shippingAddress->getStreetLine(3);
-            $houseNumber = (int)filter_var($extraStreet, FILTER_SANITIZE_NUMBER_INT);
-            $houseNumberExtension = preg_replace('/^[0-9\-]+/', '', $extraStreet);
+            $pattern = '/^(?<houseNumber>\d{1,5})((?<houseNumberExtension>[\-\/\s]*[\w[:print:]]+)*)/';
+            preg_match($pattern, $shippingAddress->getStreetLine(2), $matches);
+            $parsedAddress = array_filter($matches, function ($key) {
+                return !is_int($key);
+            }, ARRAY_FILTER_USE_KEY);
+
+            $houseNumber = $parsedAddress['houseNumber'] ?? '';
+            $houseNumberExtension = preg_replace(
+                '/^[\s\/]/',
+                '',
+                $parsedAddress['houseNumberExtension'] ?? ''
+            );
+
+            if ($houseNumberExtension) {
+                return [
+                    'street'               => $shippingAddress->getStreetLine(1),
+                    'houseNumber'          => $houseNumber,
+                    'houseNumberExtension' => $houseNumberExtension
+                ];
+            }
+
+            if ($this->config->housenumberExtensionOnThirdStreet()
+                && trim($shippingAddress->getStreetLine(3) != '')
+            ) {
+                $houseNumberExtension = trim($shippingAddress->getStreetLine(3));
+            }
 
             return [
                 'street'               => $shippingAddress->getStreetLine(1),
@@ -174,23 +211,20 @@ class Order
         }
 
         $address = implode(' ', $shippingAddress->getStreet());
-        $pattern = '#^([\w[:punct:] ]+) ([0-9]{1,5})([\w[:punct:]\-/]*)$#';
+        $pattern = '/^(?<street>[\w[:alpha:]]+[ \w[:alpha:]]*) (?<houseNumber>\d{1,5})((?<houseNumberExtension>[\-\/\s]*\w+)*)/';
         preg_match($pattern, $address, $matches);
-        $street = (isset($matches[1])) ? $matches[1] : '';
-        $houseNumber = (isset($matches[2])) ? $matches[2] : '';
-        $houseNumberExtension = (isset($matches[3])) ? $matches[3] : '';
+        $parsedAddress = array_filter($matches, function ($key) {
+            return !is_int($key);
+        }, ARRAY_FILTER_USE_KEY);
 
-        return [
-            'street'               => $street,
-            'houseNumber'          => $houseNumber,
-            'houseNumberExtension' => $houseNumberExtension
-        ];
+        return $parsedAddress;
     }
 
     /**
      * @param $order
      *
      * @return array
+     * @throws LocalizedException
      */
     private function getProducts(OrderInterface $order)
     {
@@ -198,14 +232,14 @@ class Order
 
         /** @var Item $item */
         foreach ($order->getItems() as $item) {
-            if ($item->getProductType() != 'simple') {
+            if ($item->getProductType() !== Type::TYPE_SIMPLE && $item->getProductType() !== Grouped::TYPE_CODE) {
                 continue;
             }
 
             $itemData = [
                 'quantity'             => (int)$item->getQtyOrdered(),
                 'unitPrice'            => [
-                    'value'    => $this->getItemPrice($item),
+                    'value'    => $this->itemHandler->getPriceValue($item),
                     'currency' => $order->getOrderCurrencyCode()
                 ],
                 'description'          => $this->getItemDescription($item),
@@ -225,20 +259,6 @@ class Order
         }
 
         return $products;
-    }
-
-    /**
-     * @param Item $item
-     *
-     * @return float|null
-     */
-    private function getItemPrice(Item $item)
-    {
-        if ($item->getParentItemId() > 0) {
-            return $item->getParentItem()->getPriceInclTax();
-        } else {
-            return $item->getPriceInclTax();
-        }
     }
 
     /**

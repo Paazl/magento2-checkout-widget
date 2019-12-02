@@ -1,0 +1,21 @@
+<?php
+/**
+ * Copyright © 2019 Paazl. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+?>
+<?php
+/** @var \Magento\Backend\Block\Template $block */
+/** @var \Paazl\CheckoutWidget\ViewModel\Pickup\Info $viewModel */
+$viewModel = $block->getData('pickupViewModel');
+?>
+<?php if ($pickupAddress = $viewModel->getPickupLocationAddressHtml()):?>
+    <strong><?= $block->escapeHtml($viewModel->getPickupTitle()) ?></strong>
+    <?= $block->escapeHtml($viewModel->getLocationName()) ?>
+    <div class="pickup-info-wrapper">
+        <?= /* @escapeNotVerified */ $pickupAddress ?>
+    </div>
+<?php endif;?>
+
