@@ -10,8 +10,6 @@ define(['jquery'], function ($) {
         $.validator.addMethod(
             'validate-paazl-delivery-matrix-code',
             function (v) {
-                console.log($.mage.isEmptyNoTrim(v));
-                console.log(/^[A-Z]{1,2}$/.test(v));
                 return $.mage.isEmptyNoTrim(v) || /^[A-Z]{1,2}$/.test(v);
             },
             $.mage.__('Please enter a valid value in this field (from "A" to "Z", followed by "AA" to "ZZ").')

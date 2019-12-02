@@ -9,13 +9,7 @@ define([
     'ko',
     'Magento_Checkout/js/model/quote',
     'Paazl_CheckoutWidget/js/checkout/view/widget-config'
-], function (
-    $,
-    _,
-    ko,
-    quote,
-    widgetConfig
-) {
+], function ($, _, ko, quote, widgetConfig) {
     "use strict";
 
     /**
@@ -23,8 +17,12 @@ define([
      */
     function initWidget()
     {
-        if (quote.shippingMethod() && quote.shippingAddress() && (quote.shippingMethod()['method_code'] === 'paazlshipping')) {
-            var shippingAddress = quote.shippingAddress();
+        if (quote.shippingMethod()
+            && (quote.shippingMethod()['method_code'] === 'paazlshipping')
+            && quote.shippingAddress()
+            && quote.shippingAddress().postcode && quote.shippingAddress().countryId
+        ) {
+            let shippingAddress = quote.shippingAddress();
             widgetConfig.prototype.loadWidget(shippingAddress.postcode, shippingAddress.countryId);
         }
     }
@@ -58,10 +56,11 @@ define([
              */
             canShowPaazlWidget: ko.computed(function () {
                 var method = quote.shippingMethod();
-                return method != null ? method.carrier_code: null;
+                return method != null ? method.carrier_code : null;
             }),
 
             checkAndInitWidget: function () {
+                let force = widgetConfig.prototype.customerAddressId !== quote.shippingAddress()['customerAddressId'];
                 initWidget();
             },
 

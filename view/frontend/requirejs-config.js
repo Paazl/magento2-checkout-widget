@@ -34,6 +34,12 @@ var config = {
             },
             'Magento_Checkout/js/view/shipping': {
                 'Paazl_CheckoutWidget/js/checkout/view/shipping-mixin': true
+            },
+            'Magento_Checkout/js/view/summary/shipping': {
+                'Paazl_CheckoutWidget/js/mixins/Magento_Checkout/view/summary/shipping': true
+            },
+            'Kega_Checkout/js/view/summary/shipping-mixin': {
+                'Paazl_CheckoutWidget/js/mixins/Magento_Checkout/view/summary/shipping': true
             }
         }
     }

@@ -9,4 +9,8 @@
         <plugin name="paazl_check_active_carriers"
                 type="\Paazl\CheckoutWidget\Plugin\Shipping\CarrierFactoryPlugin" />
     </type>
+    <type name="Magento\Checkout\Model\ShippingInformationManagement">
+        <plugin name="paazl_shipping_information_management"
+                type="Paazl\CheckoutWidget\Plugin\Checkout\ShippingInformationManagementPlugin"/>
+    </type>
 </config>

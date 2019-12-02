@@ -12,4 +12,8 @@
     <extension_attributes for="Magento\Checkout\Api\Data\PaymentDetailsInterface">
         <attribute code="shipping_methods" type="Magento\Quote\Api\Data\ShippingMethodInterface[]"/>
     </extension_attributes>
+
+    <extension_attributes for="Magento\Quote\Api\Data\TotalsInterface">
+        <attribute code="shipping_methods" type="Magento\Quote\Api\Data\ShippingMethodInterface[]"/>
+    </extension_attributes>
 </config>
