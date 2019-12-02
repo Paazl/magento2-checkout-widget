@@ -1,6 +1,6 @@
 
 <p align="center">
-  <img src="https://www.paazl.com/app/themes/paazl-2018/assets/dist/images/logo.5b3f9aac.svg" width="300"/>
+  <img src="https://avatars2.githubusercontent.com/u/11311339?s=460&v=4" width="300"/>
 </p>
 <h1 align="center">Paazl for Magento 2.x</h2>
 
