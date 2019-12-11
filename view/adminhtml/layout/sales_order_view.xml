@@ -11,9 +11,19 @@
                 <argument name="template"
                           xsi:type="string">Paazl_CheckoutWidget::order/view/shipping-and-handling-info.phtml</argument>
             </action>
+            <block class="Magento\Backend\Block\Template" name="paazl_pickup_info"
+                   template="Paazl_CheckoutWidget::order/view/pickup/info.phtml">
+                <arguments>
+                    <argument name="pickupViewModel" xsi:type="object">Paazl\CheckoutWidget\ViewModel\Pickup\Info</argument>
+                </arguments>
+            </block>
             <container name="extra_shipping_info">
                 <block class="Paazl\CheckoutWidget\Block\Adminhtml\Order\View\ShippingAndHandling\PaazlStatus"
                        name="shipping_and_handling_info.paazl_status">
+                    <arguments>
+                        <argument name="viewModel"
+                                  xsi:type="object">Paazl\CheckoutWidget\ViewModel\PaazlStatus\DeliveryDate</argument>
+                    </arguments>
                 </block>
             </container>
         </referenceBlock>

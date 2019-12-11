@@ -16,6 +16,8 @@ use Paazl\CheckoutWidget\Ui\Component\Order\Listing\Column\Status\Options;
  */
 class Collection extends OriginalCollection
 {
+    private $filterByStatus = false;
+
     /**
      * Join Paazl Statuses
      *
@@ -61,7 +63,10 @@ class Collection extends OriginalCollection
                 ))
             ]
         );
-        $select->group('paazl_status');
+
+        if ($this->filterByStatus) {
+            $select->group('paazl_status');
+        }
 
         return $select;
     }
@@ -72,6 +77,7 @@ class Collection extends OriginalCollection
     public function addFieldToFilter($field, $condition = null)
     {
         if ($field == 'paazl_status') {
+            $this->filterByStatus = true;
             $this->getSelect()->having('paazl_status = ?', $condition);
             return $this;
         }

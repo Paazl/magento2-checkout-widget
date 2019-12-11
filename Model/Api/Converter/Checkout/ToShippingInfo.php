@@ -82,16 +82,15 @@ class ToShippingInfo
         $info->setIdenfifier($this->arrayManager->get('shippingOption/identifier', $result));
         $info->setPrice(floatval($this->arrayManager->get('shippingOption/rate', $result)));
         $info->setOptionTitle($this->arrayManager->get('shippingOption/name', $result));
+        $info->setPreferredDeliveryDate($this->arrayManager->get('preferredDeliveryDate', $result));
+        $info->setCarrierPickupDate($this->arrayManager->get('pickupDate', $result));
 
         if ($info->getType() === DeliveryType::PICKUP) {
             $info->setPickupDate($this->arrayManager->get('pickupDate', $result));
             $info->setLocationCode($this->arrayManager->get('pickupLocation/code', $result));
             $info->setLocationAccountNumber($this->arrayManager->get('pickupLocation/accountNumber', $result));
             $info->setLocationName($this->arrayManager->get('pickupLocation/name', $result));
-        }
-
-        if ($info->getType() === DeliveryType::DELIVERY) {
-            $info->setPreferredDeliveryDate($this->arrayManager->get('preferredDeliveryDate', $result));
+            $info->setPickupAddress($this->arrayManager->get('pickupLocation/address', $result));
         }
 
         return $info;

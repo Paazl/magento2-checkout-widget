@@ -35,7 +35,9 @@
             <?php if ($this->helper('Magento\Tax\Helper\Data')->displayShippingBothPrices() && $_incl != $_excl): ?>
                 (<?= /* @escapeNotVerified */ __('Incl. Tax') ?> <?= /* @escapeNotVerified */ $_incl ?>)
             <?php endif; ?>
-            <?= $block->getChildHtml('extra_shipping_info') ?>
+            <br />
+            <?= /* @noEscape */ $block->getChildHtml('paazl_pickup_info') ?>
+            <?= /* @noEscape */ $block->getChildHtml('extra_shipping_info') ?>
         <?php else: ?>
             <?= /* @escapeNotVerified */ __('No shipping information available') ?>
         <?php endif; ?>

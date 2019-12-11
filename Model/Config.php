@@ -237,6 +237,14 @@ class Config
     }
 
     /**
+     * @return mixed
+     */
+    public function housenumberExtensionOnThirdStreet()
+    {
+        return (bool)$this->getValue(self::API_CONFIG_PATH . '/housenumber_extension_third_street');
+    }
+
+    /**
      * @return mixed|null
      */
     public function getCustomDescription()

@@ -235,7 +235,7 @@ class PaazlApi
     /**
      * @return ClientInterface
      */
-    private function getAuthorizedClient()
+    private function getAuthorizedClient(): ClientInterface
     {
         $httpClient = $this->httpClientFactory->create();
         $httpClient->setHeaders([
