@@ -13,6 +13,8 @@ use Paazl\CheckoutWidget\Ui\Component\Order\Listing\Column\Status\Options;
 <?php /* Paazl Info Block */ ?>
 <?php /** @var $block PaazlStatus|false */ ?>
 <?php if ($paazlOrder = $block->getPaazlOrder()): ?>
+<?php /** @var Paazl\CheckoutWidget\ViewModel\PaazlStatus\DeliveryDate $viewModel */ ?>
+<?php $viewModel = $block->getData('viewModel') ?>
 <div class="admin__page-section-item-content">
     <div class="shipping-and-handling-info paazl-order-status">
         <span class="paazl-order-status-label">
@@ -32,6 +34,23 @@ use Paazl\CheckoutWidget\Ui\Component\Order\Listing\Column\Status\Options;
             <?= $block->getChildBlock('retry_button') ? $block->getChildHtml('retry_button') : '' ?>
             <?= $block->getChildBlock('edit_block') ? $block->getChildHtml('edit_block') : '' ?>
         </div>
+        <?php if($viewModel && $viewModel->isTypeDelivery()): ?>
+        <?php $shippingInfo = $viewModel->getExtShippingInfo() ?>
+        <div class="paazl-delivery-date">
+            <?php if ($preferredDeliveryDate = $shippingInfo->getPreferredDeliveryDate()) : ?>
+            <span class="preferred-delivery-date date-wrapper">
+                <span class="label"><?= /* @escapeNotVerified */ __('Preferred Delivery Date'); ?></span>:
+                <span class="value"><?= /* @escapeNotVerified */ $preferredDeliveryDate; ?></span>
+            </span>
+            <?php endif; ?>
+            <?php if ($carrierPickupDate = $shippingInfo->getCarrierPickupDate()) : ?>
+            <span class="carrier-pickup-date date-wrapper">
+                <span class="label"><?= /* @escapeNotVerified */ __('Carrier Pickup Date'); ?></span>:
+                <span class="value"><?= /* @escapeNotVerified */ $carrierPickupDate; ?></span>
+            </span>
+            <?php endif; ?>
+        </div>
+        <?php endif; ?>
     </div>
 </div>
 <?php endif; ?>
