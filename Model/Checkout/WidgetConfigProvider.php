@@ -15,11 +15,11 @@ use Magento\Quote\Model\Quote\Item\AbstractItem;
 use Magento\Sales\Model\OrderFactory;
 use Magento\Catalog\Model\ProductRepository;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\Catalog\Model\Product\Attribute\Repository as AttributeRepository;
 use Paazl\CheckoutWidget\Helper\General as GeneralHelper;
 use Paazl\CheckoutWidget\Model\Api\PaazlApiFactory;
 use Paazl\CheckoutWidget\Model\Api\UrlProvider;
 use Paazl\CheckoutWidget\Model\Config;
+use Paazl\CheckoutWidget\Model\Handler\Item as ItemHandler;
 use Paazl\CheckoutWidget\Model\TokenRetriever;
 
 /**
@@ -61,6 +61,11 @@ class WidgetConfigProvider implements ConfigProviderInterface
     private $generalHelper;
 
     /**
+     * @var ItemHandler
+     */
+    private $itemHandler;
+
+    /**
      * @var TokenRetriever
      */
     private $tokenRetriever;
@@ -75,29 +80,22 @@ class WidgetConfigProvider implements ConfigProviderInterface
      */
     private $languageProvider;
 
-    /**
-     * @var ProductRepository
-     */
+    /** @var ProductRepository */
     private $productRepository;
 
     /**
-     * @var AttributeRepository
-     */
-    private $attributeRepository;
-
-    /**
-     * WidgetConfigProvider constructor.
+     * Widget constructor.
      *
-     * @param Config              $scopeConfig
-     * @param Data                $checkoutHelper
-     * @param OrderFactory        $order
-     * @param PaazlApiFactory     $paazlApi
-     * @param GeneralHelper       $generalHelper
-     * @param TokenRetriever      $tokenRetriever
-     * @param UrlProvider         $urlProvider
-     * @param LanguageProvider    $languageProvider
-     * @param ProductRepository   $productRepository
-     * @param AttributeRepository $attributeRepository
+     * @param Config            $scopeConfig
+     * @param Data              $checkoutHelper
+     * @param OrderFactory      $order
+     * @param PaazlApiFactory   $paazlApi
+     * @param GeneralHelper     $generalHelper
+     * @param ItemHandler       $itemHandler
+     * @param TokenRetriever    $tokenRetriever
+     * @param UrlProvider       $urlProvider
+     * @param LanguageProvider  $languageProvider
+     * @param ProductRepository $productRepository
      */
     public function __construct(
         Config $scopeConfig,
@@ -105,26 +103,28 @@ class WidgetConfigProvider implements ConfigProviderInterface
         OrderFactory $order,
         PaazlApiFactory $paazlApi,
         GeneralHelper $generalHelper,
+        ItemHandler $itemHandler,
         TokenRetriever $tokenRetriever,
         UrlProvider $urlProvider,
         LanguageProvider $languageProvider,
-        ProductRepository $productRepository,
-        AttributeRepository $attributeRepository
+        ProductRepository $productRepository
     ) {
         $this->scopeConfig = $scopeConfig;
         $this->checkoutHelper = $checkoutHelper;
         $this->order = $order;
         $this->paazlApi = $paazlApi;
         $this->generalHelper = $generalHelper;
+        $this->itemHandler = $itemHandler;
         $this->tokenRetriever = $tokenRetriever;
         $this->urlProvider = $urlProvider;
         $this->languageProvider = $languageProvider;
         $this->productRepository = $productRepository;
-        $this->attributeRepository = $attributeRepository;
     }
 
     /**
      * {@inheritDoc}
+     *
+     * @throws LocalizedException
      */
     public function getConfig()
     {
@@ -144,7 +144,7 @@ class WidgetConfigProvider implements ConfigProviderInterface
             $goodsItem = [
                 "quantity" => (int)$item->getQty(),
                 "weight"   => doubleval($item->getWeight()),
-                "price"    => $this->formatPrice($item->getPrice())
+                "price"    => $this->itemHandler->getPriceValue($item)
             ];
 
             if (($itemNumberOfProcessingDays = $this->getProductNumberOfProcessingDays($item))
@@ -234,7 +234,7 @@ class WidgetConfigProvider implements ConfigProviderInterface
      */
     public function formatPrice($price)
     {
-        return number_format($price, 2, '.', '');
+        return number_format($price, 2);
     }
 
     /**
@@ -251,7 +251,7 @@ class WidgetConfigProvider implements ConfigProviderInterface
     public function getApiToken()
     {
         try {
-            return $this->tokenRetriever->retrieve($this->getQuote());
+            return $this->tokenRetriever->retrieveByQuote($this->getQuote());
         } catch (LocalizedException $e) {
             $this->generalHelper->addTolog('exception', $e->getMessage());
         }
@@ -408,7 +408,7 @@ class WidgetConfigProvider implements ConfigProviderInterface
      */
     public function getProductDeliveryMatrix(AbstractItem $item)
     {
-        $product = $this->productRepository->get($item->getSku());
+        $product = $this->productRepository->getById($item->getProduct()->getId());
 
         if ($attribute = $this->scopeConfig->getProductAttributeDeliveryMatrix()) {
             if (($deliveryMatrixCode = $product->getData($attribute)) !== null

@@ -35,11 +35,6 @@
         </arguments>
     </type>
 
-    <type name="Magento\Checkout\Model\ShippingInformationManagement">
-        <plugin name="paazl_shipping_information_manager"
-                type="Paazl\CheckoutWidget\Plugin\Checkout\ShippingInformationManagementPlugin"/>
-    </type>
-
     <type name="Magento\Sales\Model\OrderRepository">
         <plugin name="paazl_order_repository"
                 type="Paazl\CheckoutWidget\Plugin\Sales\OrderRepositoryPlugin"/>

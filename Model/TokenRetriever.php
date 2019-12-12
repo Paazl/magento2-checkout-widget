@@ -111,7 +111,7 @@ class TokenRetriever
      * @return string
      * @throws LocalizedException
      */
-    public function retrieve(Quote $quote)
+    public function retrieveByQuote(Quote $quote)
     {
         if (!$this->token) {
             $reference = $this->getQuoteReference($quote);

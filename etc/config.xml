@@ -17,6 +17,8 @@
                 <model>Paazl\CheckoutWidget\Model\Carrier\Paazlshipping</model>
                 <name>Paazl</name>
                 <title>Paazl Shipping</title>
+                <housenumber_second_street>0</housenumber_second_street>
+                <housenumber_extension_third_street>0</housenumber_extension_third_street>
                 <infotext/>
                 <specificerrmsg>This shipping method is not available. To use this shipping method, please contact us.</specificerrmsg>
                 <widget_tabs>DELIVERY,STORE,PICKUP</widget_tabs>

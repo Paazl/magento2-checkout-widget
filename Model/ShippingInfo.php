@@ -25,11 +25,13 @@ class ShippingInfo extends DataObject
     const PICKUP_ACCOUNT_NUMBER = 'pickup_account_number';
     const PICKUP_DATE = 'pickup_date';
     const PICKUP_NAME = 'pickup_name';
+    const PICKUP_ADDRESS = 'pickup_address';
     const PRICE = 'price';
     const TITLE = 'title';
     const OPTION_TITLE = 'option_title';
     const ADDRESS = 'address';
     const PREFERRED_DELIVERY_DATE = 'preferred_delivery_date';
+    const CARRIER_PICKUP_DATE = 'carrier_pickup_date';
     /**#@- */
 
     /**
@@ -140,6 +142,23 @@ class ShippingInfo extends DataObject
      * @param string $value
      * @return $this
      */
+    public function setPickupAddress($value)
+    {
+        return $this->setData(self::PICKUP_ADDRESS, $value);
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getPickupAddress()
+    {
+        return $this->getData(self::PICKUP_ADDRESS);
+    }
+
+    /**
+     * @param string $value
+     * @return $this
+     */
     public function setPrice($value)
     {
         return $this->setData(self::PRICE, $value);
@@ -219,5 +238,22 @@ class ShippingInfo extends DataObject
     public function getPreferredDeliveryDate()
     {
         return $this->getData(self::PREFERRED_DELIVERY_DATE);
+    }
+
+    /**
+     * @param string $value
+     * @return $this
+     */
+    public function setCarrierPickupDate($value)
+    {
+        return $this->setData(self::CARRIER_PICKUP_DATE, $value);
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getCarrierPickupDate()
+    {
+        return $this->getData(self::CARRIER_PICKUP_DATE);
     }
 }

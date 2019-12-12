@@ -7,7 +7,11 @@
         xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/layout_generic.xsd">
     <container name="root">
         <block class="Paazl\CheckoutWidget\Block\Adminhtml\Order\View\ShippingAndHandling\PaazlStatus"
-               name="paazl_info"
-               template="Paazl_CheckoutWidget::order/view/shipping-and-handling-info/paazl-status.phtml"/>
+               name="shipping_and_handling_info.paazl_status">
+            <arguments>
+                <argument name="viewModel"
+                          xsi:type="object">Paazl\CheckoutWidget\ViewModel\PaazlStatus\DeliveryDate</argument>
+            </arguments>
+        </block>
     </container>
 </layout>

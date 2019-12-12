@@ -13,6 +13,7 @@ use Paazl\CheckoutWidget\Helper\General as GeneralHelper;
 use Paazl\CheckoutWidget\Model\Api\PaazlApiFactory;
 use Paazl\CheckoutWidget\Model\Checkout\LanguageProvider;
 use Paazl\CheckoutWidget\Model\Config;
+use Paazl\CheckoutWidget\Model\Handler\Item as ItemHandler;
 use Paazl\CheckoutWidget\Model\TokenRetriever;
 
 /**
@@ -41,6 +42,11 @@ class WidgetConfigProvider implements ConfigProviderInterface
     private $generalHelper;
 
     /**
+     * @var ItemHandler
+     */
+    private $itemHandler;
+
+    /**
      * @var TokenRetriever
      */
     private $tokenRetriever;
@@ -53,28 +59,33 @@ class WidgetConfigProvider implements ConfigProviderInterface
     /**
      * Widget constructor.
      *
-     * @param Config           $scopeConfig
-     * @param PaazlApiFactory  $paazlApi
-     * @param GeneralHelper    $generalHelper
-     * @param TokenRetriever   $tokenRetriever
-     * @param LanguageProvider $languageProvider
+     * @param Config            $scopeConfig
+     * @param PaazlApiFactory   $paazlApi
+     * @param GeneralHelper     $generalHelper
+     * @param ItemHandler       $itemHandler
+     * @param TokenRetriever    $tokenRetriever
+     * @param LanguageProvider  $languageProvider
      */
     public function __construct(
         Config $scopeConfig,
         PaazlApiFactory $paazlApi,
         GeneralHelper $generalHelper,
+        ItemHandler $itemHandler,
         TokenRetriever $tokenRetriever,
         LanguageProvider $languageProvider
     ) {
         $this->scopeConfig = $scopeConfig;
         $this->paazlApi = $paazlApi;
         $this->generalHelper = $generalHelper;
+        $this->itemHandler = $itemHandler;
         $this->tokenRetriever = $tokenRetriever;
         $this->languageProvider = $languageProvider;
     }
 
     /**
      * {@inheritDoc}
+     *
+     * @throws LocalizedException
      */
     public function getConfig()
     {
@@ -93,7 +104,7 @@ class WidgetConfigProvider implements ConfigProviderInterface
             $goods[] = [
                 'quantity' => (int)$item->getQty(),
                 'weight'   => doubleval($item->getWeight()),
-                'price'    => $this->formatPrice($item->getPrice())
+                'price'    => $this->itemHandler->getPriceValue($item)
             ];
         }
         $config = [
