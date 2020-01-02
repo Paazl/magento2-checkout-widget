@@ -346,4 +346,12 @@ class Config
     {
         return $this->getValue(self::API_CONFIG_PATH . '/title');
     }
+
+    /**
+     * @return bool
+     */
+    public function saveShippingInformationInstantly()
+    {
+        return !!$this->getValue(self::API_CONFIG_PATH . '/onestep_checkout_used');
+    }
 }

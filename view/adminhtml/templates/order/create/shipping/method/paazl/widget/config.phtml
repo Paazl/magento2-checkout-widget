@@ -1,0 +1,19 @@
+<?php
+/**
+ * Copyright © 2019 Paazl. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+
+// @codingStandardsIgnoreFile
+
+/* @var $block Paazl\CheckoutWidget\Block\Adminhtml\Order\Create\Shipping\Method\Paazl\Widget\Config */
+?>
+<script>
+    require(
+        ["Magento_Sales/order/create/form"],
+        function () {
+            Object.assign(order, <?= /* @escapeNotVerified */ $block->getSerializedWidgetConfig() ?>);
+        }
+    );
+</script>

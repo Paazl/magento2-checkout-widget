@@ -168,3 +168,16 @@ aside.paazl_order_data_form_modal .page-actions.floating-header {
 .paazl-delivery-date .value {
     margin-left: 1rem;
 }
+
+aside.paazl-widget-modal .modal-inner-wrap {
+    width: calc(720px + 6rem);
+}
+
+section.paazl.method-select {
+    padding-bottom: 0;
+}
+
+section.paazl.method-select section.paazl__body.body form.options {
+    max-height: 400px;
+    overflow-y: auto;
+}

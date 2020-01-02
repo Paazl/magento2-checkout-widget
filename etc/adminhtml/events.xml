@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<!--
+  ~ Copyright © 2019 Paazl. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="adminhtml_sales_order_create_process_data">
+        <observer name="paazl_admin_order_create_process_data" instance="Paazl\CheckoutWidget\Observer\Admin\Order\Create\ProcessData" />
+    </event>
+</config>

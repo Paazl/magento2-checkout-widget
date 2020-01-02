@@ -4,7 +4,7 @@
  * See COPYING.txt for license details.
  */
 
-namespace Paazl\CheckoutWidget\Model\Checkout;
+namespace Paazl\CheckoutWidget\Model\Admin\Order\Create;
 
 use Magento\Checkout\Model\ConfigProviderInterface;
 use Paazl\CheckoutWidget\Model\Api\UrlProvider;
@@ -13,8 +13,6 @@ use Paazl\CheckoutWidget\Model\Config;
 
 /**
  * Class PaazlConfigProvider
- *
- * @package Paazl\CheckoutWidget\Model\Checkout
  */
 class PaazlConfigProvider implements ConfigProviderInterface
 {
@@ -66,8 +64,6 @@ class PaazlConfigProvider implements ConfigProviderInterface
         $config['carrierCode'] = Paazlshipping::CODE;
         $config['methodCode'] = Paazlshipping::CODE;
         $config['baseApiUrl'] = $this->urlProvider->getBaseUrl();
-        $config['checkoutApiUrl'] = $this->urlProvider->getCheckoutUrl();
-        $config['saveShippingInfoInstantly'] = $this->config->saveShippingInformationInstantly();
         $config['googleMapKey'] = $this->config->getGoogleMapKey();
         $config['widgetConfig'] = $this->widgetConfigProvider->getConfig();
         $config['mode'] = $this->config->isProductionApiMode() ? 'live' : 'test';

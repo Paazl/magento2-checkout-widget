@@ -4,11 +4,10 @@
  * See COPYING.txt for license details.
  */
 
-namespace Paazl\CheckoutWidget\Model\Checkout;
+namespace Paazl\CheckoutWidget\Model\Admin\Order\Create;
 
-use Magento\Checkout\Helper\Data;
+use Magento\Backend\Model\Session\Quote as SessionQuote;
 use Magento\Checkout\Model\ConfigProviderInterface;
-use Magento\Directory\Model\Currency;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Quote\Model\Quote;
 use Magento\Quote\Model\Quote\Item\AbstractItem;
@@ -19,7 +18,6 @@ use Paazl\CheckoutWidget\Helper\General as GeneralHelper;
 use Paazl\CheckoutWidget\Model\Api\PaazlApiFactory;
 use Paazl\CheckoutWidget\Model\Api\UrlProvider;
 use Paazl\CheckoutWidget\Model\Config;
-use Paazl\CheckoutWidget\Model\Handler\Item as ItemHandler;
 use Paazl\CheckoutWidget\Model\TokenRetriever;
 
 /**
@@ -41,9 +39,9 @@ class WidgetConfigProvider implements ConfigProviderInterface
     private $scopeConfig;
 
     /**
-     * @var Data
+     * @var SessionQuote
      */
-    private $checkoutHelper;
+    private $sessionQuote;
 
     /**
      * @var OrderFactory
@@ -59,11 +57,6 @@ class WidgetConfigProvider implements ConfigProviderInterface
      * @var GeneralHelper
      */
     private $generalHelper;
-
-    /**
-     * @var ItemHandler
-     */
-    private $itemHandler;
 
     /**
      * @var TokenRetriever
@@ -86,35 +79,32 @@ class WidgetConfigProvider implements ConfigProviderInterface
     /**
      * Widget constructor.
      *
-     * @param Config            $scopeConfig
-     * @param Data              $checkoutHelper
-     * @param OrderFactory      $order
-     * @param PaazlApiFactory   $paazlApi
-     * @param GeneralHelper     $generalHelper
-     * @param ItemHandler       $itemHandler
-     * @param TokenRetriever    $tokenRetriever
-     * @param UrlProvider       $urlProvider
-     * @param LanguageProvider  $languageProvider
+     * @param Config           $scopeConfig
+     * @param SessionQuote     $sessionQuote
+     * @param OrderFactory     $order
+     * @param PaazlApiFactory  $paazlApi
+     * @param GeneralHelper    $generalHelper
+     * @param TokenRetriever   $tokenRetriever
+     * @param UrlProvider      $urlProvider
+     * @param LanguageProvider $languageProvider
      * @param ProductRepository $productRepository
      */
     public function __construct(
         Config $scopeConfig,
-        Data $checkoutHelper,
+        SessionQuote $sessionQuote,
         OrderFactory $order,
         PaazlApiFactory $paazlApi,
         GeneralHelper $generalHelper,
-        ItemHandler $itemHandler,
         TokenRetriever $tokenRetriever,
         UrlProvider $urlProvider,
         LanguageProvider $languageProvider,
         ProductRepository $productRepository
     ) {
         $this->scopeConfig = $scopeConfig;
-        $this->checkoutHelper = $checkoutHelper;
+        $this->sessionQuote = $sessionQuote;
         $this->order = $order;
         $this->paazlApi = $paazlApi;
         $this->generalHelper = $generalHelper;
-        $this->itemHandler = $itemHandler;
         $this->tokenRetriever = $tokenRetriever;
         $this->urlProvider = $urlProvider;
         $this->languageProvider = $languageProvider;
@@ -123,8 +113,6 @@ class WidgetConfigProvider implements ConfigProviderInterface
 
     /**
      * {@inheritDoc}
-     *
-     * @throws LocalizedException
      */
     public function getConfig()
     {
@@ -144,7 +132,7 @@ class WidgetConfigProvider implements ConfigProviderInterface
             $goodsItem = [
                 "quantity" => (int)$item->getQty(),
                 "weight"   => doubleval($item->getWeight()),
-                "price"    => $this->itemHandler->getPriceValue($item)
+                "price"    => $this->formatPrice($item->getPrice())
             ];
 
             if (($itemNumberOfProcessingDays = $this->getProductNumberOfProcessingDays($item))
@@ -175,7 +163,7 @@ class WidgetConfigProvider implements ConfigProviderInterface
                 "startDate"    => date("Y-m-d"),
                 "numberOfDays" => 10
             ],
-            "currency"                   => $this->scopeConfig->getValue(Currency::XML_PATH_CURRENCY_DEFAULT),
+            "currency"                   => "EUR",
             "deliveryOptionDateFormat"   => "ddd DD MMM",
             "deliveryEstimateDateFormat" => "dddd DD MMMM",
             "pickupOptionDateFormat"     => "ddd DD MMM",
@@ -198,7 +186,7 @@ class WidgetConfigProvider implements ConfigProviderInterface
 
         $config = array_merge($config, $this->languageProvider->getConfig());
 
-        $this->generalHelper->addTolog('request', $config);
+        $this->generalHelper->addTolog('config', $config);
 
         return $config;
     }
@@ -208,7 +196,7 @@ class WidgetConfigProvider implements ConfigProviderInterface
      */
     public function getQuote()
     {
-        return $this->checkoutHelper->getQuote();
+        return $this->sessionQuote->getQuote();
     }
 
     /**
@@ -327,7 +315,7 @@ class WidgetConfigProvider implements ConfigProviderInterface
      */
     public function getProductNumberOfProcessingDays(AbstractItem $item)
     {
-        $product = $this->productRepository->getById($item->getProduct()->getId());
+        $product = $this->productRepository->get($item->getSku());
 
         if ($attribute = $this->scopeConfig->getProductAttributeNumberOfProcessingDays()) {
             if (($numberOfProcessingDays = $product->getData($attribute)) !== null) {
@@ -408,7 +396,7 @@ class WidgetConfigProvider implements ConfigProviderInterface
      */
     public function getProductDeliveryMatrix(AbstractItem $item)
     {
-        $product = $this->productRepository->getById($item->getProduct()->getId());
+        $product = $this->productRepository->get($item->getSku());
 
         if ($attribute = $this->scopeConfig->getProductAttributeDeliveryMatrix()) {
             if (($deliveryMatrixCode = $product->getData($attribute)) !== null

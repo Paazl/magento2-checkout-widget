@@ -116,21 +116,8 @@ class TokenRetriever
         if (!$this->token) {
             $reference = $this->getQuoteReference($quote);
 
-            if ($reference->getToken()) {
-                try {
-                    $api = $this->apiFactory->create();
-                    // Check if token is expired
-                    if (($token = $api->getApiToken($this->referenceBuilder->getQuoteReference($quote)))
-                        && $token->getToken() !== $reference->getToken()
-                    ) {
-                        // ... and refresh it in QuoteReference
-                        $this->refreshQuoteReferenceApiToken($reference, $token->getToken());
-                    }
-                } catch (\Exception $exception) {
-                    throw new LocalizedException(__($exception->getMessage()), $exception);
-                }
+            if ($reference->getToken() && !$reference->isTokenExpired()) {
                 $this->token = $reference->getToken();
-
                 return $this->token;
             }
 
