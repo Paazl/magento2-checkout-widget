@@ -7,21 +7,19 @@
 
 <h2>About Paazl</h2>
 
-Paazl enables international brands and retailers to create the ultimate last mile experience.                                            
+Paazl is a carrier management and delivery experience platform for global e-commerce.  Our mission is to help brands and retailers offer the best delivery everywhere.
 
-Our platform connects you to delivery methods worldwide. From any type of home delivery to thousands of carrier collection points. Paazl even helps you with your stores to achieve a truly, omnichannel approach.
+Our extensions enable a seamless and intuitive display of delivery options in the check-out of your webshop. They support a wide range of home delivery options, carrier collection points and click & collect via your local stores. The extensions also provides timeframe availability, nominated day selection and ETA mechanisms. Powerful algorithms calculate the right delivery for every customer.
 
-Use our extensions to power customer experience in your webshop. Paazl personalizes delivery methods, displaying these seamlessly and intuitively in your checkout. And with clear information on when to expect delivery we help maximizing conversion.
+Our warehousing solutions take care of the shipping labels, carrier manifesting, electronic customs documentation and personalized track & trace notifications. Your customer service team can tap directly into our systems for real time monitoring.
 
-Connect your warehouse to our platform to automate the shipping process. We facilitate shipping labels of broad range of local, national and global e-commerce carriers. We offer a flexible solution and speed up your go-to-market.  
-
-Paazl track & trace allows you to engage customers with your own look & feel. We help you make delivery a really branded experience, building trust with pro-active communication.
+In a nutshell, Paazl provides the tools to scale e-commerce delivery globally. Our carrier management and delivery experience platform increases carrier flexibility, go-to-market speed and customer loyalty, lowering shipping costs as well as driving long-term revenue
 
 <h2>The Paazl Magento2 extension</h2>
 
 The new Paazl Magento2 extension is all about the delivery experience of consumers. It comes with the brand new Paazl Checkout Widget that helps you display any type delivery method in your Magento checkout ([See more here](https://vimeo.com/362771849/)). The typical Magento2 customer for this extension has international ambitions, high volume delivery and processes its shipments via an ERP/OMS/WMS. See also our [Wiki](https://github.com/Paazl/magento2-checkout-widget/wiki) for the differences with our Magento1 extension.
 
-Note that the Paazl Magento2 extension offers the basics for integrating Paazl in your checkout. Always make sure to align with other extensions and/or existing customisation.
+Note that the Paazl Magento2 extension offers all the basics for integrating Paazl in your checkout. Always make sure to align with other extensions and/or existing customisation.
 
 <h2>Installation using Composer</h2>
 Magento 2 uses Composer to manage the module package and the library. Composer is a dependency manager for PHP. Composer declares the libraries your project depends on and installs them for you.
