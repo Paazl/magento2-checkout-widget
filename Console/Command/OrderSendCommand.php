@@ -11,7 +11,7 @@ use Magento\Framework\App\State;
 use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Api\OrderRepositoryInterface;
-use Paazl\CheckoutWidget\Model\Api\Processor\SendToService;
+use Paazl\CheckoutWidget\Model\Api\Processor\SendToService\Proxy as SendToServiceProxy;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -49,12 +49,12 @@ class OrderSendCommand extends Command
      * OrderSendCommand constructor.
      *
      * @param OrderRepositoryInterface $orderRepository
-     * @param SendToService            $sendToService
+     * @param SendToServiceProxy       $sendToService
      * @param State                    $state
      */
     public function __construct(
         OrderRepositoryInterface $orderRepository,
-        SendToService $sendToService,
+        SendToServiceProxy $sendToService,
         State $state
     ) {
         $this->orderRepository = $orderRepository;

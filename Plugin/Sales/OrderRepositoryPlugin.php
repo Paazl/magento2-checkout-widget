@@ -122,7 +122,6 @@ class OrderRepositoryPlugin
 
         try {
             $this->orderReferenceRepository->save($orderReference);
-            $this->sendToService->process($order);
         } catch (\Exception $e) {
             $this->generalHelper->addTolog('exception', $e->getMessage());
         }

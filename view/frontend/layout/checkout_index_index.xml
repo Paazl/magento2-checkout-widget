@@ -40,17 +40,6 @@
                                                         <item name="shippingMethodListTemplate" xsi:type="string">Paazl_CheckoutWidget/checkout/shipping-method-list</item>
                                                         <item name="shippingMethodItemTemplate" xsi:type="string">Paazl_CheckoutWidget/checkout/shipping-method-item</item>
                                                     </item>
-                                                    <item name="children" xsi:type="array">
-                                                        <item name="shippingAdditional" xsi:type="array">
-                                                            <item name="children" xsi:type="array">
-                                                                <item name="paazl_checkoutwidget" xsi:type="array">
-                                                                    <item name="component" xsi:type="string">
-                                                                        Paazl_CheckoutWidget/js/checkout/view/widget-config
-                                                                    </item>
-                                                                </item>
-                                                            </item>
-                                                        </item>
-                                                    </item>
                                                 </item>
                                             </item>
                                         </item>

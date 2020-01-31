@@ -15,6 +15,7 @@ define([
 
     var shippingConfig = window.checkoutConfig.paazlshipping || {};
     var widgetConfig = shippingConfig.widgetConfig || {};
+    var mapActive = false;
 
     domReady(function () {
         /**
@@ -69,7 +70,6 @@ define([
 
     return Component.extend({
         configJson: ko.observable(),
-        widgetLoaded: false,
         customerAddressId: null,
         state: {
             postcode: null,
@@ -78,9 +78,18 @@ define([
 
         initialize: function () {
             this._super();
-            this.getConfigJson(widgetConfig);
+            this.initWidget();
+        },
 
-            if (shippingConfig.googleMapKey) {
+        initWidget: function () {
+            if (this.configJson() === undefined) {
+                this.configJson(widgetConfig);
+            }
+            this.initMap();
+        },
+
+        initMap: function () {
+            if ((!mapActive) && shippingConfig.googleMapKey) {
                 (function (i, s, o, g, r, a, m) {
                     a = s.createElement(o),
                         m = s.getElementsByTagName(o)[0];
@@ -93,6 +102,8 @@ define([
                     'script',
                     '//maps.googleapis.com/maps/api/js?key=' + shippingConfig.googleMapKey
                 );
+
+                mapActive = true;
             }
         },
 
@@ -128,6 +139,7 @@ define([
         },
 
         loadWidget: function (postcode, country) {
+            this.initWidget();
             var data = this.configJson(),
                 self = this;
 
@@ -155,7 +167,6 @@ define([
                  */
             };
 
-            self.widgetLoaded = true;
             self.customerAddressId = quote.shippingAddress()['customerAddressId'];
 
             require([this.getJsName()], infoUpdate);
