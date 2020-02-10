@@ -215,7 +215,7 @@ class Order
         }
 
         $address = implode(' ', $shippingAddress->getStreet());
-        $pattern = '/^(?<street>[\w[:alpha:]]+[ \w[:alpha:]]*) (?<houseNumber>\d{1,5})((?<houseNumberExtension>[\-\/\s]*\w+)*)/';
+        $pattern = '/^(?<street>.+) (?<houseNumber>[0-9]{1,5})(?<houseNumberExtension>[[:punct:]\s]*.+)*$/';
         preg_match($pattern, $address, $matches);
         $parsedAddress = array_filter($matches, function ($key) {
             return !is_int($key);
