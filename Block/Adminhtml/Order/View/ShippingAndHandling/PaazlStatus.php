@@ -67,7 +67,7 @@ class PaazlStatus extends AbstractOrder
             return parent::_prepareLayout();
         }
 
-        if ($this->getPaazlOrder()->isSent()) {
+        if ($this->getPaazlOrder()->canResend()) {
             $onclick = "submitAndReloadArea($('paazl-order-status').parentNode.parentNode, '" . $this->getResendUrl() . "')";
             $resendButton = $this->getLayout()
                 ->createBlock(Button::class)
@@ -80,18 +80,23 @@ class PaazlStatus extends AbstractOrder
 
             return parent::_prepareLayout();
         }
-        $onclick = "submitAndReloadArea($('paazl-order-status').parentNode.parentNode, '" . $this->getRetryUrl() . "')";
-        $retryButton = $this->getLayout()
-            ->createBlock(Button::class)
-            ->setData([
-                'label' => __('Retry'),
-                'class' => 'action-retry action-secondary',
-                'onclick' => $onclick
-            ]);
-        $editBlock = $this->getLayout()
-            ->createBlock(PaazlEdit::class);
-        $this->setChild('retry_button', $retryButton);
-        $this->setChild('edit_block', $editBlock);
+        if ($this->getPaazlOrder()->canEdit()) {
+            $editBlock = $this->getLayout()->createBlock(PaazlEdit::class);
+            $this->setChild('edit_block', $editBlock);
+        }
+
+        if ($this->getPaazlOrder()->canRetry()) {
+            $onclick = "submitAndReloadArea($('paazl-order-status').parentNode.parentNode, '" . $this->getRetryUrl() . "')";
+            $retryButton = $this->getLayout()
+                ->createBlock(Button::class)
+                ->setData([
+                    'label' => __('Retry'),
+                    'class' => 'action-retry action-secondary',
+                    'onclick' => $onclick
+                ]);
+
+            $this->setChild('retry_button', $retryButton);
+        }
 
         return parent::_prepareLayout();
     }

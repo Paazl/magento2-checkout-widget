@@ -78,4 +78,8 @@
             </argument>
         </arguments>
     </type>
+
+    <type name="\Magento\Quote\Api\CartManagementInterface">
+        <plugin name="paazl_checkoutwidget" type="\Paazl\CheckoutWidget\Plugin\Quote\CartManagementPlugin"/>
+    </type>
 </config>

@@ -65,4 +65,23 @@ interface OrderReferenceInterface
      * @return bool
      */
     public function isSent();
+
+    /**
+     * Can resend order again after successful send.
+     *
+     * @return bool
+     */
+    public function canResend();
+
+    /**
+     * Can resend order again after failed send.
+     *
+     * @return bool
+     */
+    public function canRetry();
+
+    /**
+     * @return bool
+     */
+    public function canEdit();
 }

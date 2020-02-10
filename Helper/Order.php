@@ -23,8 +23,17 @@ class Order
      */
     public function isPaazlOrder(OrderInterface $order)
     {
-        $shippingMethod = $order->getShippingMethod();
+        return $this->isPaazlShippingMethod($order->getShippingMethod());
+    }
 
-        return $shippingMethod == Paazlshipping::CODE . '_' . Paazlshipping::CODE;
+    /**
+     * @param string $shippingMethod
+     *
+     * @return bool
+     */
+    public function isPaazlShippingMethod(string $shippingMethod)
+    {
+        $params = explode('_', $shippingMethod, 2);
+        return !empty($params[0]) && ($params[0] === Paazlshipping::CODE);
     }
 }

@@ -142,7 +142,7 @@ class Info implements ArgumentInterface
         /** @var ShippingInfo $orderInfo */
         $orderInfo = $this->getOrderInfo();
 
-        if ($orderInfo->getType() !== DeliveryType::PICKUP) {
+        if (!$orderInfo || ($orderInfo->getType() !== DeliveryType::PICKUP)) {
             return '';
         }
 

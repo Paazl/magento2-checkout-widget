@@ -85,4 +85,28 @@ class OrderReference extends AbstractModel implements OrderReferenceInterface
     {
         return (!empty($this->getExtSentAt()));
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function canResend()
+    {
+        return $this->isSent();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function canRetry()
+    {
+        return (!$this->isSent()) && (!empty($this->getExtShippingInfo()));
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function canEdit()
+    {
+        return !$this->isSent();
+    }
 }

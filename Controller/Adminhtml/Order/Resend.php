@@ -62,7 +62,8 @@ class Resend extends Order
         LoggerInterface $logger
     ) {
         $this->sendToService = $sendToService;
-        parent::__construct($context,
+        parent::__construct(
+            $context,
             $coreRegistry,
             $fileFactory,
             $translateInline,

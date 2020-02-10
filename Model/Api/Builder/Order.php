@@ -94,6 +94,10 @@ class Order
         }
 
         $extInformation = $this->extInfoHandler->getInfoFromOrderReference($reference);
+        if ($extInformation === null) {
+            throw new NotFoundException(__('Reference information not found'));
+        }
+
         /** @var Address $shippingAddress */
         $shippingAddress = $order->getShippingAddress();
         if ($extInformation->getType() === DeliveryType::PICKUP) {
