@@ -165,7 +165,7 @@ class Paazlshipping extends AbstractCarrier implements CarrierInterface
 
         /** @var \Magento\Shipping\Model\Rate\Result $result */
         $result = $this->rateResultFactory->create();
-        $shippingPrice = $this->getConfigData('price');
+        $shippingPrice = 0;
         $method = $this->rateMethodFactory->create();
 
         /**
@@ -177,7 +177,16 @@ class Paazlshipping extends AbstractCarrier implements CarrierInterface
         // Recalculate shipping price
         $quote = $this->extractQuote($request);
         if (!$quote || (!$quote->getId())) {
-            return null;
+            /*
+             * No quote. Can happen when 1st product was added to quote.
+             * Return method's "placeholder", we'll obtain a token at a later stage.
+             */
+            $method->setCarrier($this->getCarrierCode());
+            $method->setCarrierTitle($this->getConfigData('title'));
+            $method->setPrice($shippingPrice);
+            $method->setCost($shippingPrice);
+            $result->append($method);
+            return $result;
         }
 
         try {
