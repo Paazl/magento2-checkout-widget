@@ -93,6 +93,11 @@ class OrderRepositoryPlugin
         OrderInterface $order
     ) {
         $shippingMethod = $order->getShippingMethod(true);
+
+        if (!$shippingMethod) {
+            return $order;
+        }
+
         $carrierCode = $shippingMethod->getData('carrier_code');
 
         if ($carrierCode !== Paazlshipping::CODE) {
