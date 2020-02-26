@@ -24,7 +24,7 @@ define([
             return {
                 responsive: true,
                 clickableOverlay: false,
-                title: $.mage.__('Choice shipping method'),
+                title: $.mage.__('Choose shipping method'),
                 modalClass: 'popup paazl-widget-modal',
                 buttons: [{
                     text: $.mage.__('Continue'),

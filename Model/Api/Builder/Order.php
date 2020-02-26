@@ -225,7 +225,7 @@ class Order
     }
 
     /**
-     * @param $order
+     * @param OrderInterface $order
      *
      * @return array
      * @throws LocalizedException
@@ -256,6 +256,7 @@ class Order
             }
 
             if ($dimensions = $this->getProductDimemension($item)) {
+                // phpcs:ignore Magento2.Performance
                 $itemData = array_merge($itemData, $dimensions);
             }
 

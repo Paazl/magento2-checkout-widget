@@ -10,7 +10,6 @@ use Magento\Checkout\Model\ConfigProviderInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Model\Order as OrderModel;
 use Paazl\CheckoutWidget\Helper\General as GeneralHelper;
-use Paazl\CheckoutWidget\Model\Api\PaazlApiFactory;
 use Paazl\CheckoutWidget\Model\Checkout\LanguageProvider;
 use Paazl\CheckoutWidget\Model\Config;
 use Paazl\CheckoutWidget\Model\Handler\Item as ItemHandler;
@@ -30,11 +29,6 @@ class WidgetConfigProvider implements ConfigProviderInterface
      * @var OrderModel
      */
     private $order;
-
-    /**
-     * @var PaazlApiFactory
-     */
-    private $paazlApi;
 
     /**
      * @var GeneralHelper
@@ -60,7 +54,6 @@ class WidgetConfigProvider implements ConfigProviderInterface
      * Widget constructor.
      *
      * @param Config            $scopeConfig
-     * @param PaazlApiFactory   $paazlApi
      * @param GeneralHelper     $generalHelper
      * @param ItemHandler       $itemHandler
      * @param TokenRetriever    $tokenRetriever
@@ -68,14 +61,12 @@ class WidgetConfigProvider implements ConfigProviderInterface
      */
     public function __construct(
         Config $scopeConfig,
-        PaazlApiFactory $paazlApi,
         GeneralHelper $generalHelper,
         ItemHandler $itemHandler,
         TokenRetriever $tokenRetriever,
         LanguageProvider $languageProvider
     ) {
         $this->scopeConfig = $scopeConfig;
-        $this->paazlApi = $paazlApi;
         $this->generalHelper = $generalHelper;
         $this->itemHandler = $itemHandler;
         $this->tokenRetriever = $tokenRetriever;
@@ -122,7 +113,7 @@ class WidgetConfigProvider implements ConfigProviderInterface
                 'numberOfGoods' => $this->getProductsCount(),
                 'goods'         => $goods
             ],
-            'currency'                   => 'EUR',
+            'currency'                   => $this->getOrder()->getOrderCurrency(),
             'sortingModel'               => [
                 'orderBy'       => 'PRICE',
                 'sortOrder'     => 'ASC'
@@ -156,8 +147,8 @@ class WidgetConfigProvider implements ConfigProviderInterface
     /**
      * Retrieves price in price format
      *
-     * @param $price
-     * @return double
+     * @param double|float $price
+     * @return string
      */
     public function formatPrice($price)
     {

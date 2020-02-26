@@ -122,7 +122,7 @@ class TokenRetriever
             }
 
             try {
-                $api = $this->apiFactory->create();
+                $api = $this->apiFactory->create($quote->getStoreId());
                 $token = $api->getApiToken($this->referenceBuilder->getQuoteReference($quote));
                 $gmtNow = $this->timezone->date(null, null, false);
                 // @codingStandardsIgnoreLine
@@ -150,7 +150,7 @@ class TokenRetriever
     {
         if (!$this->token) {
             try {
-                $api = $this->apiFactory->create();
+                $api = $this->apiFactory->create($order->getStoreId());
                 $token = $api->getApiToken($this->referenceBuilder->getOrderReference($order));
                 $this->token = $token->getToken();
             } catch (\Exception $exception) {
@@ -165,7 +165,7 @@ class TokenRetriever
      * Refreshes API token in quote reference
      *
      * @param QuoteReferenceInterface $reference
-     * @param $token
+     * @param string $token
      * @throws LocalizedException
      */
     protected function refreshQuoteReferenceApiToken(QuoteReferenceInterface $reference, $token)

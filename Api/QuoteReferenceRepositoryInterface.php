@@ -18,7 +18,7 @@ interface QuoteReferenceRepositoryInterface
 {
 
     /**
-     * @param $quoteId
+     * @param int $quoteId
      *
      * @return QuoteReferenceInterface
      * @throws NoSuchEntityException

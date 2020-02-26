@@ -13,6 +13,7 @@ use Paazl\CheckoutWidget\Model\Api\ApiException;
 use Paazl\CheckoutWidget\Model\Api\Builder\Reference;
 use Paazl\CheckoutWidget\Model\Api\Converter\Checkout\ToShippingInfo;
 use Paazl\CheckoutWidget\Model\Api\PaazlApi;
+use Paazl\CheckoutWidget\Model\Api\PaazlApiFactory;
 use Paazl\CheckoutWidget\Model\ExtInfoHandler;
 
 /**
@@ -24,9 +25,9 @@ class CheckoutInfoToQuote
 {
 
     /**
-     * @var PaazlApi
+     * @var PaazlApiFactory
      */
-    private $api;
+    private $paazlApiFactory;
 
     /**
      * @var Reference
@@ -51,20 +52,20 @@ class CheckoutInfoToQuote
     /**
      * CheckoutInfoToQuote constructor.
      *
-     * @param PaazlApi       $api
-     * @param Reference      $referenceBuilder
-     * @param ToShippingInfo $shippingInfo
-     * @param ExtInfoHandler $extInfoHandler
-     * @param General        $generalHelper
+     * @param PaazlApiFactory $paazlApiFactory
+     * @param Reference       $referenceBuilder
+     * @param ToShippingInfo  $shippingInfo
+     * @param ExtInfoHandler  $extInfoHandler
+     * @param General         $generalHelper
      */
     public function __construct(
-        PaazlApi $api,
+        PaazlApiFactory $paazlApiFactory,
         Reference $referenceBuilder,
         ToShippingInfo $shippingInfo,
         ExtInfoHandler $extInfoHandler,
         General $generalHelper
     ) {
-        $this->api = $api;
+        $this->paazlApiFactory = $paazlApiFactory;
         $this->referenceBuilder = $referenceBuilder;
         $this->shippingInfo = $shippingInfo;
         $this->extInfoHandler = $extInfoHandler;
@@ -80,7 +81,9 @@ class CheckoutInfoToQuote
     {
         try {
             // Getting the checkout information from Paazl
-            $result = $this->api->fetchCheckoutData($this->referenceBuilder->getQuoteReference($quote));
+            /** @var PaazlApi $paazlApi */
+            $paazlApi = $this->paazlApiFactory->create($quote->getStoreId());
+            $result = $paazlApi->fetchCheckoutData($this->referenceBuilder->getQuoteReference($quote));
 
             // Converting response to extInfo
             $info = $this->shippingInfo->convert($result);

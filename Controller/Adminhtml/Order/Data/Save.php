@@ -7,7 +7,7 @@
 namespace Paazl\CheckoutWidget\Controller\Adminhtml\Order\Data;
 
 use Magento\Backend\App\Action;
-use Magento\Backend\Model\Session\Proxy as Session;
+use Magento\Backend\Model\Session;
 use Magento\Backend\Model\View\Result\Redirect;
 use Magento\Framework\Controller\Result\Json;
 use Magento\Framework\Controller\Result\JsonFactory;
@@ -26,7 +26,6 @@ use Paazl\CheckoutWidget\Api\OrderReferenceRepositoryInterface;
 use Paazl\CheckoutWidget\Controller\Adminhtml\Order;
 use Paazl\CheckoutWidget\Model\Api\Field\DeliveryType;
 use Paazl\CheckoutWidget\Model\Api\Processor\SendToService;
-use Paazl\CheckoutWidget\Model\Api\PaazlApi;
 use Paazl\CheckoutWidget\Model\Api\Builder\Order as OrderBuilder;
 use Paazl\CheckoutWidget\Model\ExtInfoHandler;
 use Paazl\CheckoutWidget\Model\Config;
@@ -39,28 +38,41 @@ class Save extends Order
 {
     const DEFAULT_MESSAGE_KEY = 'message';
 
-    /** @var PaazlApi */
-    protected $paazlApi;
-
-    /** @var SerializerInterface */
+    /**
+     * @var SerializerInterface
+     */
     protected $serializer;
 
-    /** @var LayoutFactory */
+    /**
+     * @var LayoutFactory
+     */
     private $layoutFactory;
 
-    /** @var Session */
+    /**
+     * @var Session
+     */
     private $session;
 
-    /** @var OrderReferenceRepositoryInterface */
+    /**
+     * @var OrderReferenceRepositoryInterface
+     */
     private $orderReferenceRepository;
 
-    /** @var OrderBuilder */
+    /**
+     * @var OrderBuilder
+     */
     private $orderBuilder;
 
-    /** @var ExtInfoHandler */
+    /**
+     * @var ExtInfoHandler
+     */
     private $extInfoHandler;
 
+    /**
+     * @var Config
+     */
     private $scopeConfig;
+
     /**
      * @var ShippingInfoFactory
      */
@@ -74,7 +86,6 @@ class Save extends Order
      * @param PageFactory                       $resultPageFactory
      * @param OrderRepositoryInterface          $orderRepository
      * @param SendToService                     $sendToService
-     * @param PaazlApi                          $paazlApi
      * @param SerializerInterface               $serializer
      * @param LayoutFactory                     $layoutFactory
      * @param Session                           $session
@@ -90,7 +101,6 @@ class Save extends Order
         PageFactory $resultPageFactory,
         OrderRepositoryInterface $orderRepository,
         SendToService $sendToService,
-        PaazlApi $paazlApi,
         SerializerInterface $serializer,
         LayoutFactory $layoutFactory,
         Session $session,
@@ -107,7 +117,6 @@ class Save extends Order
             $orderRepository,
             $sendToService
         );
-        $this->paazlApi = $paazlApi;
         $this->serializer = $serializer;
         $this->layoutFactory = $layoutFactory;
         $this->session = $session;

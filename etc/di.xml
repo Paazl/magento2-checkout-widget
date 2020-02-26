@@ -49,6 +49,17 @@
         </arguments>
     </type>
 
+    <type name="Paazl\CheckoutWidget\Console\Command\OrderSendCommand">
+        <arguments>
+            <argument name="orderRepository"
+                      xsi:type="object">Magento\Sales\Api\OrderRepositoryInterface\Proxy</argument>
+            <argument name="sendToService"
+                      xsi:type="object">Paazl\CheckoutWidget\Model\Api\Processor\SendToService\Proxy</argument>
+            <argument name="state"
+                      xsi:type="object">Magento\Framework\App\State\Proxy</argument>
+        </arguments>
+    </type>
+
     <type name="Magento\Framework\View\Asset\Minification">
         <plugin name="paazl-minification-plugin" type="Paazl\CheckoutWidget\Plugin\ExcludeFromMinification"/>
     </type>

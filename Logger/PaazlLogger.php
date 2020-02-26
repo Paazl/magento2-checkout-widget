@@ -17,8 +17,8 @@ class PaazlLogger extends Logger
 {
 
     /**
-     * @param $type
-     * @param $data
+     * @param string $type
+     * @param mixed $data
      */
     public function add($type, $data)
     {

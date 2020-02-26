@@ -68,7 +68,8 @@ class PaazlStatus extends AbstractOrder
         }
 
         if ($this->getPaazlOrder()->canResend()) {
-            $onclick = "submitAndReloadArea($('paazl-order-status').parentNode.parentNode, '" . $this->getResendUrl() . "')";
+            $onclick = "submitAndReloadArea($('paazl-order-status').parentNode.parentNode, '" .
+                $this->getResendUrl() . "')";
             $resendButton = $this->getLayout()
                 ->createBlock(Button::class)
                 ->setData([
@@ -86,7 +87,8 @@ class PaazlStatus extends AbstractOrder
         }
 
         if ($this->getPaazlOrder()->canRetry()) {
-            $onclick = "submitAndReloadArea($('paazl-order-status').parentNode.parentNode, '" . $this->getRetryUrl() . "')";
+            $onclick = "submitAndReloadArea($('paazl-order-status').parentNode.parentNode, '" .
+                $this->getRetryUrl() . "')";
             $retryButton = $this->getLayout()
                 ->createBlock(Button::class)
                 ->setData([
@@ -163,7 +165,8 @@ class PaazlStatus extends AbstractOrder
     {
         if (null === $this->paazlOrder) {
             try {
-                $this->paazlOrder = $this->getOrderReferenceRepository()->getByOrderId($this->getOrder()->getEntityId());
+                $this->paazlOrder =
+                    $this->getOrderReferenceRepository()->getByOrderId($this->getOrder()->getEntityId());
             } catch (NoSuchEntityException $exception) {
                 $this->paazlOrder = false;
             }

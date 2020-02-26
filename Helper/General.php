@@ -91,8 +91,8 @@ class General extends AbstractHelper
     }
 
     /**
-     * @param $type
-     * @param $data
+     * @param string $type
+     * @param mixed $data
      */
     public function addTolog($type, $data)
     {

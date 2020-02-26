@@ -8,6 +8,7 @@ namespace Paazl\CheckoutWidget\Model\Checkout;
 
 use Magento\Checkout\Model\ConfigProviderInterface;
 use Paazl\CheckoutWidget\Model\Api\UrlProvider;
+use Paazl\CheckoutWidget\Model\Api\UrlProviderFactory;
 use Paazl\CheckoutWidget\Model\Carrier\Paazlshipping;
 use Paazl\CheckoutWidget\Model\Config;
 
@@ -37,16 +38,16 @@ class PaazlConfigProvider implements ConfigProviderInterface
      * PaazlConfigProvider constructor.
      *
      * @param Config               $config
-     * @param UrlProvider          $urlProvider
+     * @param UrlProviderFactory   $urlProviderFactory
      * @param WidgetConfigProvider $widgetConfigProvider
      */
     public function __construct(
         Config $config,
-        UrlProvider $urlProvider,
+        UrlProviderFactory $urlProviderFactory,
         WidgetConfigProvider $widgetConfigProvider
     ) {
         $this->config = $config;
-        $this->urlProvider = $urlProvider;
+        $this->urlProvider = $urlProviderFactory->create();
         $this->widgetConfigProvider = $widgetConfigProvider;
     }
 

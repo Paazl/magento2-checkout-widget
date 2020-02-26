@@ -48,7 +48,7 @@ class CartManagementPlugin
 
     /**
      * @param CartManagementInterface $subject
-     * @param                         $cartId
+     * @param int                     $cartId
      * @param PaymentInterface|null   $paymentMethod
      *
      * @return null

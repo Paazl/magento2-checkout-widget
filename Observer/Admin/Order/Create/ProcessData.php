@@ -12,10 +12,8 @@ use Magento\Framework\Message\ManagerInterface;
 use Magento\Sales\Model\AdminOrder\Create as OrderCreateModel;
 use Magento\Quote\Model\Quote;
 use Paazl\CheckoutWidget\Model\Api\Builder\Reference;
-use Paazl\CheckoutWidget\Model\Api\PaazlApi;
 use Paazl\CheckoutWidget\Model\Api\Processor\CheckoutInfoToQuote;
 use Paazl\CheckoutWidget\Model\Carrier\Paazlshipping;
-
 
 class ProcessData implements ObserverInterface
 {
@@ -30,11 +28,6 @@ class ProcessData implements ObserverInterface
     private $checkoutInfoToQuote;
 
     /**
-     * @var PaazlApi
-     */
-    private $api;
-
-    /**
      * @var Reference
      */
     private $referenceBuilder;
@@ -44,18 +37,15 @@ class ProcessData implements ObserverInterface
      *
      * @param ManagerInterface $messageManager
      * @param CheckoutInfoToQuote $checkoutInfoToQuote
-     * @param PaazlApi $api
      * @param Reference $referenceBuilder
      */
     public function __construct(
         ManagerInterface $messageManager,
         CheckoutInfoToQuote $checkoutInfoToQuote,
-        PaazlApi $api,
         Reference $referenceBuilder
     ) {
         $this->messageManager = $messageManager;
         $this->checkoutInfoToQuote = $checkoutInfoToQuote;
-        $this->api = $api;
         $this->referenceBuilder = $referenceBuilder;
     }
 
@@ -71,7 +61,7 @@ class ProcessData implements ObserverInterface
             /** @var Quote $quote */
             $quote = $orderCreateModel->getQuote();
             $this->checkoutInfoToQuote->process($quote);
-            $quote->getShippingAddress()->setCollectShippingRates(true);
+            $quote->getShippingAddress()->setCollectShippingRates(1);
         }
     }
 }

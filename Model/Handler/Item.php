@@ -22,6 +22,11 @@ class Item
      */
     private $generalHelper;
 
+    /**
+     * Item constructor.
+     *
+     * @param GeneralHelper $generalHelper
+     */
     public function __construct(GeneralHelper $generalHelper)
     {
         $this->generalHelper = $generalHelper;
@@ -31,8 +36,8 @@ class Item
      * Gets formatted price from quote or order item
      * When price value = 0 method will return value equivalent 0.01
      *
-     * @param $item
-     * @return string
+     * @param AbstractExtensibleModel $item
+     * @return float
      * @throws LocalizedException
      */
     public function getPriceValue(AbstractExtensibleModel $item)

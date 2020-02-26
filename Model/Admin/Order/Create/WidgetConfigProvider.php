@@ -15,8 +15,6 @@ use Magento\Sales\Model\OrderFactory;
 use Magento\Catalog\Model\ProductRepository;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Paazl\CheckoutWidget\Helper\General as GeneralHelper;
-use Paazl\CheckoutWidget\Model\Api\PaazlApiFactory;
-use Paazl\CheckoutWidget\Model\Api\UrlProvider;
 use Paazl\CheckoutWidget\Model\Config;
 use Paazl\CheckoutWidget\Model\TokenRetriever;
 
@@ -49,11 +47,6 @@ class WidgetConfigProvider implements ConfigProviderInterface
     private $order;
 
     /**
-     * @var PaazlApiFactory
-     */
-    private $paazlApi;
-
-    /**
      * @var GeneralHelper
      */
     private $generalHelper;
@@ -64,16 +57,13 @@ class WidgetConfigProvider implements ConfigProviderInterface
     private $tokenRetriever;
 
     /**
-     * @var UrlProvider
-     */
-    private $urlProvider;
-
-    /**
      * @var LanguageProvider
      */
     private $languageProvider;
 
-    /** @var ProductRepository */
+    /**
+     * @var ProductRepository
+     */
     private $productRepository;
 
     /**
@@ -82,10 +72,8 @@ class WidgetConfigProvider implements ConfigProviderInterface
      * @param Config           $scopeConfig
      * @param SessionQuote     $sessionQuote
      * @param OrderFactory     $order
-     * @param PaazlApiFactory  $paazlApi
      * @param GeneralHelper    $generalHelper
      * @param TokenRetriever   $tokenRetriever
-     * @param UrlProvider      $urlProvider
      * @param LanguageProvider $languageProvider
      * @param ProductRepository $productRepository
      */
@@ -93,20 +81,16 @@ class WidgetConfigProvider implements ConfigProviderInterface
         Config $scopeConfig,
         SessionQuote $sessionQuote,
         OrderFactory $order,
-        PaazlApiFactory $paazlApi,
         GeneralHelper $generalHelper,
         TokenRetriever $tokenRetriever,
-        UrlProvider $urlProvider,
         LanguageProvider $languageProvider,
         ProductRepository $productRepository
     ) {
         $this->scopeConfig = $scopeConfig;
         $this->sessionQuote = $sessionQuote;
         $this->order = $order;
-        $this->paazlApi = $paazlApi;
         $this->generalHelper = $generalHelper;
         $this->tokenRetriever = $tokenRetriever;
-        $this->urlProvider = $urlProvider;
         $this->languageProvider = $languageProvider;
         $this->productRepository = $productRepository;
     }
@@ -163,7 +147,7 @@ class WidgetConfigProvider implements ConfigProviderInterface
                 "startDate"    => date("Y-m-d"),
                 "numberOfDays" => 10
             ],
-            "currency"                   => "EUR",
+            "currency"                   => $this->getQuote()->getQuoteCurrencyCode(),
             "deliveryOptionDateFormat"   => "ddd DD MMM",
             "deliveryEstimateDateFormat" => "dddd DD MMMM",
             "pickupOptionDateFormat"     => "ddd DD MMM",
@@ -204,7 +188,7 @@ class WidgetConfigProvider implements ConfigProviderInterface
      */
     public function getDefaultCountry()
     {
-        return $this->scopeConfig->getDefaultCountry();
+        return $this->scopeConfig->getDefaultCountry($this->getQuote()->getStoreId());
     }
 
     /**
@@ -212,13 +196,13 @@ class WidgetConfigProvider implements ConfigProviderInterface
      */
     public function getDefaultPostcode()
     {
-        return $this->scopeConfig->getDefaultPostcode();
+        return $this->scopeConfig->getDefaultPostcode($this->getQuote()->getStoreId());
     }
 
     /**
-     * @param $price
+     * @param double $price
      *
-     * @return double
+     * @return string
      */
     public function formatPrice($price)
     {
@@ -230,7 +214,7 @@ class WidgetConfigProvider implements ConfigProviderInterface
      */
     public function getApiKey()
     {
-        return $this->scopeConfig->getApiKey();
+        return $this->scopeConfig->getApiKey($this->getQuote()->getStoreId());
     }
 
     /**
@@ -252,7 +236,7 @@ class WidgetConfigProvider implements ConfigProviderInterface
      */
     public function getAvailableTabs()
     {
-        return $this->scopeConfig->getAvailableTabs();
+        return $this->scopeConfig->getAvailableTabs($this->getQuote()->getStoreId());
     }
 
     /**
@@ -260,24 +244,24 @@ class WidgetConfigProvider implements ConfigProviderInterface
      */
     public function getDefaultTab()
     {
-        return $this->scopeConfig->getDefaultTab();
-    }
-
-    /**
-     * @return boolean
-     */
-    public function getWidgetTheme()
-    {
-        $widgetTheme = $this->scopeConfig->getWidgetTheme();
-        return $widgetTheme == 'CUSTOM' ? 'DEFAULT' : $widgetTheme;
+        return $this->scopeConfig->getDefaultTab($this->getQuote()->getStoreId());
     }
 
     /**
      * @return string
      */
+    public function getWidgetTheme()
+    {
+        $widgetTheme = $this->scopeConfig->getWidgetTheme($this->getQuote()->getStoreId());
+        return $widgetTheme == 'CUSTOM' ? 'DEFAULT' : $widgetTheme;
+    }
+
+    /**
+     * @return bool
+     */
     public function getNominatedDateEnabled()
     {
-        return $this->scopeConfig->getNominatedDateEnabled();
+        return $this->scopeConfig->getNominatedDateEnabled($this->getQuote()->getStoreId());
     }
 
     /**
@@ -317,7 +301,9 @@ class WidgetConfigProvider implements ConfigProviderInterface
     {
         $product = $this->productRepository->get($item->getSku());
 
-        if ($attribute = $this->scopeConfig->getProductAttributeNumberOfProcessingDays()) {
+        $attribute = $this->scopeConfig
+            ->getProductAttributeNumberOfProcessingDays($this->getQuote()->getStoreId());
+        if ($attribute) {
             if (($numberOfProcessingDays = $product->getData($attribute)) !== null) {
                 if (is_numeric($numberOfProcessingDays)
                     && $numberOfProcessingDays >= Config::MIN_NUMBER_OF_PROCESSING_DAYS
@@ -336,7 +322,7 @@ class WidgetConfigProvider implements ConfigProviderInterface
      */
     public function getShippingOptionsLimit()
     {
-        return $this->scopeConfig->getShippingOptionsLimit();
+        return $this->scopeConfig->getShippingOptionsLimit($this->getQuote()->getStoreId());
     }
 
     /**
@@ -344,7 +330,7 @@ class WidgetConfigProvider implements ConfigProviderInterface
      */
     public function getPickupLocationsPageLimit()
     {
-        return $this->scopeConfig->getPickupLocationsPageLimit();
+        return $this->scopeConfig->getPickupLocationsPageLimit($this->getQuote()->getStoreId());
     }
 
     /**
@@ -352,7 +338,7 @@ class WidgetConfigProvider implements ConfigProviderInterface
      */
     public function getPickupLocationsLimit()
     {
-        return $this->scopeConfig->getPickupLocationsLimit();
+        return $this->scopeConfig->getPickupLocationsLimit($this->getQuote()->getStoreId());
     }
 
     /**
@@ -360,15 +346,7 @@ class WidgetConfigProvider implements ConfigProviderInterface
      */
     public function getInitialPickupLocations()
     {
-        return $this->scopeConfig->getInitialPickupLocations();
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCustomCss()
-    {
-        return $this->scopeConfig->getCustomCss();
+        return $this->scopeConfig->getInitialPickupLocations($this->getQuote()->getStoreId());
     }
 
     /**
@@ -376,15 +354,7 @@ class WidgetConfigProvider implements ConfigProviderInterface
      */
     public function isEnabled()
     {
-        return $this->scopeConfig->isEnabled();
-    }
-
-    /**
-     * @return string
-     */
-    public function getApiBaseUrl()
-    {
-        return $this->urlProvider->getBaseUrl();
+        return $this->scopeConfig->isEnabled($this->getQuote()->getStoreId());
     }
 
     /**
@@ -398,7 +368,9 @@ class WidgetConfigProvider implements ConfigProviderInterface
     {
         $product = $this->productRepository->get($item->getSku());
 
-        if ($attribute = $this->scopeConfig->getProductAttributeDeliveryMatrix()) {
+        $attribute = $this->scopeConfig
+            ->getProductAttributeDeliveryMatrix($this->getQuote()->getStoreId());
+        if ($attribute) {
             if (($deliveryMatrixCode = $product->getData($attribute)) !== null
                 && $this->validateDeliveryMatrixCode($deliveryMatrixCode)
             ) {

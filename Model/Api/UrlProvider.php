@@ -6,7 +6,7 @@
 
 namespace Paazl\CheckoutWidget\Model\Api;
 
-use Paazl\CheckoutWidget\Model\Config;
+use Paazl\CheckoutWidget\Model\System\Config\Source\ApiMode;
 
 /**
  * UrlProvider
@@ -21,18 +21,18 @@ class UrlProvider
     /**#@- */
 
     /**
-     * @var Config
+     * @var int
      */
-    private $config;
+    private $mode;
 
     /**
      * UrlProvider constructor.
      *
-     * @param Config $config
+     * @param int $mode
      */
-    public function __construct(Config $config)
+    public function __construct($mode)
     {
-        $this->config = $config;
+        $this->mode = $mode;
     }
 
     /**
@@ -41,7 +41,7 @@ class UrlProvider
     public function getBaseUrl()
     {
         $result = self::BASE_URL_TEST;
-        if ($this->config->isProductionApiMode()) {
+        if ($this->mode === ApiMode::MODE_PRODUCTION) {
             $result = self::BASE_URL_LIVE;
         }
 

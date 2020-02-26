@@ -61,7 +61,7 @@ class Paazlshipping extends AbstractCarrier implements CarrierInterface
     private $rateMethodFactory;
 
     /**
-     * @var LoggerInterface
+     * @var PaazlLogger
      */
     private $logger;
 

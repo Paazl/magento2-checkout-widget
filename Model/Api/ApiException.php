@@ -23,14 +23,15 @@ class ApiException extends \Exception
     }
 
     /**
-     * @param $message
-     * @param $code
+     * @param string $message
+     * @param int|string $code
      * @param \Exception|null $previous
      * @return ApiException
      */
     public static function fromErrorResponse($message, $code, \Exception $previous = null)
     {
         // Parsing errors
+        $code = (int)$code;
         $errors = json_decode($message, true);
         $message = 'API error';
         if ($errors !== null && !empty($errors['errors']) && is_array($errors['errors'])) {

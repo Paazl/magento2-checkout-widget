@@ -8,6 +8,7 @@ namespace Paazl\CheckoutWidget\Block\Checkout;
 
 use Magento\Framework\View\Element\Template;
 use Paazl\CheckoutWidget\Model\Api\UrlProvider;
+use Paazl\CheckoutWidget\Model\Api\UrlProviderFactory;
 use Paazl\CheckoutWidget\Model\Checkout\WidgetConfigProvider;
 use Paazl\CheckoutWidget\Model\Config;
 use Magento\Framework\View\Element\Template\Context;
@@ -40,29 +41,21 @@ class Widget extends Template
      *
      * @param Context              $context
      * @param Config               $scopeConfig
-     * @param UrlProvider          $urlProvider
+     * @param UrlProviderFactory   $urlProviderFactory
      * @param WidgetConfigProvider $widgetConfigProvider
      * @param array                $data
      */
     public function __construct(
         Context $context,
         Config $scopeConfig,
-        UrlProvider $urlProvider,
+        UrlProviderFactory $urlProviderFactory,
         WidgetConfigProvider $widgetConfigProvider,
         array $data = []
     ) {
         $this->scopeConfig = $scopeConfig;
         $this->widgetConfigProvider = $widgetConfigProvider;
-        $this->urlProvider = $urlProvider;
+        $this->urlProvider = $urlProviderFactory->create();
         parent::__construct($context, $data);
-    }
-
-    /**
-     * @return string
-     */
-    public function getWidgetConfigJson()
-    {
-        return json_encode($this->widgetConfigProvider->getConfig());
     }
 
     // ---

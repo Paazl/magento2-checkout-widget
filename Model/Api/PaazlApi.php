@@ -6,12 +6,11 @@
 
 namespace Paazl\CheckoutWidget\Model\Api;
 
-use Magento\Framework\HTTP\ClientFactory;
 use Magento\Framework\HTTP\ClientInterface;
 use Paazl\CheckoutWidget\Helper\General as GeneralHelper;
+use Paazl\CheckoutWidget\Model\Api\Http\ClientFactory;
 use Paazl\CheckoutWidget\Model\Api\Response\Data\Token;
 use Paazl\CheckoutWidget\Model\Api\Response\Data\TokenBuilder;
-use Paazl\CheckoutWidget\Model\Config;
 
 /**
  * Class PaazlApi
@@ -22,9 +21,9 @@ class PaazlApi
 {
 
     /**
-     * @var Config
+     * @var Configuration
      */
-    private $scopeConfig;
+    private $configuration;
 
     /**
      * @var array
@@ -54,20 +53,20 @@ class PaazlApi
     /**
      * PaazlApi constructor.
      *
-     * @param Config        $scopeConfig
+     * @param Configuration $configuration
      * @param GeneralHelper $generalHelper
      * @param ClientFactory $httpClientFactory
      * @param TokenBuilder  $tokenBuilder
      * @param UrlProvider   $urlProvider
      */
     public function __construct(
-        Config $scopeConfig,
+        Configuration $configuration,
         GeneralHelper $generalHelper,
         ClientFactory $httpClientFactory,
         TokenBuilder $tokenBuilder,
         UrlProvider $urlProvider
     ) {
-        $this->scopeConfig = $scopeConfig;
+        $this->configuration = $configuration;
         $this->generalHelper = $generalHelper;
         $this->httpClientFactory = $httpClientFactory;
         $this->tokenBuilder = $tokenBuilder;
@@ -89,7 +88,7 @@ class PaazlApi
 
         try {
             $this->request['reference'] = $reference;
-            $this->generalHelper->addTolog('Token request', $this->request);
+            $this->generalHelper->addTolog('Token request: ', $this->request);
 
             $httpClient->addHeader('Content-Type', 'application/json;charset=UTF-8');
             $httpClient->addHeader('Accept', 'application/json;charset=UTF-8');
@@ -98,7 +97,8 @@ class PaazlApi
             $body = $httpClient->getBody();
             $status = $httpClient->getStatus();
 
-            $this->generalHelper->addTolog('Token response', $body);
+            $this->generalHelper->addTolog('Token response status: ', $status);
+            $this->generalHelper->addTolog('Token response: ', $body);
             if ($status >= 200 && $status < 300) {
                 /** @var Token $token */
                 $token = $this->tokenBuilder->setResponse($body)->create();
@@ -124,7 +124,7 @@ class PaazlApi
 
         $httpClient = $this->getAuthorizedClient();
 
-        $this->generalHelper->addTolog('Order request', $orderData);
+        $this->generalHelper->addTolog('AddOrder request: ', $orderData);
 
         $httpClient->addHeader('Content-Type', 'application/json;charset=UTF-8');
         $httpClient->addHeader('Accept', 'application/json;charset=UTF-8');
@@ -133,7 +133,8 @@ class PaazlApi
         $body = $httpClient->getBody();
         $status = $httpClient->getStatus();
 
-        $this->generalHelper->addTolog('debug', $body);
+        $this->generalHelper->addTolog('AddOrder response status: ', $status);
+        $this->generalHelper->addTolog('AddOrder response body: ', $body);
         if ($status >= 400 && $status < 500) {
             throw ApiException::fromErrorResponse($body, $status);
         }
@@ -145,13 +146,19 @@ class PaazlApi
         throw ApiException::error();
     }
 
+    /**
+     * @param array $orderData
+     *
+     * @return string
+     * @throws ApiException
+     */
     public function getShippingOptions(array $orderData)
     {
         $url = $this->urlProvider->getShippingOptionsUrl();
 
         $httpClient = $this->getAuthorizedClient();
 
-        $this->generalHelper->addTolog('Order request', $orderData);
+        $this->generalHelper->addTolog('getShippingOptions request: ', $orderData);
 
         $httpClient->addHeader('Content-Type', 'application/json;charset=UTF-8');
         $httpClient->addHeader('Accept', 'application/json;charset=UTF-8');
@@ -160,7 +167,8 @@ class PaazlApi
         $body = $httpClient->getBody();
         $status = $httpClient->getStatus();
 
-        $this->generalHelper->addTolog('debug', $body);
+        $this->generalHelper->addTolog('getShippingOptions response status: ', $status);
+        $this->generalHelper->addTolog('getShippingOptions response: ', $body);
         if ($status >= 400 && $status < 500) {
             throw ApiException::fromErrorResponse($body, $status);
         }
@@ -173,7 +181,7 @@ class PaazlApi
     }
 
     /**
-     * @param $reference
+     * @param string $reference
      *
      * @return mixed|null
      * @throws ApiException
@@ -191,15 +199,18 @@ class PaazlApi
 
             $httpClient->addHeader('Accept', 'application/json;charset=UTF-8');
 
+            $this->generalHelper->addTolog('fetchCheckoutData URL: ', $url);
+
             $httpClient->get($url);
             $status = $httpClient->getStatus();
             $body = $httpClient->getBody();
+            $this->generalHelper->addTolog('fetchCheckoutData response status: ', $body);
+            $this->generalHelper->addTolog('fetchCheckoutData response: ', $body);
             if ($status !== 200) {
                 // @codingStandardsIgnoreLine
                 throw new \Exception('Cannot obtain checkout info');
             }
             $result = json_decode($body, true);
-            $this->generalHelper->addTolog('debug', $body);
         } catch (\Exception $e) {
             $this->generalHelper->addTolog('exception', $e->getMessage());
             throw ApiException::error($e);
@@ -213,23 +224,7 @@ class PaazlApi
      */
     private function buildAuthorizationHeader()
     {
-        return 'Bearer ' . $this->getApiKey() . ':' . $this->getApiSecret();
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getApiKey()
-    {
-        return $this->scopeConfig->getApiKey();
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getApiSecret()
-    {
-        return $this->scopeConfig->getApiSecret();
+        return 'Bearer ' . $this->configuration->getKey() . ':' . $this->configuration->getSecret();
     }
 
     /**
@@ -242,7 +237,7 @@ class PaazlApi
             'Authorization' => $this->buildAuthorizationHeader()
         ]);
 
-        $timeout = $this->scopeConfig->getApiTimeout();
+        $timeout = $this->configuration->getTimeout();
         if ($timeout > 0) {
             $httpClient->setTimeout($timeout);
         }

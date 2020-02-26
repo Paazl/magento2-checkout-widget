@@ -7,7 +7,7 @@
 namespace Paazl\CheckoutWidget\ViewModel\PaazlStatus;
 
 use Magento\Framework\View\Element\Block\ArgumentInterface;
-use Magento\Backend\Block\Template\Context\Proxy as ProxyContext;
+use Magento\Backend\Block\Template\Context;
 use Magento\Framework\Api\DataObjectHelper;
 use Magento\Framework\Exception\LocalizedException;
 use Paazl\CheckoutWidget\Block\Adminhtml\Order\View\ShippingAndHandling\PaazlStatus as ParentBlock;
@@ -30,7 +30,7 @@ class DeliveryDate implements ArgumentInterface
     protected $dataObjectHelper;
 
     /**
-     * @var ProxyContext
+     * @var Context
      */
     private $context;
 
@@ -64,13 +64,13 @@ class DeliveryDate implements ArgumentInterface
      *
      * @param DataObjectHelper    $dataObjectHelper
      * @param ExtInfoHandler      $extInfoHandler
-     * @param ProxyContext        $context
+     * @param Context             $context
      * @param ShippingInfoFactory $shippingInfoFactory
      */
     public function __construct(
         DataObjectHelper $dataObjectHelper,
         ExtInfoHandler $extInfoHandler,
-        ProxyContext $context,
+        Context $context,
         ShippingInfoFactory $shippingInfoFactory
     ) {
         $this->dataObjectHelper = $dataObjectHelper;

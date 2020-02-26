@@ -148,7 +148,7 @@ class ShippingInfo extends DataObject
     }
 
     /**
-     * @return string|null
+     * @return array|null
      */
     public function getPickupAddress()
     {
@@ -156,7 +156,7 @@ class ShippingInfo extends DataObject
     }
 
     /**
-     * @param string $value
+     * @param float $value
      * @return $this
      */
     public function setPrice($value)
@@ -165,7 +165,7 @@ class ShippingInfo extends DataObject
     }
 
     /**
-     * @return string|null
+     * @return float|null
      */
     public function getPrice()
     {
