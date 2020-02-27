@@ -21,7 +21,6 @@ use Paazl\CheckoutWidget\Helper\Order as OrderHelper;
 use Paazl\CheckoutWidget\Model\Api\Field\DeliveryType;
 use Paazl\CheckoutWidget\Model\ExtInfoHandler;
 use Paazl\CheckoutWidget\Model\Delivery\OrderPickupLocationFactory;
-use Paazl\CheckoutWidget\Model\Api\PaazlApi;
 use Paazl\CheckoutWidget\Model\ShippingInfo;
 use Paazl\CheckoutWidget\Model\Location\OrderAddressFactory;
 
@@ -30,37 +29,54 @@ use Paazl\CheckoutWidget\Model\Location\OrderAddressFactory;
  */
 class Info implements ArgumentInterface
 {
-    /** @var OrderInterface */
+    /**
+     * @var OrderInterface
+     */
     private $order = null;
 
-    /** @var ShippingInfo */
+    /**
+     * @var ShippingInfo
+     */
     protected $orderInfo = null;
 
-    /** @var RequestInterface */
+    /**
+     * @var RequestInterface
+     */
     protected $request;
 
-    /** @var OrderRepositoryInterface */
+    /**
+     * @var OrderRepositoryInterface
+     */
     protected $orderRepository;
 
-    /** @var OrderHelper */
+    /**
+     * @var OrderHelper
+     */
     protected $orderHelper;
 
-    /** @var OrderReferenceRepositoryInterface */
+    /**
+     * @var OrderReferenceRepositoryInterface
+     */
     private $orderReferenceRepository;
 
-    /** @var PaazlApi */
-    private $api;
-
-    /** @var ExtInfoHandler */
+    /**
+     * @var ExtInfoHandler
+     */
     protected $extInfoHandler;
 
-    /** @var OrderPickupLocationFactory $orderPickupLocationFactory */
+    /**
+     * @var OrderPickupLocationFactory $orderPickupLocationFactory
+     */
     protected $orderPickupLocationFactory;
 
-    /** @var OrderAddressFactory */
+    /**
+     * @var OrderAddressFactory
+     */
     private $orderAddressFactory;
 
-    /** @var AddressRenderer */
+    /**
+     * @var AddressRenderer
+     */
     private $addressRenderer;
 
     /**
@@ -70,7 +86,6 @@ class Info implements ArgumentInterface
      * @param OrderRepositoryInterface $orderRepository
      * @param OrderHelper $orderHelper
      * @param OrderReferenceRepositoryInterface $orderReferenceRepository
-     * @param PaazlApi $api
      * @param ExtInfoHandler $extInfoHandler
      * @param OrderPickupLocationFactory $orderPickupLocationFactory
      * @param OrderAddressFactory $orderAddressFactory
@@ -81,7 +96,6 @@ class Info implements ArgumentInterface
         OrderRepositoryInterface $orderRepository,
         OrderHelper $orderHelper,
         OrderReferenceRepositoryInterface $orderReferenceRepository,
-        PaazlApi $api,
         ExtInfoHandler $extInfoHandler,
         OrderPickupLocationFactory $orderPickupLocationFactory,
         OrderAddressFactory $orderAddressFactory,
@@ -91,7 +105,6 @@ class Info implements ArgumentInterface
         $this->orderRepository = $orderRepository;
         $this->orderHelper = $orderHelper;
         $this->orderReferenceRepository = $orderReferenceRepository;
-        $this->api = $api;
         $this->extInfoHandler = $extInfoHandler;
         $this->orderPickupLocationFactory = $orderPickupLocationFactory;
         $this->orderAddressFactory = $orderAddressFactory;
@@ -139,10 +152,10 @@ class Info implements ArgumentInterface
             return '';
         }
 
-        /** @var ShippingInfo $orderInfo */
+        /** @var ShippingInfo|null $orderInfo */
         $orderInfo = $this->getOrderInfo();
 
-        if ($orderInfo->getType() !== DeliveryType::PICKUP) {
+        if (!$orderInfo || ($orderInfo->getType() !== DeliveryType::PICKUP)) {
             return '';
         }
 

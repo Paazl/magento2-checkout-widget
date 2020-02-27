@@ -9,12 +9,14 @@ namespace Paazl\CheckoutWidget\Model\System\Config\Source;
 use Magento\Framework\Option\ArrayInterface;
 
 /**
- * Class Apimode
+ * Class ApiMode
  *
  * @package Paazl\CheckoutWidget\Model\System\Config\Source
  */
 class ApiMode implements ArrayInterface
 {
+    const MODE_PRODUCTION = 1;
+    const MODE_STAGING = 0;
 
     /**
      * @var array

@@ -14,6 +14,7 @@ use Paazl\CheckoutWidget\Helper\General as GeneralHelper;
 use Paazl\CheckoutWidget\Helper\Order as OrderHelper;
 use Paazl\CheckoutWidget\Model\Api\Builder\Order;
 use Paazl\CheckoutWidget\Model\Api\PaazlApi;
+use Paazl\CheckoutWidget\Model\Api\PaazlApiFactory;
 
 /**
  * Class SendToService
@@ -29,9 +30,9 @@ class SendToService
     private $orderBuilder;
 
     /**
-     * @var PaazlApi
+     * @var PaazlApiFactory
      */
-    private $paazlApi;
+    private $paazlApiFactory;
 
     /**
      * @var OrderHelper
@@ -57,7 +58,7 @@ class SendToService
      * SendToService constructor.
      *
      * @param Order                             $orderBuilder
-     * @param PaazlApi                          $paazlApi
+     * @param PaazlApiFactory                   $paazlApiFactory
      * @param OrderHelper                       $orderHelper
      * @param GeneralHelper                     $generalHelper
      * @param MarkOrderAsSent                   $markOrderAsSent
@@ -65,14 +66,14 @@ class SendToService
      */
     public function __construct(
         Order $orderBuilder,
-        PaazlApi $paazlApi,
+        PaazlApiFactory $paazlApiFactory,
         OrderHelper $orderHelper,
         GeneralHelper $generalHelper,
         MarkOrderAsSent $markOrderAsSent,
         OrderReferenceRepositoryInterface $orderReferenceRepository
     ) {
         $this->orderBuilder = $orderBuilder;
-        $this->paazlApi = $paazlApi;
+        $this->paazlApiFactory = $paazlApiFactory;
         $this->orderHelper = $orderHelper;
         $this->generalHelper = $generalHelper;
         $this->markOrderAsSent = $markOrderAsSent;
@@ -104,7 +105,9 @@ class SendToService
 
         try {
             $orderInfo = $this->orderBuilder->getCreateOrderData($order);
-            $this->paazlApi->addOrder($orderInfo);
+            /** @var PaazlApi $paazlApi */
+            $paazlApi = $this->paazlApiFactory->create($order->getStoreId());
+            $paazlApi->addOrder($orderInfo);
             $this->markOrderAsSent->process($order);
         } catch (\Exception $e) {
             $this->generalHelper->addTolog('exception', $e->getMessage());

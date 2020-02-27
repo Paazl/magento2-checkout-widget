@@ -41,7 +41,7 @@ class Reference
      */
     public function getQuoteReference(Quote $quote)
     {
-        return $this->config->getReferencePrefix() . $quote->getId();
+        return $this->config->getReferencePrefix($quote->getStoreId()) . $quote->getId();
     }
 
     /**
@@ -51,6 +51,6 @@ class Reference
      */
     public function getOrderReference(OrderInterface $order)
     {
-        return $this->config->getReferencePrefix() . $order->getIncrementId();
+        return $this->config->getReferencePrefix($order->getStoreId()) . $order->getIncrementId();
     }
 }

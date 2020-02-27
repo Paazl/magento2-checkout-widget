@@ -21,7 +21,7 @@ class ExcludeFromMinification
      *
      * @param Minification $subject
      * @param array        $result
-     * @param              $contentType
+     * @param string       $contentType
      *
      * @return array
      */

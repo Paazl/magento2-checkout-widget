@@ -16,8 +16,6 @@ use Magento\Sales\Model\OrderFactory;
 use Magento\Catalog\Model\ProductRepository;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Paazl\CheckoutWidget\Helper\General as GeneralHelper;
-use Paazl\CheckoutWidget\Model\Api\PaazlApiFactory;
-use Paazl\CheckoutWidget\Model\Api\UrlProvider;
 use Paazl\CheckoutWidget\Model\Config;
 use Paazl\CheckoutWidget\Model\Handler\Item as ItemHandler;
 use Paazl\CheckoutWidget\Model\TokenRetriever;
@@ -51,11 +49,6 @@ class WidgetConfigProvider implements ConfigProviderInterface
     private $order;
 
     /**
-     * @var PaazlApiFactory
-     */
-    private $paazlApi;
-
-    /**
      * @var GeneralHelper
      */
     private $generalHelper;
@@ -71,16 +64,13 @@ class WidgetConfigProvider implements ConfigProviderInterface
     private $tokenRetriever;
 
     /**
-     * @var UrlProvider
-     */
-    private $urlProvider;
-
-    /**
      * @var LanguageProvider
      */
     private $languageProvider;
 
-    /** @var ProductRepository */
+    /**
+     * @var ProductRepository
+     */
     private $productRepository;
 
     /**
@@ -89,11 +79,9 @@ class WidgetConfigProvider implements ConfigProviderInterface
      * @param Config            $scopeConfig
      * @param Data              $checkoutHelper
      * @param OrderFactory      $order
-     * @param PaazlApiFactory   $paazlApi
      * @param GeneralHelper     $generalHelper
      * @param ItemHandler       $itemHandler
      * @param TokenRetriever    $tokenRetriever
-     * @param UrlProvider       $urlProvider
      * @param LanguageProvider  $languageProvider
      * @param ProductRepository $productRepository
      */
@@ -101,22 +89,18 @@ class WidgetConfigProvider implements ConfigProviderInterface
         Config $scopeConfig,
         Data $checkoutHelper,
         OrderFactory $order,
-        PaazlApiFactory $paazlApi,
         GeneralHelper $generalHelper,
         ItemHandler $itemHandler,
         TokenRetriever $tokenRetriever,
-        UrlProvider $urlProvider,
         LanguageProvider $languageProvider,
         ProductRepository $productRepository
     ) {
         $this->scopeConfig = $scopeConfig;
         $this->checkoutHelper = $checkoutHelper;
         $this->order = $order;
-        $this->paazlApi = $paazlApi;
         $this->generalHelper = $generalHelper;
         $this->itemHandler = $itemHandler;
         $this->tokenRetriever = $tokenRetriever;
-        $this->urlProvider = $urlProvider;
         $this->languageProvider = $languageProvider;
         $this->productRepository = $productRepository;
     }
@@ -175,7 +159,7 @@ class WidgetConfigProvider implements ConfigProviderInterface
                 "startDate"    => date("Y-m-d"),
                 "numberOfDays" => 10
             ],
-            "currency"                   => $this->scopeConfig->getValue(Currency::XML_PATH_CURRENCY_DEFAULT),
+            "currency"                   => $this->getQuote()->getQuoteCurrencyCode(),
             "deliveryOptionDateFormat"   => "ddd DD MMM",
             "deliveryEstimateDateFormat" => "dddd DD MMMM",
             "pickupOptionDateFormat"     => "ddd DD MMM",
@@ -228,13 +212,13 @@ class WidgetConfigProvider implements ConfigProviderInterface
     }
 
     /**
-     * @param $price
+     * @param double $price
      *
-     * @return double
+     * @return string
      */
     public function formatPrice($price)
     {
-        return number_format($price, 2);
+        return number_format($price, 2, '.', '');
     }
 
     /**
@@ -242,7 +226,7 @@ class WidgetConfigProvider implements ConfigProviderInterface
      */
     public function getApiKey()
     {
-        return $this->scopeConfig->getApiKey();
+        return $this->scopeConfig->getApiKey($this->getQuote()->getStoreId());
     }
 
     /**
@@ -276,7 +260,7 @@ class WidgetConfigProvider implements ConfigProviderInterface
     }
 
     /**
-     * @return boolean
+     * @return string
      */
     public function getWidgetTheme()
     {
@@ -285,7 +269,7 @@ class WidgetConfigProvider implements ConfigProviderInterface
     }
 
     /**
-     * @return string
+     * @return bool
      */
     public function getNominatedDateEnabled()
     {
@@ -329,7 +313,9 @@ class WidgetConfigProvider implements ConfigProviderInterface
     {
         $product = $this->productRepository->getById($item->getProduct()->getId());
 
-        if ($attribute = $this->scopeConfig->getProductAttributeNumberOfProcessingDays()) {
+        $attribute = $this->scopeConfig
+            ->getProductAttributeNumberOfProcessingDays();
+        if ($attribute) {
             if (($numberOfProcessingDays = $product->getData($attribute)) !== null) {
                 if (is_numeric($numberOfProcessingDays)
                     && $numberOfProcessingDays >= Config::MIN_NUMBER_OF_PROCESSING_DAYS
@@ -376,27 +362,11 @@ class WidgetConfigProvider implements ConfigProviderInterface
     }
 
     /**
-     * @return mixed
-     */
-    public function getCustomCss()
-    {
-        return $this->scopeConfig->getCustomCss();
-    }
-
-    /**
      * @return boolean
      */
     public function isEnabled()
     {
         return $this->scopeConfig->isEnabled();
-    }
-
-    /**
-     * @return string
-     */
-    public function getApiBaseUrl()
-    {
-        return $this->urlProvider->getBaseUrl();
     }
 
     /**
@@ -410,7 +380,9 @@ class WidgetConfigProvider implements ConfigProviderInterface
     {
         $product = $this->productRepository->getById($item->getProduct()->getId());
 
-        if ($attribute = $this->scopeConfig->getProductAttributeDeliveryMatrix()) {
+        $attribute = $this->scopeConfig
+            ->getProductAttributeDeliveryMatrix();
+        if ($attribute) {
             if (($deliveryMatrixCode = $product->getData($attribute)) !== null
                 && $this->validateDeliveryMatrixCode($deliveryMatrixCode)
             ) {

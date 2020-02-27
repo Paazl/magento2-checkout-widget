@@ -13,9 +13,9 @@ use Magento\Framework\Exception\InputException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
-use Magento\Backend\Model\Session\Proxy as Session;
+use Magento\Backend\Model\Session;
+use Paazl\CheckoutWidget\Model\Api\PaazlApiFactory;
 use Paazl\CheckoutWidget\Model\Order\WidgetConfigProvider;
-use Paazl\CheckoutWidget\Model\Api\PaazlApi;
 use Paazl\CheckoutWidget\Model\Api\ApiException;
 
 /**
@@ -23,49 +23,63 @@ use Paazl\CheckoutWidget\Model\Api\ApiException;
  */
 class Options implements OptionSourceInterface
 {
-    /** @var RequestInterface */
+    /**
+     * @var RequestInterface
+     */
     protected $request;
 
-    /** @var array */
+    /**
+     * @var array
+     */
     protected $options = null;
 
-    /** @var OrderRepositoryInterface */
+    /**
+     * @var OrderRepositoryInterface
+     */
     protected $orderRepository;
 
-    /** @var WidgetConfigProvider */
+    /**
+     * @var WidgetConfigProvider
+     */
     protected $widgetConfigProvider;
 
-    /** @var PaazlApi */
-    protected $paazlApi;
+    /**
+     * @var PaazlApiFactory
+     */
+    protected $paazlApiFactory;
 
-    /** @var SerializerInterface */
+    /**
+     * @var SerializerInterface
+     */
     protected $serializer;
 
-    /** @var Session */
+    /**
+     * @var Session
+     */
     private $session;
 
     /**
      * Constructor
      *
-     * @param RequestInterface $request
+     * @param RequestInterface         $request
      * @param OrderRepositoryInterface $orderRepository
-     * @param WidgetConfigProvider $widgetConfigProvider
-     * @param PaazlApi $paazlApi
-     * @param SerializerInterface $serializer
-     * @param Session $session
+     * @param WidgetConfigProvider     $widgetConfigProvider
+     * @param PaazlApiFactory          $paazlApiFactory
+     * @param SerializerInterface      $serializer
+     * @param Session                  $session
      */
     public function __construct(
         RequestInterface $request,
         OrderRepositoryInterface $orderRepository,
         WidgetConfigProvider $widgetConfigProvider,
-        PaazlApi $paazlApi,
+        PaazlApiFactory $paazlApiFactory,
         SerializerInterface $serializer,
         Session $session
     ) {
         $this->request = $request;
         $this->orderRepository = $orderRepository;
         $this->widgetConfigProvider = $widgetConfigProvider;
-        $this->paazlApi = $paazlApi;
+        $this->paazlApiFactory = $paazlApiFactory;
         $this->serializer = $serializer;
         $this->session = $session;
     }
@@ -92,7 +106,10 @@ class Options implements OptionSourceInterface
                 $orderData = $this->widgetConfigProvider
                     ->setOrder($order)
                     ->getConfig();
-                $shippingOptions = $this->serializer->unserialize($this->paazlApi->getShippingOptions($orderData));
+                $shippingOptions = $this->serializer->unserialize(
+                    $this->paazlApiFactory->create($order->getStoreId())
+                        ->getShippingOptions($orderData)
+                );
                 $shippingOptions = $shippingOptions['shippingOptions'];
                 $this->session->setPaazlShippingOptions($this->serializer->serialize($shippingOptions));
                 $options = [];

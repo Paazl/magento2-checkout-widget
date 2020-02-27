@@ -8,17 +8,20 @@ namespace Paazl\CheckoutWidget\Model\Carrier;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\DataObject;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Quote\Model\Quote\Item;
 use Magento\Shipping\Model\Carrier\AbstractCarrier;
 use Magento\Shipping\Model\Carrier\CarrierInterface;
 use Magento\Shipping\Model\Rate\ResultFactory;
 use Magento\Quote\Model\Quote\Address\RateResult\ErrorFactory;
 use Magento\Quote\Model\Quote\Address\RateResult\MethodFactory;
 use Magento\Quote\Model\Quote\Address\RateRequest;
+use Paazl\CheckoutWidget\Logger\PaazlLogger;
 use Paazl\CheckoutWidget\Model\ExtInfoHandler;
-use Magento\Checkout\Helper\Data as CheckoutHelper;
 use Paazl\CheckoutWidget\Model\Config;
 use Magento\Framework\App\State as AppState;
 use Magento\Framework\App\Area;
+use Paazl\CheckoutWidget\Model\TokenRetriever;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -58,12 +61,7 @@ class Paazlshipping extends AbstractCarrier implements CarrierInterface
     private $rateMethodFactory;
 
     /**
-     * @var CheckoutHelper
-     */
-    private $checkoutHelper;
-
-    /**
-     * @var LoggerInterface
+     * @var PaazlLogger
      */
     private $logger;
 
@@ -83,6 +81,11 @@ class Paazlshipping extends AbstractCarrier implements CarrierInterface
     private $appState;
 
     /**
+     * @var TokenRetriever
+     */
+    private $tokenRetriever;
+
+    /**
      * Paazlshipping constructor.
      *
      * @param ScopeConfigInterface $scopeConfig
@@ -91,9 +94,10 @@ class Paazlshipping extends AbstractCarrier implements CarrierInterface
      * @param AppState             $appState
      * @param ResultFactory        $rateResultFactory
      * @param MethodFactory        $rateMethodFactory
-     * @param CheckoutHelper       $checkoutHelper
      * @param Config               $config
      * @param ExtInfoHandler       $extInfoHandler
+     * @param TokenRetriever       $tokenRetriever
+     * @param PaazlLogger          $paazlLogger
      * @param array                $data
      */
     public function __construct(
@@ -103,20 +107,21 @@ class Paazlshipping extends AbstractCarrier implements CarrierInterface
         AppState $appState,
         ResultFactory $rateResultFactory,
         MethodFactory $rateMethodFactory,
-        CheckoutHelper $checkoutHelper,
         Config $config,
         ExtInfoHandler $extInfoHandler,
+        TokenRetriever $tokenRetriever,
+        PaazlLogger $paazlLogger,
         array $data = []
     ) {
         $this->rateResultFactory = $rateResultFactory;
         $this->rateMethodFactory = $rateMethodFactory;
-        $this->checkoutHelper = $checkoutHelper;
-        $this->logger = $logger;
+        $this->logger = $paazlLogger;
 
         parent::__construct($scopeConfig, $rateErrorFactory, $logger, $data);
         $this->extInfoHandler = $extInfoHandler;
         $this->config = $config;
         $this->appState = $appState;
+        $this->tokenRetriever = $tokenRetriever;
     }
 
     /**
@@ -132,12 +137,6 @@ class Paazlshipping extends AbstractCarrier implements CarrierInterface
      */
     public function isActive()
     {
-        $areaCode = $this->appState->getAreaCode();
-        if ($areaCode === Area::AREA_ADMIN ||
-            $areaCode === Area::AREA_ADMINHTML) {
-            return false;
-        }
-
         return parent::isActive() && $this->config->isEnabled();
     }
 
@@ -160,13 +159,13 @@ class Paazlshipping extends AbstractCarrier implements CarrierInterface
      */
     public function collectRates(RateRequest $request)
     {
-        if (!$this->isActive()) {
+        if (!$this->getConfigFlag('active')) {
             return false;
         }
 
         /** @var \Magento\Shipping\Model\Rate\Result $result */
         $result = $this->rateResultFactory->create();
-        $shippingPrice = $this->getConfigData('price');
+        $shippingPrice = 0;
         $method = $this->rateMethodFactory->create();
 
         /**
@@ -176,20 +175,59 @@ class Paazlshipping extends AbstractCarrier implements CarrierInterface
         $method->setMethodTitle($this->getConfigData('name'));
 
         // Recalculate shipping price
-        $info = $this->extInfoHandler->getInfoFromQuote($quote = $this->checkoutHelper->getQuote());
-
-        if ($info && $info->getType()) {
-            $shippingPrice = $info->getPrice();
-            if ($info->getOptionTitle()) {
-                $method->setMethodTitle($info->getOptionTitle());
-            }
+        $quote = $this->extractQuote($request);
+        if (!$quote || (!$quote->getId())) {
+            /*
+             * No quote. Can happen when 1st product was added to quote.
+             * Return method's "placeholder", we'll obtain a token at a later stage.
+             */
+            $method->setCarrier($this->getCarrierCode());
+            $method->setCarrierTitle($this->getConfigData('title'));
+            $method->setPrice($shippingPrice);
+            $method->setCost($shippingPrice);
+            $result->append($method);
+            return $result;
         }
 
-        $method->setCarrier($this->getCarrierCode());
-        $method->setCarrierTitle($this->getConfigData('title'));
-        $method->setPrice($shippingPrice);
-        $method->setCost($shippingPrice);
-        $result->append($method);
-        return $result;
+        try {
+            $this->tokenRetriever->retrieveByQuote($quote);
+
+            $info = $this->extInfoHandler->getInfoFromQuote($quote);
+
+            if ($info && $info->getType()) {
+                $shippingPrice = $info->getPrice();
+                if ($info->getOptionTitle()) {
+                    $method->setMethodTitle($info->getOptionTitle());
+                }
+            }
+
+            $method->setCarrier($this->getCarrierCode());
+            $method->setCarrierTitle($this->getConfigData('title'));
+            $method->setPrice($shippingPrice);
+            $method->setCost($shippingPrice);
+            $result->append($method);
+            return $result;
+        } catch (LocalizedException $e) {
+            $this->logger->add('exception', $e->getLogMessage());
+        }
+
+        return null;
+    }
+
+    /**
+     * @param RateRequest $request
+     *
+     * @return \Magento\Quote\Model\Quote|null
+     */
+    private function extractQuote(RateRequest $request)
+    {
+        $quote = null;
+        $items = $request->getAllItems();
+        $current = current($items);
+        if ($current instanceof Item) {
+            $quote = $current->getQuote();
+        }
+
+        return $quote;
     }
 }

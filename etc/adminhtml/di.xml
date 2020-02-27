@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<!--
+  ~ Copyright © 2019 Paazl. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Paazl\CheckoutWidget\Model\CompositeConfigProvider">
+        <arguments>
+            <argument name="configProviders" xsi:type="array">
+                <item name="paazl_shipping_config"
+                      xsi:type="object">Paazl\CheckoutWidget\Model\Admin\Order\Create\PaazlConfigProvider</item>
+            </argument>
+        </arguments>
+    </type>
+    
+    <type name="Paazl\CheckoutWidget\Ui\Component\Order\View\PaazlModal\AvailableShippingMethods\Options">
+        <arguments>
+            <argument name="session" xsi:type="object">Magento\Backend\Model\Session\Proxy</argument>
+        </arguments>
+    </type>
+
+    <type name="Paazl\CheckoutWidget\Controller\Adminhtml\Order\Data\Save">
+        <arguments>
+            <argument name="session" xsi:type="object">Magento\Backend\Model\Session\Proxy</argument>
+        </arguments>
+    </type>
+
+    <type name="Paazl\CheckoutWidget\Controller\Adminhtml\Order\Data\Validate">
+        <arguments>
+            <argument name="session" xsi:type="object">Magento\Backend\Model\Session\Proxy</argument>
+        </arguments>
+    </type>
+
+    <type name="Paazl\CheckoutWidget\ViewModel\PaazlStatus\DeliveryDate">
+        <arguments>
+            <argument name="context" xsi:type="object">Magento\Backend\Block\Template\Context\Proxy</argument>
+        </arguments>
+    </type>
+</config>

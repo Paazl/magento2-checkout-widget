@@ -7,11 +7,11 @@
 namespace Paazl\CheckoutWidget\ViewModel\PaazlStatus;
 
 use Magento\Framework\View\Element\Block\ArgumentInterface;
-use Magento\Backend\Block\Template\Context\Proxy as ProxyContext;
+use Magento\Backend\Block\Template\Context;
 use Magento\Framework\Api\DataObjectHelper;
-use Magento\Framework\Serialize\SerializerInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Paazl\CheckoutWidget\Block\Adminhtml\Order\View\ShippingAndHandling\PaazlStatus as ParentBlock;
+use Paazl\CheckoutWidget\Model\ExtInfoHandler;
 use Paazl\CheckoutWidget\Model\ShippingInfo;
 use Paazl\CheckoutWidget\Model\ShippingInfoFactory;
 use Paazl\CheckoutWidget\Model\Api\Field\DeliveryType;
@@ -30,12 +30,7 @@ class DeliveryDate implements ArgumentInterface
     protected $dataObjectHelper;
 
     /**
-     * @var SerializerInterface
-     */
-    private $serializer;
-
-    /**
-     * @var ProxyContext
+     * @var Context
      */
     private $context;
 
@@ -60,23 +55,28 @@ class DeliveryDate implements ArgumentInterface
     private $extShippingInfo = null;
 
     /**
+     * @var ExtInfoHandler
+     */
+    private $extInfoHandler;
+
+    /**
      * ViewModel constructor
      *
-     * @param DataObjectHelper $dataObjectHelper
-     * @param SerializerInterface $serializer
-     * @param ProxyContext $context
+     * @param DataObjectHelper    $dataObjectHelper
+     * @param ExtInfoHandler      $extInfoHandler
+     * @param Context             $context
      * @param ShippingInfoFactory $shippingInfoFactory
      */
     public function __construct(
         DataObjectHelper $dataObjectHelper,
-        SerializerInterface $serializer,
-        ProxyContext $context,
+        ExtInfoHandler $extInfoHandler,
+        Context $context,
         ShippingInfoFactory $shippingInfoFactory
     ) {
         $this->dataObjectHelper = $dataObjectHelper;
-        $this->serializer = $serializer;
         $this->shippingInfoFactory = $shippingInfoFactory;
         $this->context = $context;
+        $this->extInfoHandler = $extInfoHandler;
     }
 
     /**
@@ -122,14 +122,7 @@ class DeliveryDate implements ArgumentInterface
         }
 
         if (null === $this->extShippingInfo) {
-            $shippingInfo = $this->shippingInfoFactory->create();
-            $shippingInfoData = $this->serializer->unserialize($this->getPaazlOrder()->getExtShippingInfo());
-            $this->dataObjectHelper->populateWithArray(
-                $shippingInfo,
-                $shippingInfoData,
-                ShippingInfo::class
-            );
-            $this->extShippingInfo = $shippingInfo;
+            $this->extShippingInfo = $this->extInfoHandler->getInfoFromOrderReference($this->getPaazlOrder());
         }
 
         return $this->extShippingInfo;
@@ -143,6 +136,6 @@ class DeliveryDate implements ArgumentInterface
      */
     public function isTypeDelivery()
     {
-        return $this->getExtShippingInfo()->getType() === DeliveryType::DELIVERY;
+        return $this->getExtShippingInfo() && $this->getExtShippingInfo()->getType() === DeliveryType::DELIVERY;
     }
 }

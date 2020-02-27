@@ -1,0 +1,43 @@
+<?php
+/**
+ * Copyright © 2019 Paazl. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+
+// @codingStandardsIgnoreFile
+
+/* @var $block Magento\Backend\Block\Template */
+?>
+
+<script type="text/javascript">
+    require([
+        'jquery',
+        'Magento_Sales/order/create/scripts',
+        'Paazl_CheckoutWidget/js/admin/order/create/shipping/method/paazl/widget/modal',
+        'jquery/ui'
+    ], function ($) {
+        'use strict';
+
+        AdminOrder.prototype.showModalFlag = true;
+        AdminOrder.prototype.oldShippingMethod = null;
+        AdminOrder.prototype.shippingMethod = null;
+
+
+        AdminOrder.prototype.setShippingMethod = AdminOrder.prototype.setShippingMethod.wrap(
+            function (parentFunction, method) {
+                this.oldShippingMethod = this.shippingMethod;
+
+                if (this.showModalFlag && method === 'paazlshipping_paazlshipping') {
+                    jQuery('#paazl-modal').paazlWidgetModal('openModal');
+
+                    return false;
+                }
+
+                this.showModalFlag = true;
+                parentFunction(method);
+                this.shippingMethod = method;
+            }
+        );
+    });
+</script>

@@ -73,4 +73,11 @@ interface QuoteReferenceInterface
      * @return string
      */
     public function getTokenExpiresAt();
+
+    /**
+     * @param \DateTime|null $now
+     *
+     * @return bool
+     */
+    public function isTokenExpired(\DateTime $now = null);
 }

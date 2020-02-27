@@ -67,8 +67,9 @@ class PaazlStatus extends AbstractOrder
             return parent::_prepareLayout();
         }
 
-        if ($this->getPaazlOrder()->isSent()) {
-            $onclick = "submitAndReloadArea($('paazl-order-status').parentNode.parentNode, '" . $this->getResendUrl() . "')";
+        if ($this->getPaazlOrder()->canResend()) {
+            $onclick = "submitAndReloadArea($('paazl-order-status').parentNode.parentNode, '" .
+                $this->getResendUrl() . "')";
             $resendButton = $this->getLayout()
                 ->createBlock(Button::class)
                 ->setData([
@@ -80,18 +81,24 @@ class PaazlStatus extends AbstractOrder
 
             return parent::_prepareLayout();
         }
-        $onclick = "submitAndReloadArea($('paazl-order-status').parentNode.parentNode, '" . $this->getRetryUrl() . "')";
-        $retryButton = $this->getLayout()
-            ->createBlock(Button::class)
-            ->setData([
-                'label' => __('Retry'),
-                'class' => 'action-retry action-secondary',
-                'onclick' => $onclick
-            ]);
-        $editBlock = $this->getLayout()
-            ->createBlock(PaazlEdit::class);
-        $this->setChild('retry_button', $retryButton);
-        $this->setChild('edit_block', $editBlock);
+        if ($this->getPaazlOrder()->canEdit()) {
+            $editBlock = $this->getLayout()->createBlock(PaazlEdit::class);
+            $this->setChild('edit_block', $editBlock);
+        }
+
+        if ($this->getPaazlOrder()->canRetry()) {
+            $onclick = "submitAndReloadArea($('paazl-order-status').parentNode.parentNode, '" .
+                $this->getRetryUrl() . "')";
+            $retryButton = $this->getLayout()
+                ->createBlock(Button::class)
+                ->setData([
+                    'label' => __('Retry'),
+                    'class' => 'action-retry action-secondary',
+                    'onclick' => $onclick
+                ]);
+
+            $this->setChild('retry_button', $retryButton);
+        }
 
         return parent::_prepareLayout();
     }
@@ -158,7 +165,8 @@ class PaazlStatus extends AbstractOrder
     {
         if (null === $this->paazlOrder) {
             try {
-                $this->paazlOrder = $this->getOrderReferenceRepository()->getByOrderId($this->getOrder()->getEntityId());
+                $this->paazlOrder =
+                    $this->getOrderReferenceRepository()->getByOrderId($this->getOrder()->getEntityId());
             } catch (NoSuchEntityException $exception) {
                 $this->paazlOrder = false;
             }

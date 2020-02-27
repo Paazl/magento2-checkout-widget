@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<!--
+  ~ Copyright © 2019 Paazl. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="before.body.end">
+            <block class="Magento\Backend\Block\Template" name="order.create.shipping.method.paazl.wrapper"
+                   template="Paazl_CheckoutWidget::order/create/shipping/method/paazl.phtml">
+                <block class="Paazl\CheckoutWidget\Block\Checkout\Widget" name="paazl.checkout.widget"
+                       template="Paazl_CheckoutWidget::checkout/widget.phtml"/>
+            </block>
+            <block class="Paazl\CheckoutWidget\Block\Adminhtml\Order\Create\Shipping\Method\Paazl\Widget\Modal"
+                   name="order.create.shipping.method.paazl.widget.modal"/>
+        </referenceContainer>
+        <referenceContainer name="js">
+            <block class="Magento\Backend\Block\Template"
+                   name="order.create.paazl.js"
+                   template="Paazl_CheckoutWidget::order/create/paazl-js.phtml"/>
+            <block class="Paazl\CheckoutWidget\Block\Adminhtml\Order\Create\Shipping\Method\Paazl\Widget\Config"
+                   name="order.create.shipping.method.paazl.widget.config" after="-"/>
+        </referenceContainer>
+    </body>
+</page>

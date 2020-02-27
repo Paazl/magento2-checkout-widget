@@ -21,6 +21,7 @@ use Magento\Quote\Api\ShipmentEstimationInterface;
 use Magento\Quote\Api\ShippingMethodManagementInterface;
 use Paazl\CheckoutWidget\Model\Api\Builder\Reference;
 use Paazl\CheckoutWidget\Model\Api\PaazlApi;
+use Paazl\CheckoutWidget\Model\Api\PaazlApiFactory;
 use Paazl\CheckoutWidget\Model\Api\Processor\CheckoutInfoToQuote;
 use Paazl\CheckoutWidget\Model\Carrier\Paazlshipping;
 use Paazl\CheckoutWidget\Model\Api\ApiException;
@@ -34,9 +35,9 @@ use Paazl\CheckoutWidget\Model\Api\Field\DeliveryType;
 class ShippingInformationManagementPlugin
 {
     /**
-     * @var PaazlApi
+     * @var PaazlApiFactory
      */
-    private $api;
+    private $paazlApiFactory;
 
     /**
      * @var Reference
@@ -59,7 +60,7 @@ class ShippingInformationManagementPlugin
     private $shipmentEstimation;
 
     /**
-     * @var CartInterface
+     * @var CartInterface|null
      */
     private $quote;
 
@@ -81,7 +82,7 @@ class ShippingInformationManagementPlugin
     /**
      * ShippingInformationManagementPlugin constructor.
      *
-     * @param PaazlApi                          $api
+     * @param PaazlApiFactory                   $paazlApiFactory
      * @param Reference                         $referenceBuilder
      * @param CartRepositoryInterface           $quoteRepository
      * @param CheckoutInfoToQuote               $checkoutInfoToQuote
@@ -91,7 +92,7 @@ class ShippingInformationManagementPlugin
      * @param ArrayManager                      $arrayManager
      */
     public function __construct(
-        PaazlApi $api,
+        PaazlApiFactory $paazlApiFactory,
         Reference $referenceBuilder,
         CartRepositoryInterface $quoteRepository,
         CheckoutInfoToQuote $checkoutInfoToQuote,
@@ -100,7 +101,7 @@ class ShippingInformationManagementPlugin
         TotalsExtensionFactory $totalsExtensionFactory,
         ArrayManager $arrayManager
     ) {
-        $this->api = $api;
+        $this->paazlApiFactory = $paazlApiFactory;
         $this->referenceBuilder = $referenceBuilder;
         $this->quoteRepository = $quoteRepository;
         $this->checkoutInfoToQuote = $checkoutInfoToQuote;
@@ -112,7 +113,7 @@ class ShippingInformationManagementPlugin
 
     /**
      * @param ShippingInformationManagement $subject
-     * @param                               $cartId
+     * @param int                           $cartId
      * @param ShippingInformationInterface  $addressInformation
      *
      * @return null
@@ -129,7 +130,9 @@ class ShippingInformationManagementPlugin
 
         if ($addressInformation->getShippingCarrierCode() === Paazlshipping::CODE) {
             // Getting the checkout information from Paazl
-            $result = $this->api->fetchCheckoutData($this->referenceBuilder->getQuoteReference($quote));
+            /** @var PaazlApi $paazlApi */
+            $paazlApi = $this->paazlApiFactory->create($quote->getStoreId());
+            $result = $paazlApi->fetchCheckoutData($this->referenceBuilder->getQuoteReference($quote));
 
             // Checking pickupLocation
             if ($this->arrayManager->get('deliveryType', $result) === DeliveryType::PICKUP) {
@@ -203,7 +206,7 @@ class ShippingInformationManagementPlugin
             /** @var TotalsInterface $totals */
             $totals = $paymentDetails->getTotals();
 
-            /** @var TotalsExtensionInterface $extension */
+            /** @var TotalsExtensionInterface|null $extension */
             $extension = $totals->getExtensionAttributes();
             if (!$extension) {
                 $extension = $this->totalsExtensionFactory->create();

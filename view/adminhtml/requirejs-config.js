@@ -4,6 +4,11 @@
  */
 
 var config = {
+    map: {
+        '*': {
+            paazlWidgetModal: 'Paazl_CheckoutWidget/js/admin/order/create/shipping/method/paazl/widget/modal'
+        }
+    },
     config: {
         mixins: {
             'mage/validation': {

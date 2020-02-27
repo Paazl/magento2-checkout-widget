@@ -17,7 +17,9 @@ use Paazl\CheckoutWidget\Model\Api\Processor\SendToService;
 
 abstract class Order extends Action
 {
-    /** @var JsonFactory */
+    /**
+     * @var JsonFactory
+     */
     protected $resultJsonFactory;
 
     /**
@@ -30,7 +32,9 @@ abstract class Order extends Action
      */
     protected $orderRepository;
 
-    /** @var SendToService */
+    /**
+     * @var SendToService
+     */
     protected $sendToService;
 
     /**

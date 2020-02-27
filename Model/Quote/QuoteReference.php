@@ -7,6 +7,7 @@
 namespace Paazl\CheckoutWidget\Model\Quote;
 
 use Magento\Framework\Model\AbstractModel;
+use Magento\Framework\Stdlib\DateTime;
 use Paazl\CheckoutWidget\Api\Data\Quote\QuoteReferenceInterface;
 use Paazl\CheckoutWidget\Model\ResourceModel\Quote\QuoteReference as QuoteReferenceResource;
 
@@ -97,5 +98,35 @@ class QuoteReference extends AbstractModel implements QuoteReferenceInterface
     public function getTokenExpiresAt()
     {
         return $this->getData(self::TOKEN_EXPIRES_AT);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isTokenExpired(\DateTime $now = null)
+    {
+        $result = true;
+        $expiresAt = $this->getTokenExpiresAt();
+        if (empty($expiresAt)) {
+            return $result;
+        }
+
+        $expires = \DateTime::createFromFormat(
+            DateTime::DATETIME_PHP_FORMAT,
+            $expiresAt,
+            new \DateTimeZone('UTC')
+        );
+
+        try {
+            $now = $now ?: new \DateTime('now', new \DateTimeZone('UTC'));
+            // phpcs:ignore
+        } catch (\Exception $e) {
+        }
+
+        if ($now && $expires && ($now < $expires)) {
+            $result = false;
+        }
+
+        return $result;
     }
 }

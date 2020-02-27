@@ -22,10 +22,12 @@ class AttributesWithStatic implements ArrayInterface
      * @var array
      */
     public $options;
+
     /**
      * @var Repository
      */
     private $attributeRepository;
+
     /**
      * @var SearchCriteriaBuilder
      */
@@ -75,7 +77,7 @@ class AttributesWithStatic implements ArrayInterface
     }
 
     /**
-     * @param $attributeLabel
+     * @param string $attributeLabel
      *
      * @return string
      */

@@ -13,7 +13,7 @@ use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\View\Result\PageFactory;
 use Magento\Framework\Serialize\SerializerInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
-use Magento\Backend\Model\Session\Proxy as Session;
+use Magento\Backend\Model\Session;
 use Paazl\CheckoutWidget\Controller\Adminhtml\Order;
 use Paazl\CheckoutWidget\Model\Api\Processor\SendToService;
 
@@ -24,10 +24,14 @@ class Validate extends Order
 {
     const DEFAULT_MESSAGE_KEY = 'message';
 
-    /** @var SerializerInterface */
+    /**
+     * @var SerializerInterface
+     */
     protected $serializer;
 
-    /** @var Session */
+    /**
+     * @var Session
+     */
     private $session;
 
     /**

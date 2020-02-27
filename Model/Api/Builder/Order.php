@@ -94,6 +94,10 @@ class Order
         }
 
         $extInformation = $this->extInfoHandler->getInfoFromOrderReference($reference);
+        if ($extInformation === null) {
+            throw new NotFoundException(__('Reference information not found'));
+        }
+
         /** @var Address $shippingAddress */
         $shippingAddress = $order->getShippingAddress();
         if ($extInformation->getType() === DeliveryType::PICKUP) {
@@ -211,7 +215,7 @@ class Order
         }
 
         $address = implode(' ', $shippingAddress->getStreet());
-        $pattern = '/^(?<street>[\w[:alpha:]]+[ \w[:alpha:]]*) (?<houseNumber>\d{1,5})((?<houseNumberExtension>[\-\/\s]*\w+)*)/';
+        $pattern = '/^(?<street>.+) (?<houseNumber>[0-9]{1,5})(?<houseNumberExtension>[[:punct:]\s]*.+)*$/';
         preg_match($pattern, $address, $matches);
         $parsedAddress = array_filter($matches, function ($key) {
             return !is_int($key);
@@ -221,7 +225,7 @@ class Order
     }
 
     /**
-     * @param $order
+     * @param OrderInterface $order
      *
      * @return array
      * @throws LocalizedException
@@ -252,6 +256,7 @@ class Order
             }
 
             if ($dimensions = $this->getProductDimemension($item)) {
+                // phpcs:ignore Magento2.Performance
                 $itemData = array_merge($itemData, $dimensions);
             }
 

@@ -13,10 +13,9 @@ define([
 ], function (ko, Component, $, domReady, shippingSaveProcessor, quote) {
     'use strict';
 
-    const paazlCheckoutUrl = 'https://api-acc.paazl.com/v1/checkout';
-
     var shippingConfig = window.checkoutConfig.paazlshipping || {};
     var widgetConfig = shippingConfig.widgetConfig || {};
+    var mapActive = false;
 
     domReady(function () {
         /**
@@ -29,9 +28,48 @@ define([
         });
     });
 
+    /**
+     * @param {String} url
+     * @return {Boolean}
+     */
+    function isCheckoutUrl(url) {
+        return shippingConfig.checkoutApiUrl && (shippingConfig.checkoutApiUrl.indexOf(url) === 0);
+    }
+
+    if (shippingConfig.saveShippingInfoInstantly === true) {
+        // Updating shipping information at every update of shipping option
+        let openOrig = window.XMLHttpRequest.prototype.open;
+
+        window.XMLHttpRequest.prototype.open = function (method, url, async, user, password) {
+            if (isCheckoutUrl(url)) {
+                this.removeEventListener('load', onLoadEnd);
+                this.addEventListener('load', onLoadEnd);
+            }
+
+            return openOrig.apply(this, arguments);
+        };
+    }
+
+    /**
+     * @param {ProgressEvent} event
+     */
+    function onLoadEnd(event) {
+        let ready =
+            (this.readyState === 4)
+            && event.target
+            && (event.target.status === 200);
+
+        if (ready) {
+            let shippingMethod = quote.shippingMethod();
+
+            if (shippingMethod && shippingMethod['method_code']) {
+                shippingSaveProcessor.saveShippingInformation();
+            }
+        }
+    }
+
     return Component.extend({
         configJson: ko.observable(),
-        widgetLoaded: false,
         customerAddressId: null,
         state: {
             postcode: null,
@@ -40,9 +78,18 @@ define([
 
         initialize: function () {
             this._super();
-            this.getConfigJson(widgetConfig);
+            this.initWidget();
+        },
 
-            if (shippingConfig.googleMapKey) {
+        initWidget: function () {
+            if (this.configJson() === undefined) {
+                this.configJson(widgetConfig);
+            }
+            this.initMap();
+        },
+
+        initMap: function () {
+            if ((!mapActive) && shippingConfig.googleMapKey) {
                 (function (i, s, o, g, r, a, m) {
                     a = s.createElement(o),
                         m = s.getElementsByTagName(o)[0];
@@ -55,6 +102,8 @@ define([
                     'script',
                     '//maps.googleapis.com/maps/api/js?key=' + shippingConfig.googleMapKey
                 );
+
+                mapActive = true;
             }
         },
 
@@ -90,6 +139,7 @@ define([
         },
 
         loadWidget: function (postcode, country) {
+            this.initWidget();
             var data = this.configJson(),
                 self = this;
 
@@ -110,50 +160,13 @@ define([
                     container.data('paazlactive', true);
                     self.state.postcode = data.consigneePostalCode;
                     self.state.country = data.consigneeCountryCode;
-                } else {
-                    if (postcode != '' && (postcode != self.state.postcode)) {
-                        paazlCheckout.setConsigneePostalCode(postcode);
-                        self.state.postcode = postcode;
-                    }
-
-                    if (country != '' && (country != self.state.country)) {
-                        paazlCheckout.setConsigneeCountryCode(country);
-                        self.state.country = country;
-                    }
                 }
+                /*
+                 * Don't make an update otherwise:
+                 *   change of country/postcode will reload the block with shipping methods.
+                 */
             };
 
-            let open = window.XMLHttpRequest.prototype.open,
-                onloadend;
-
-            window.XMLHttpRequest.prototype.open = function (method, url, async, user, password) {
-                if (url === paazlCheckoutUrl) {
-                    if(this.onloadend) {
-                        onloadend = this.onloadend;
-                    }
-                    this.onloadend = onLoadEnd;
-                }
-
-                return open.apply(this, arguments);
-            };
-
-            function onLoadEnd() {
-                let ready = this.readyState === 4 || false;
-
-                if (self.widgetLoaded && ready) {
-                    let shippingMethod = quote.shippingMethod();
-
-                    if (shippingMethod && shippingMethod['method_code']) {
-                        shippingSaveProcessor.saveShippingInformation();
-                    }
-                }
-
-                if(onloadend) {
-                    return onloadend.apply(this, arguments);
-                }
-            }
-
-            self.widgetLoaded = true;
             self.customerAddressId = quote.shippingAddress()['customerAddressId'];
 
             require([this.getJsName()], infoUpdate);

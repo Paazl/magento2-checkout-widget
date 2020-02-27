@@ -79,13 +79,15 @@ class PaazlOrderDataDataProvider implements DataProviderInterface
         return [];
     }
 
+    // phpcs:disable
     /**
      * {@inheritDoc}
      */
     public function setConfigData($config)
     {
-        // TODO: Implement setConfigData() method.
+
     }
+    // phpcs:enable
 
     /**
      * {@inheritDoc}
@@ -143,43 +145,53 @@ class PaazlOrderDataDataProvider implements DataProviderInterface
         return [];
     }
 
+    // phpcs:disable
     /**
      * {@inheritDoc}
      */
     public function addFilter(\Magento\Framework\Api\Filter $filter)
     {
-        // TODO: Implement addFilter() method.
-    }
 
+    }
+    // phpcs:enable
+
+    // phpcs:disable
     /**
      * {@inheritDoc}
      */
     public function addOrder($field, $direction)
     {
-        // TODO: Implement addOrder() method.
-    }
 
+    }
+    // phpcs:enable
+
+    // phpcs:disable
     /**
      * {@inheritDoc}
      */
     public function setLimit($offset, $size)
     {
-        // TODO: Implement setLimit() method.
-    }
 
+    }
+    // phpcs:enable
+
+    // phpcs:disable
     /**
      * {@inheritDoc}
      */
     public function getSearchCriteria()
     {
-        // TODO: Implement getSearchCriteria() method.
-    }
 
+    }
+    // phpcs:enable
+
+    // phpcs:disable
     /**
      * {@inheritDoc}
      */
     public function getSearchResult()
     {
-        // TODO: Implement getSearchResult() method.
+
     }
+    // phpcs:enable
 }

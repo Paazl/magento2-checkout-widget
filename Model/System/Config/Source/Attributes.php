@@ -22,10 +22,12 @@ class Attributes implements ArrayInterface
      * @var array
      */
     public $options;
+
     /**
      * @var Repository
      */
     private $attributeRepository;
+
     /**
      * @var SearchCriteriaBuilder
      */
@@ -74,7 +76,7 @@ class Attributes implements ArrayInterface
     }
 
     /**
-     * @param $attributeLabel
+     * @param string $attributeLabel
      *
      * @return string
      */
