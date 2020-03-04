@@ -19,7 +19,10 @@ In a nutshell, Paazl provides the tools to scale e-commerce delivery globally. O
 
 The new Paazl Magento2 extension is all about the delivery experience of consumers. It comes with the brand new Paazl Checkout Widget that helps you display any type delivery method in your Magento checkout ([See more here](https://vimeo.com/362771849/)). The typical Magento2 customer for this extension has international ambitions, high volume delivery and processes its shipments via an ERP/OMS/WMS. See also our [Wiki](https://github.com/Paazl/magento2-checkout-widget/wiki) for the differences with our Magento1 extension.
 
-Note that the Paazl Magento2 extension offers all the basics for integrating Paazl in your checkout. Always make sure to align with other extensions and/or existing customisation.
+Note 1: that the Paazl Magento2 extension offers all the basics for integrating Paazl in your checkout. Always make sure to align with other extensions and/or existing customisation.
+
+Note 2: the extension is only available for customers that have the new Paazl license. Please always contact our Support team at support@paazl.com before installing.
+
 
 <h2>Installation using Composer</h2>
 Magento 2 uses Composer to manage the module package and the library. Composer is a dependency manager for PHP. Composer declares the libraries your project depends on and installs them for you.
