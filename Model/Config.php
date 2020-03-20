@@ -66,6 +66,16 @@ class Config
     }
 
     /**
+     * Get module version from config
+     *
+     * @return string
+     */
+    public function getVersion()
+    {
+        return $this->getValue(self::API_CONFIG_PATH . '/version');
+    }
+
+    /**
      * @param null|Store|int|string $store
      *
      * @return mixed

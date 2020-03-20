@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2019 Paazl. All rights reserved.
+ * Copyright © Paazl. All rights reserved.
  * See COPYING.txt for license details.
  */
 
@@ -8,7 +8,7 @@ namespace Paazl\CheckoutWidget\Block\Adminhtml\Paazl;
 
 use Magento\Config\Block\System\Config\Form\Field;
 use Magento\Framework\Data\Form\Element\AbstractElement;
-use Paazl\CheckoutWidget\Helper\General as GeneralHelper;
+use Paazl\CheckoutWidget\Model\Config;
 use Magento\Backend\Block\Template\Context;
 
 /**
@@ -20,21 +20,20 @@ class Version extends Field
 {
 
     /**
-     * @var GeneralHelper
+     * @var Config
      */
-    private $generalHelper;
+    private $config;
 
     /**
      * Version constructor.
-     *
-     * @param Context       $context
-     * @param GeneralHelper $generalHelper
+     * @param Context $context
+     * @param Config $config
      */
     public function __construct(
         Context $context,
-        GeneralHelper $generalHelper
+        Config $config
     ) {
-        $this->generalHelper = $generalHelper;
+        $this->config = $config;
         parent::__construct($context);
     }
 
@@ -49,7 +48,7 @@ class Version extends Field
             '<strong>%s</strong><br/>%s: %s',
             __('Paazl Checkout Widget'),
             __('Module Version'),
-            $this->generalHelper->getExtensionVersion()
+            $this->config->getVersion()
         );
         $element->setData('text', $html);
         return parent::_getElementHtml($element);
