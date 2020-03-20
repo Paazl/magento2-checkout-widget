@@ -299,7 +299,7 @@ class WidgetConfigProvider implements ConfigProviderInterface
      */
     public function getProductNumberOfProcessingDays(AbstractItem $item)
     {
-        $product = $this->productRepository->get($item->getSku());
+        $product = $this->productRepository->getById($item->getProduct()->getId());
 
         $attribute = $this->scopeConfig
             ->getProductAttributeNumberOfProcessingDays($this->getQuote()->getStoreId());
@@ -366,7 +366,7 @@ class WidgetConfigProvider implements ConfigProviderInterface
      */
     public function getProductDeliveryMatrix(AbstractItem $item)
     {
-        $product = $this->productRepository->get($item->getSku());
+        $product = $this->productRepository->getById($item->getProduct()->getId());
 
         $attribute = $this->scopeConfig
             ->getProductAttributeDeliveryMatrix($this->getQuote()->getStoreId());
