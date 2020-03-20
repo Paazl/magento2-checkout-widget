@@ -117,7 +117,7 @@ class Config
             $mode = ApiMode::MODE_STAGING;
         }
 
-        return $mode;
+        return (int)$mode;
     }
 
     /**
