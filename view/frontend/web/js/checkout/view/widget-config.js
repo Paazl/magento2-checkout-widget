@@ -154,8 +154,14 @@ define([
 
             var infoUpdate = function (paazlCheckout) {
                 if (!container.data('paazlactive')) {
-                    data.consigneePostalCode = postcode || data.consigneePostalCode;
-                    data.consigneeCountryCode = country || data.consigneeCountryCode;
+                    if (postcode && country) {
+                        data.consigneePostalCode = postcode || data.consigneePostalCode;
+                        data.consigneeCountryCode = country || data.consigneeCountryCode;
+                    }
+
+                    if (!data.consigneePostalCode || !data.consigneeCountryCode) {
+                        return;
+                    }
                     paazlCheckout.init(data);
                     container.data('paazlactive', true);
                     self.state.postcode = data.consigneePostalCode;
