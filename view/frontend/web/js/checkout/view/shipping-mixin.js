@@ -20,7 +20,6 @@ define([
         if (quote.shippingMethod()
             && (quote.shippingMethod()['method_code'] === 'paazlshipping')
             && quote.shippingAddress()
-            && quote.shippingAddress().postcode && quote.shippingAddress().countryId
         ) {
             let shippingAddress = quote.shippingAddress();
             widgetConfig.prototype.loadWidget(shippingAddress.postcode, shippingAddress.countryId);

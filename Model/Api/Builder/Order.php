@@ -176,52 +176,37 @@ class Order
      * @param Address $shippingAddress
      *
      * @return array
+     * @throws LocalizedException
      */
-    private function parseAddress(Address $shippingAddress)
+    public function parseAddress(Address $shippingAddress)
     {
-        if ($this->config->housenumberOnSecondStreet() && trim($shippingAddress->getStreetLine(2) != '')) {
-            $pattern = '/^(?<houseNumber>\d{1,5})((?<houseNumberExtension>[\-\/\s]*[\w[:print:]]+)*)/';
-            preg_match($pattern, $shippingAddress->getStreetLine(2), $matches);
-            $parsedAddress = array_filter($matches, function ($key) {
-                return !is_int($key);
-            }, ARRAY_FILTER_USE_KEY);
+        $street = implode(' ', $shippingAddress->getStreet());
+        $street = trim(str_replace("\t", ' ', $street));
+        $houseExtensionPattern = '(?<houseNumber>\d{1,5})[[:punct:]\-\/\s]*(?<houseNumberExtension>[^[:space:]]{1,2})?';
+        $streetPattern = '(?<street>.+)';
 
-            $houseNumber = $parsedAddress['houseNumber'] ?? '';
-            $houseNumberExtension = preg_replace(
-                '/^[\s\/]/',
-                '',
-                $parsedAddress['houseNumberExtension'] ?? ''
-            );
+        $patterns = [
+            "/^{$streetPattern}[\s\R[:space:]]+{$houseExtensionPattern}$/",
+            "/^{$houseExtensionPattern}[\s\R[:space:]]+{$streetPattern}$/",
+        ];
 
-            if ($houseNumberExtension) {
-                return [
-                    'street'               => $shippingAddress->getStreetLine(1),
-                    'houseNumber'          => $houseNumber,
-                    'houseNumberExtension' => $houseNumberExtension
-                ];
-            }
+        $result = null;
 
-            if ($this->config->housenumberExtensionOnThirdStreet()
-                && trim($shippingAddress->getStreetLine(3) != '')
-            ) {
-                $houseNumberExtension = trim($shippingAddress->getStreetLine(3));
+        foreach ($patterns as $pattern) {
+            if (!preg_match($pattern, $street, $matches)) {
+                continue;
             }
 
             return [
-                'street'               => $shippingAddress->getStreetLine(1),
-                'houseNumber'          => $houseNumber,
-                'houseNumberExtension' => $houseNumberExtension
+                'street'               => trim($matches['street'] ?? ''),
+                'houseNumber'          => trim($matches['houseNumber'] ?? ''),
+                'houseNumberExtension' => trim($matches['houseNumberExtension'] ?? ''),
             ];
         }
 
-        $address = implode(' ', $shippingAddress->getStreet());
-        $pattern = '/^(?<street>.+) (?<houseNumber>[0-9]{1,5})(?<houseNumberExtension>[[:punct:]\s]*.+)*$/';
-        preg_match($pattern, $address, $matches);
-        $parsedAddress = array_filter($matches, function ($key) {
-            return !is_int($key);
-        }, ARRAY_FILTER_USE_KEY);
-
-        return $parsedAddress;
+        throw new LocalizedException(
+            __('This order cannot be committed to Paazl, please make sure the address has a valid housenumber.')
+        );
     }
 
     /**
