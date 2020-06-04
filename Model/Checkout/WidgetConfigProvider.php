@@ -215,6 +215,7 @@ class WidgetConfigProvider implements ConfigProviderInterface
      * @param double $price
      *
      * @return string
+     * @deprecated
      */
     public function formatPrice($price)
     {
