@@ -82,9 +82,7 @@ define([
         },
 
         initWidget: function () {
-            if (this.configJson() === undefined) {
-                this.configJson(widgetConfig);
-            }
+            this.configJson(window.checkoutConfig.paazlshipping.widgetConfig);
             this.initMap();
         },
 

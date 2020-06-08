@@ -23,6 +23,9 @@ var config = {
             },
             'Kega_Checkout/js/view/summary/shipping-mixin': {
                 'Paazl_CheckoutWidget/js/mixins/Magento_Checkout/view/summary/shipping': true
+            },
+            'Onestepcheckout_Iosc/js/shipping': {
+                'Paazl_CheckoutWidget/js/mixins/Onestepcheckout_Iosc/shipping-mixin': true
             }
         }
     }

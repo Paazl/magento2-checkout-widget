@@ -170,7 +170,7 @@ class WidgetConfigProvider implements ConfigProviderInterface
             ],
             "shipmentParameters"         => [
                 "totalWeight"   => $this->getTotalWeight(),
-                "totalPrice"    => $this->getQuote()->getSubtotal(),
+                "totalPrice"    => $this->getQuote()->getSubtotalWithDiscount(),
                 "numberOfGoods" => $this->getProductsCount(),
                 "goods"         => $goods
             ],
