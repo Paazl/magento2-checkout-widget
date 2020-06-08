@@ -72,6 +72,7 @@ class PaazlConfigProvider implements ConfigProviderInterface
         $config['googleMapKey'] = $this->config->getGoogleMapKey();
         $config['widgetConfig'] = $this->widgetConfigProvider->getConfig();
         $config['mode'] = $this->config->isProductionApiMode() ? 'live' : 'test';
+        $config['showOnFirstLoad'] = $this->config->showWidgetOnFirstLoad();
 
         if (empty($config['widgetConfig']['token'])) {
             // We were unable to obtain a token - enabling other methods if they're available

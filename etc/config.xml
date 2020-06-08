@@ -18,6 +18,7 @@
                 <model>Paazl\CheckoutWidget\Model\Carrier\Paazlshipping</model>
                 <name>Paazl</name>
                 <title>Paazl Shipping</title>
+                <show_on_firstload>1</show_on_firstload>
                 <housenumber_second_street>0</housenumber_second_street>
                 <housenumber_extension_third_street>0</housenumber_extension_third_street>
                 <infotext/>
