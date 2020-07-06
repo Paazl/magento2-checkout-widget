@@ -144,6 +144,15 @@
                     </depends>
                     <comment>Use this to distinguish between orders in each environment.</comment>
                 </field>
+                <field id="insurance_value" translate="label comment" type="text" sortOrder="48" showInDefault="1"
+                       showInWebsite="1" showInStore="1">
+                    <label>Insurance value</label>
+                    <validate>validate-number validate-zero-or-greater</validate>
+                    <depends>
+                        <field id="active">1</field>
+                    </depends>
+                    <comment>Fill in the insurance amount as a number.</comment>
+                </field>
                 <field id="heading_attributes" translate="label comment" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Product Attributes</label>
                     <frontend_model>Paazl\CheckoutWidget\Block\Adminhtml\Paazl\Heading</frontend_model>

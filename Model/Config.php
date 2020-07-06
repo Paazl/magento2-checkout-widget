@@ -459,4 +459,13 @@ class Config
     {
         return !!$this->getValue(self::API_CONFIG_PATH . '/show_on_firstload', $store);
     }
+
+    /**
+     * @param null|Store|int|string $store
+     * @return float
+     */
+    public function getInsuranceValue($store = null)
+    {
+        return abs((float)$this->getValue(self::API_CONFIG_PATH . '/insurance_value', $store));
+    }
 }

@@ -130,9 +130,9 @@ class Order
                 'currency' => $order->getOrderCurrencyCode(),
                 'value'    => $order->getGrandTotal(),
             ],
-            'insuredValue'          => [
+            'insuranceValue'        => [
                 'currency' => $order->getOrderCurrencyCode(),
-                'value'    => $order->getGrandTotal(),
+                'value'    => $this->config->getInsuranceValue($order->getStoreId()),
             ],
             'requestedDeliveryDate' => $extInformation->getPreferredDeliveryDate(),
             'products'              => [],
