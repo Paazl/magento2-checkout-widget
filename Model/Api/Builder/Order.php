@@ -186,8 +186,8 @@ class Order
         $streetPattern = '(?<street>.+)';
 
         $patterns = [
-            "/^{$streetPattern}[\s\R[:space:]]+{$houseExtensionPattern}$/",
-            "/^{$houseExtensionPattern}[\s\R[:space:]]+{$streetPattern}$/",
+            "/^{$streetPattern}[\s[:space:]]+{$houseExtensionPattern}$/",
+            "/^{$houseExtensionPattern}[\s[:space:]]+{$streetPattern}$/",
         ];
 
         $result = null;
