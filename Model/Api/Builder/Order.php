@@ -176,7 +176,6 @@ class Order
      * @param Address $shippingAddress
      *
      * @return array
-     * @throws LocalizedException
      */
     public function parseAddress(Address $shippingAddress)
     {
@@ -204,9 +203,64 @@ class Order
             ];
         }
 
-        throw new LocalizedException(
-            __('This order cannot be committed to Paazl, please make sure the address has a valid housenumber.')
-        );
+        $streetToParse = explode(' ', $street);
+        $probably = [
+            'street' => [],
+            'houseNumber' => [],
+            'houseNumberExtension' => []
+        ];
+
+        if (ctype_digit(end($streetToParse))) {
+            $probably = [
+                'houseNumber' => array_pop($streetToParse),
+                'street' => implode(' ', $streetToParse),
+                'houseNumberExtension' => ''
+            ];
+            if ($probably['street'] && $probably['houseNumber']) {
+                return $probably;
+            }
+        }
+        foreach ($streetToParse as $parser) {
+            if (!trim($parser)) {
+                continue;
+            }
+            if (!preg_match('~[0-9]+~' , $parser)
+                && strlen($parser) > 2) {
+                $probably['street'][] = $parser;
+            } elseif (ctype_digit($parser)) {
+                $probably['houseNumber'][] = $parser;
+            } else {
+                $num = '';
+                foreach (str_split($parser) as $index => $char) {
+                    if (is_numeric($char)) {
+                        $num .= $char;
+                    } else {
+                        $probably['houseNumber'][] = $num;
+                        $probably['houseNumberExtension'][] = substr($parser, $index, strlen($parser) - $index);
+                        break;
+                    }
+                }
+            }
+        }
+
+        $probably = [
+            'street' => implode(' ', $probably['street']),
+            'houseNumber' => implode('', $probably['houseNumber']),
+            'houseNumberExtension' => implode('', $probably['houseNumberExtension'])
+        ];
+        if ($probably['street'] && $probably['houseNumber']) {
+            return $probably;
+        }
+
+        /**
+         * Fallback to full address on street and housenumber set to 0
+         * This is a new requirement from Paazl API.
+         */
+        return [
+            'street' => $street,
+            'houseNumber' => 0,
+            'houseNumberExtension' => null,
+        ];
     }
 
     /**

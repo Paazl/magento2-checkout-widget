@@ -83,7 +83,6 @@ class OrderTest extends TestCase
      * @param array $expect
      *
      * @dataProvider parseAddressProvider
-     * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function testParseAddress(array $street, array $expect)
     {
@@ -134,43 +133,83 @@ class OrderTest extends TestCase
                 [' 68 / HM  Donkere spaarne  '],
                 ['street' => 'Donkere spaarne', 'houseNumber' => '68', 'houseNumberExtension' => 'HM']
             ],
+            [
+                ['Remi Vandervaerenlaan 712/0202'],
+                ['street' => 'Remi Vandervaerenlaan', 'houseNumber' => '712', 'houseNumberExtension' => '/0202']
+            ],
+            [
+                ['Nijverheidstraat 1152 bus1.2'],
+                ['street' => 'Nijverheidstraat', 'houseNumber' => '1152', 'houseNumberExtension' => 'bus1.2']
+            ],
+            [
+                ['Marienwaerdt 6e Dreef 4'],
+                ['street' => 'Marienwaerdt 6e Dreef', 'houseNumber' => '4', 'houseNumberExtension' => '']
+            ],
+            [
+                ['Nieuwe gracht 20zw /2'],
+                ['street' => 'Nieuwe gracht', 'houseNumber' => '20', 'houseNumberExtension' => 'zw/2']
+            ],
+            [
+                ['Dr. J. Straat 12-14'],
+                ['street' => 'Dr. J. Straat', 'houseNumber' => '12', 'houseNumberExtension' => '14']
+            ],
+            [
+                ['Nieuwe gracht 20zw/3'],
+                ['street' => 'Nieuwe gracht', 'houseNumber' => '20', 'houseNumberExtension' => 'zw/3']
+            ],
+            [
+                ['Nieuwe gracht 20 zw/4'],
+                ['street' => 'Nieuwe gracht', 'houseNumber' => '20', 'houseNumberExtension' => 'zw/4']
+            ],
+            [
+                ['Dr. J. Straat 12 a'],
+                ['street' => 'Dr. J. Straat', 'houseNumber' => '12', 'houseNumberExtension' => 'a']
+            ],
+            [
+                ['Dr. J. Straat 12a'],
+                ['street' => 'Dr. J. Straat', 'houseNumber' => '12', 'houseNumberExtension' => 'a']
+            ],
+            [
+                ['Laan 1940 – 1945 37'],
+                ['street' => 'Laan 1940 – 1945', 'houseNumber' => '37', 'houseNumberExtension' => '']
+            ],
+            [
+                ['Laan 1940–1945 37'],
+                ['street' => 'Laan 1940–1945', 'houseNumber' => '37', 'houseNumberExtension' => '']
+            ],
         ];
     }
 
     /**
      * @param array $street
-     * @dataProvider parseAddressExceptionProvider
+     * @param array $expect
+     *
+     * @dataProvider parseAddressUnknownProvider
      */
-    public function testParseAddressException(array $street)
+    public function testParseAddressUnknown(array $street, array $expect)
     {
         $addressMock = $this->getMockBuilder(Address::class)->disableOriginalConstructor()->getMock();
         $addressMock->expects($this->once())->method('getStreet')->willReturn($street);
 
-        $this->expectException(\Magento\Framework\Exception\LocalizedException::class);
+        $result = $this->entity->parseAddress($addressMock);
 
-        $this->entity->parseAddress($addressMock);
+        $this->assertEquals($expect, $result);
     }
 
-    public function parseAddressExceptionProvider(): array
+    public function parseAddressUnknownProvider(): array
     {
         return [
             [
-                ['spaarne']
+                ['spaarne'],
+                ['street' => 'spaarne', 'houseNumber' => '0', 'houseNumberExtension' => '']
             ],
             [
-                [' Diemerkade str. ']
+                [' Diemerkade str. '],
+                ['street' => 'Diemerkade str.', 'houseNumber' => '0', 'houseNumberExtension' => '']
             ],
             [
-                [' Diemerkade  ', ' str. ']
-            ],
-            [
-                ['Oberländer']
-            ],
-            [
-                ['Oberländer', '', ' Ufer ']
-            ],
-            [
-                ['Сумская ул.']
+                ['Straat72test'],
+                ['street' => 'Straat72test', 'houseNumber' => '0', 'houseNumberExtension' => '']
             ],
         ];
     }
