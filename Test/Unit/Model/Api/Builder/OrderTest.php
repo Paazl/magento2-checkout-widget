@@ -252,8 +252,8 @@ class OrderTest extends TestCase
 
         $result = $this->entity->getCreateOrderData($orderMock);
 
-        $this->assertEquals($configValue, $result['insuranceValue']['value']);
-        $this->assertEquals($orderCurrency, $result['insuranceValue']['currency']);
+        $this->assertEquals($configValue, $result['insuredValue']['value']);
+        $this->assertEquals($orderCurrency, $result['insuredValue']['currency']);
     }
 
     /**

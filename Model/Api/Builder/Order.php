@@ -130,7 +130,7 @@ class Order
                 'currency' => $order->getOrderCurrencyCode(),
                 'value'    => $order->getGrandTotal(),
             ],
-            'insuranceValue'        => [
+            'insuredValue'        => [
                 'currency' => $order->getOrderCurrencyCode(),
                 'value'    => $this->config->getInsuranceValue($order->getStoreId()),
             ],
