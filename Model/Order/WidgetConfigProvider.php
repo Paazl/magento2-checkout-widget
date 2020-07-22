@@ -109,7 +109,7 @@ class WidgetConfigProvider implements ConfigProviderInterface
             ],
             'shipmentParameters'         => [
                 'totalWeight'   => $this->getTotalWeight(),
-                'totalPrice'    => $this->formatPrice($this->getOrder()->getSubtotal()),
+                'totalPrice'    => $this->getOrder()->getSubtotal(),
                 'numberOfGoods' => $this->getProductsCount(),
                 'goods'         => $goods
             ],
@@ -149,10 +149,11 @@ class WidgetConfigProvider implements ConfigProviderInterface
      *
      * @param double|float $price
      * @return string
+     * @deprecated
      */
     public function formatPrice($price)
     {
-        return number_format($price, 2);
+        return number_format($price, 2, '.', '');
     }
 
     /**

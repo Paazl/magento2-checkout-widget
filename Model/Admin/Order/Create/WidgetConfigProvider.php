@@ -116,7 +116,7 @@ class WidgetConfigProvider implements ConfigProviderInterface
             $goodsItem = [
                 "quantity" => (int)$item->getQty(),
                 "weight"   => doubleval($item->getWeight()),
-                "price"    => $this->formatPrice($item->getPrice())
+                "price"    => $item->getPrice()
             ];
 
             if (($itemNumberOfProcessingDays = $this->getProductNumberOfProcessingDays($item))
@@ -158,7 +158,7 @@ class WidgetConfigProvider implements ConfigProviderInterface
             ],
             "shipmentParameters"         => [
                 "totalWeight"   => $this->getTotalWeight(),
-                "totalPrice"    => $this->formatPrice($this->getQuote()->getSubtotal()),
+                "totalPrice"    => $this->getQuote()->getSubtotalWithDiscount(),
                 "numberOfGoods" => $this->getProductsCount(),
                 "goods"         => $goods
             ],
@@ -203,6 +203,7 @@ class WidgetConfigProvider implements ConfigProviderInterface
      * @param double $price
      *
      * @return string
+     * @deprecated
      */
     public function formatPrice($price)
     {

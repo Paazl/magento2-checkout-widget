@@ -103,14 +103,25 @@
                 <field id="name" translate="label comment" type="text" sortOrder="42" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Default Method Name</label>
                 </field>
+                <field id="show_on_firstload" translate="label" type="select" sortOrder="42" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Show Widget on FirstLoad</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Set to Yes if you want to load the Widget on the first checkout load before the client details are filled in. The default values below would be used on this first load and can be set on store-level.</comment>
+                </field>
                 <field id="default_country" translate="label" type="select" sortOrder="43" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Default Country</label>
                     <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
                     <can_be_empty>0</can_be_empty>
+                    <depends>
+                        <field id="show_on_firstload">1</field>
+                    </depends>
                 </field>
                 <field id="default_postcode" translate="label comment" type="text" sortOrder="44" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Default Postal Code</label>
                     <comment>The checkout widget will display the pickup locations nearest to this postal code.</comment>
+                    <depends>
+                        <field id="show_on_firstload">1</field>
+                    </depends>
                 </field>
                 <field id="housenumber_second_street" translate="label" type="select" sortOrder="45" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Use second street as housenumber</label>
@@ -132,6 +143,15 @@
                         <field id="active">1</field>
                     </depends>
                     <comment>Use this to distinguish between orders in each environment.</comment>
+                </field>
+                <field id="insurance_value" translate="label comment" type="text" sortOrder="48" showInDefault="1"
+                       showInWebsite="1" showInStore="1">
+                    <label>Insurance value</label>
+                    <validate>validate-number validate-zero-or-greater</validate>
+                    <depends>
+                        <field id="active">1</field>
+                    </depends>
+                    <comment>Fill in the insurance amount as a number.</comment>
                 </field>
                 <field id="heading_attributes" translate="label comment" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Product Attributes</label>

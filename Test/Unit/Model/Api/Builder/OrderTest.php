@@ -7,13 +7,17 @@
 namespace Paazl\CheckoutWidget\Test\Unit\Model\Api\Builder;
 
 use Magento\Framework\TestFramework\Unit\Helper\ObjectManager as ObjectManagerHelper;
+use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Model\Order\Address;
+use Paazl\CheckoutWidget\Api\Data\Order\OrderReferenceInterface;
 use Paazl\CheckoutWidget\Model\Api\Builder\Order;
 use Paazl\CheckoutWidget\Model\Api\Builder\Reference;
 use Paazl\CheckoutWidget\Model\Config;
 use Paazl\CheckoutWidget\Model\ExtInfoHandler;
 use Paazl\CheckoutWidget\Model\Handler\Item;
 use Paazl\CheckoutWidget\Model\ResourceModel\Order\OrderReferenceRepository;
+use Paazl\CheckoutWidget\Model\ShippingInfo;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 class OrderTest extends TestCase
@@ -29,15 +33,36 @@ class OrderTest extends TestCase
      */
     private $entity;
 
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject
+     */
+    private $extInfoHandlerMock;
+
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject
+     */
+    private $orderReferenceRepositoryMock;
+
+    /**
+     * @var MockObject
+     */
+    private $configMock;
+
     protected function setUp()
     {
         $this->objectManager = (new ObjectManagerHelper($this));
 
         $extInfoHandlerMock = $this->getMockBuilder(ExtInfoHandler::class)->disableOriginalConstructor()->getMock();
+        $this->extInfoHandlerMock = $extInfoHandlerMock;
+
         $referenceBuilderMock = $this->getMockBuilder(Reference::class)->disableOriginalConstructor()->getMock();
         $configMock = $this->getMockBuilder(Config::class)->disableOriginalConstructor()->getMock();
+        $this->configMock = $configMock;
+
         $orderReferenceRepositoryMock = $this->getMockBuilder(OrderReferenceRepository::class)
             ->disableOriginalConstructor()->getMock();
+        $this->orderReferenceRepositoryMock = $orderReferenceRepositoryMock;
+
         $itemHandlerMock = $this->getMockBuilder(Item::class)
             ->disableOriginalConstructor()->getMock();
 
@@ -58,7 +83,6 @@ class OrderTest extends TestCase
      * @param array $expect
      *
      * @dataProvider parseAddressProvider
-     * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function testParseAddress(array $street, array $expect)
     {
@@ -109,43 +133,140 @@ class OrderTest extends TestCase
                 [' 68 / HM  Donkere spaarne  '],
                 ['street' => 'Donkere spaarne', 'houseNumber' => '68', 'houseNumberExtension' => 'HM']
             ],
+            [
+                ['Remi Vandervaerenlaan 712/0202'],
+                ['street' => 'Remi Vandervaerenlaan', 'houseNumber' => '712', 'houseNumberExtension' => '/0202']
+            ],
+            [
+                ['Nijverheidstraat 1152 bus1.2'],
+                ['street' => 'Nijverheidstraat', 'houseNumber' => '1152', 'houseNumberExtension' => 'bus1.2']
+            ],
+            [
+                ['Marienwaerdt 6e Dreef 4'],
+                ['street' => 'Marienwaerdt 6e Dreef', 'houseNumber' => '4', 'houseNumberExtension' => '']
+            ],
+            [
+                ['Nieuwe gracht 20zw /2'],
+                ['street' => 'Nieuwe gracht', 'houseNumber' => '20', 'houseNumberExtension' => 'zw/2']
+            ],
+            [
+                ['Dr. J. Straat 12-14'],
+                ['street' => 'Dr. J. Straat', 'houseNumber' => '12', 'houseNumberExtension' => '14']
+            ],
+            [
+                ['Nieuwe gracht 20zw/3'],
+                ['street' => 'Nieuwe gracht', 'houseNumber' => '20', 'houseNumberExtension' => 'zw/3']
+            ],
+            [
+                ['Nieuwe gracht 20 zw/4'],
+                ['street' => 'Nieuwe gracht', 'houseNumber' => '20', 'houseNumberExtension' => 'zw/4']
+            ],
+            [
+                ['Dr. J. Straat 12 a'],
+                ['street' => 'Dr. J. Straat', 'houseNumber' => '12', 'houseNumberExtension' => 'a']
+            ],
+            [
+                ['Dr. J. Straat 12a'],
+                ['street' => 'Dr. J. Straat', 'houseNumber' => '12', 'houseNumberExtension' => 'a']
+            ],
+            [
+                ['Laan 1940 – 1945 37'],
+                ['street' => 'Laan 1940 – 1945', 'houseNumber' => '37', 'houseNumberExtension' => '']
+            ],
+            [
+                ['Laan 1940–1945 37'],
+                ['street' => 'Laan 1940–1945', 'houseNumber' => '37', 'houseNumberExtension' => '']
+            ],
         ];
     }
 
     /**
      * @param array $street
-     * @dataProvider parseAddressExceptionProvider
-     * @expectedException \Magento\Framework\Exception\LocalizedException
+     * @param array $expect
+     *
+     * @dataProvider parseAddressUnknownProvider
      */
-    public function testParseAddressException(array $street)
+    public function testParseAddressUnknown(array $street, array $expect)
     {
         $addressMock = $this->getMockBuilder(Address::class)->disableOriginalConstructor()->getMock();
         $addressMock->expects($this->once())->method('getStreet')->willReturn($street);
 
-        $this->entity->parseAddress($addressMock);
+        $result = $this->entity->parseAddress($addressMock);
+
+        $this->assertEquals($expect, $result);
     }
 
-    public function parseAddressExceptionProvider(): array
+    public function parseAddressUnknownProvider(): array
     {
         return [
             [
-                ['spaarne']
+                ['spaarne'],
+                ['street' => 'spaarne', 'houseNumber' => '0', 'houseNumberExtension' => '']
             ],
             [
-                [' Diemerkade str. ']
+                [' Diemerkade str. '],
+                ['street' => 'Diemerkade str.', 'houseNumber' => '0', 'houseNumberExtension' => '']
             ],
             [
-                [' Diemerkade  ', ' str. ']
+                ['Straat72test'],
+                ['street' => 'Straat72test', 'houseNumber' => '0', 'houseNumberExtension' => '']
             ],
-            [
-                ['Oberländer']
-            ],
-            [
-                ['Oberländer', '', ' Ufer ']
-            ],
-            [
-                ['Сумская ул.']
-            ],
+        ];
+    }
+
+    /**
+     * @param $configValue
+     * @param $orderCurrency
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NotFoundException
+     * @throws \ReflectionException
+     * @dataProvider orderInsuredValueDataProvider
+     */
+    public function testOrderInsuredValue($configValue, $orderCurrency)
+    {
+        $orderId = 1;
+        $orderStoreId = 2;
+
+        $addressMock = $this->createMock(Address::class);
+        $addressMock->method('getStreet')->willReturn(['Test str. 189']);
+
+        $orderMock = $this->createMock(\Magento\Sales\Model\Order::class);
+        $orderMock->method('getEntityId')->willReturn($orderId);
+        $orderMock->method('getStoreId')->willReturn($orderStoreId);
+        $orderMock->method('getShippingAddress')->willReturn($addressMock);
+        $orderMock->method('getBillingAddress')->willReturn($addressMock);
+        $orderMock->method('getOrderCurrencyCode')->willReturn($orderCurrency);
+        $orderMock->method('getItems')->willReturn([]);
+
+        /** @var OrderReferenceInterface|MockObject $referenceMock */
+        $referenceMock = $this->createMock(OrderReferenceInterface::class);
+
+        $this->orderReferenceRepositoryMock->method('getByOrderId')
+            ->with($orderId)
+            ->willReturn($referenceMock);
+
+        $shippingInfoMock = $this->createMock(ShippingInfo::class);
+        $this->extInfoHandlerMock->method('getInfoFromOrderReference')->willReturn($shippingInfoMock);
+
+        $this->configMock->method('getInsuranceValue')->with($orderStoreId)->willReturn($configValue);
+
+        $result = $this->entity->getCreateOrderData($orderMock);
+
+        $this->assertEquals($configValue, $result['insuredValue']['value']);
+        $this->assertEquals($orderCurrency, $result['insuredValue']['currency']);
+    }
+
+    /**
+     * @return array[]
+     */
+    public function orderInsuredValueDataProvider()
+    {
+        return [
+            [0, 'EUR'],
+            [0, 'USD'],
+            [1.05, 'EUR'],
+            [20.19, 'USD'],
+            [201.36363, 'USD'],
         ];
     }
 }

@@ -93,4 +93,15 @@
     <type name="\Magento\Quote\Api\CartManagementInterface">
         <plugin name="paazl_checkoutwidget" type="\Paazl\CheckoutWidget\Plugin\Quote\CartManagementPlugin"/>
     </type>
+
+    <type name="\Paazl\CheckoutWidget\Plugin\Framework\App\ActionPlugin">
+        <arguments>
+            <argument name="paazlConfigProvider"
+                      xsi:type="object">\Paazl\CheckoutWidget\Model\Checkout\WidgetConfigProvider\Proxy</argument>
+        </arguments>
+    </type>
+
+    <type name="\Magento\Framework\App\Action\AbstractAction">
+        <plugin name="paazlshipping" type="Paazl\CheckoutWidget\Plugin\Framework\App\ActionPlugin"/>
+    </type>
 </config>

@@ -82,9 +82,7 @@ define([
         },
 
         initWidget: function () {
-            if (this.configJson() === undefined) {
-                this.configJson(widgetConfig);
-            }
+            this.configJson(window.checkoutConfig.paazlshipping.widgetConfig);
             this.initMap();
         },
 
@@ -154,14 +152,20 @@ define([
 
             var infoUpdate = function (paazlCheckout) {
                 if (!container.data('paazlactive')) {
-                    if (postcode && country) {
-                        data.consigneePostalCode = postcode || data.consigneePostalCode;
-                        data.consigneeCountryCode = country || data.consigneeCountryCode;
+                    var postalCode, countryCode;
+                    if ((!postcode || !country) && shippingConfig.showOnFirstLoad) {
+                        postalCode = data.consigneePostalCode;
+                        countryCode = data.consigneeCountryCode;
+                    } else if (postcode && country) {
+                        postalCode = postcode;
+                        countryCode = country;
                     }
 
-                    if (!data.consigneePostalCode || !data.consigneeCountryCode) {
+                    if (!postalCode || !countryCode) {
                         return;
                     }
+                    data.consigneePostalCode = postalCode;
+                    data.consigneeCountryCode = countryCode;
                     paazlCheckout.init(data);
                     container.data('paazlactive', true);
                     self.state.postcode = data.consigneePostalCode;
