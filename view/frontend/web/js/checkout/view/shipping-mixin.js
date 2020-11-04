@@ -69,6 +69,12 @@ define([
             isPaazlOnly: function () {
                 var rates = this.rates();
                 return (rates.length === 1 && rates[0].carrier_code === 'paazlshipping');
+            },
+
+            setShippingInformation: function () {
+                widgetConfig.prototype.lock();
+                this._super();
+                widgetConfig.prototype.unlock();
             }
         });
     }

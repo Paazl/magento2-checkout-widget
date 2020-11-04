@@ -12,6 +12,15 @@ var config = {
             'Magento_Checkout/js/model/checkout-data-resolver': {
                 'Paazl_CheckoutWidget/js/checkout/model/checkout-data-resolver-mixin': true
             },
+            'Magento_Checkout/js/model/shipping-rate-service': {
+                'Paazl_CheckoutWidget/js/checkout/model/shipping-rate-service-mixin': true
+            },
+            'Magento_Checkout/js/model/shipping-rate-processor/new-address': {
+                'Paazl_CheckoutWidget/js/checkout/model/shipping-rate-processor/processor-mixin': true
+            },
+            'Magento_Checkout/js/model/shipping-rate-processor/customer-address': {
+                'Paazl_CheckoutWidget/js/checkout/model/shipping-rate-processor/processor-mixin': true
+            },
             'Magento_Checkout/js/view/summary/abstract-total': {
                 'Paazl_CheckoutWidget/js/checkout/view/summary/abstract-total-mixin': true
             },
