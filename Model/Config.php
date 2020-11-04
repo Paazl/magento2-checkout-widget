@@ -184,6 +184,16 @@ class Config
      *
      * @return mixed
      */
+    public function getWidgetSectionToggle($store = null)
+    {
+        return $this->getValue(self::API_CONFIG_PATH . '/widget_section_mode', $store);
+    }
+
+    /**
+     * @param null|Store|int|string $store
+     *
+     * @return mixed
+     */
     public function getDefaultTab($store = null)
     {
         return $this->getValue(self::API_CONFIG_PATH . '/widget_default_tab', $store);
@@ -310,6 +320,10 @@ class Config
      */
     public function housenumberExtensionOnThirdStreet($store = null)
     {
+        if (!$this->housenumberOnSecondStreet($store)) {
+            return false;
+        }
+
         return (bool)$this->getValue(self::API_CONFIG_PATH . '/housenumber_extension_third_street', $store);
     }
 
@@ -467,5 +481,14 @@ class Config
     public function getInsuranceValue($store = null)
     {
         return abs((float)$this->getValue(self::API_CONFIG_PATH . '/insurance_value', $store));
+    }
+
+    /**
+     * @param null|Store|int|string $store
+     * @return bool
+     */
+    public function getHouseNumberDefaultOption($store = null)
+    {
+        return !!$this->getValue(self::API_CONFIG_PATH . '/housenumber_default_value', $store);
     }
 }

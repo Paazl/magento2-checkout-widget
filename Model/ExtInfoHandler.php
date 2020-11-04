@@ -108,6 +108,9 @@ class ExtInfoHandler
         }
 
         $info = $reference->getExtShippingInfo();
+        if (empty($info)) {
+            return null;
+        }
 
         /** @var ShippingInfo $shippingInfo */
         $shippingInfo = $this->shippingInfoFactory->create();

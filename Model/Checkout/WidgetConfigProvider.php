@@ -6,15 +6,14 @@
 
 namespace Paazl\CheckoutWidget\Model\Checkout;
 
+use Magento\Catalog\Model\ProductRepository;
 use Magento\Checkout\Helper\Data;
 use Magento\Checkout\Model\ConfigProviderInterface;
-use Magento\Directory\Model\Currency;
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Quote\Model\Quote;
 use Magento\Quote\Model\Quote\Item\AbstractItem;
 use Magento\Sales\Model\OrderFactory;
-use Magento\Catalog\Model\ProductRepository;
-use Magento\Framework\Exception\NoSuchEntityException;
 use Paazl\CheckoutWidget\Helper\General as GeneralHelper;
 use Paazl\CheckoutWidget\Model\Config;
 use Paazl\CheckoutWidget\Model\Handler\Item as ItemHandler;
@@ -149,6 +148,7 @@ class WidgetConfigProvider implements ConfigProviderInterface
             "loadPaazlBasedData"         => true,
             "loadCarrierBasedData"       => true,
             "availableTabs"              => $this->getAvailableTabs(),
+            "headerTabType"              => $this->getWidgetSectionToggle(),
             "defaultTab"                 => $this->getDefaultTab(),
             "style"                      => $this->getWidgetTheme(),
             "nominatedDateEnabled"       => $this->getNominatedDateEnabled(),
@@ -250,6 +250,14 @@ class WidgetConfigProvider implements ConfigProviderInterface
     public function getAvailableTabs()
     {
         return $this->scopeConfig->getAvailableTabs();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getWidgetSectionToggle()
+    {
+        return $this->scopeConfig->getWidgetSectionToggle();
     }
 
     /**

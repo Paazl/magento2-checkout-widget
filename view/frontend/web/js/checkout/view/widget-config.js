@@ -69,8 +69,9 @@ define([
     }
 
     return Component.extend({
-        configJson: ko.observable(),
+        configJson: {},
         customerAddressId: null,
+        locked: false,
         state: {
             postcode: null,
             country: null
@@ -82,7 +83,7 @@ define([
         },
 
         initWidget: function () {
-            this.configJson(window.checkoutConfig.paazlshipping.widgetConfig);
+            this.configJson = widgetConfig || {};
             this.initMap();
         },
 
@@ -105,8 +106,19 @@ define([
             }
         },
 
-        getConfigJson: function (data) {
-            this.configJson(data);
+        lock: function() {
+            this.locked = true;
+        },
+
+        unlock: function() {
+            this.locked = false;
+        },
+
+        /**
+         * @return {boolean}
+         */
+        isLocked: function() {
+            return this.locked;
         },
 
         isHideOtherMethods: function () {
@@ -138,7 +150,7 @@ define([
 
         loadWidget: function (postcode, country) {
             this.initWidget();
-            var data = this.configJson(),
+            var data = this.configJson,
                 self = this;
 
             if (!data) {

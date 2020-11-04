@@ -8,7 +8,7 @@
     <default>
         <carriers>
             <paazlshipping>
-                <version>v1.3.0</version>
+                <version>v1.4.0</version>
                 <active>0</active>
                 <sallowspecific>0</sallowspecific>
                 <price>0</price>
@@ -25,12 +25,14 @@
                 <specificerrmsg>This shipping method is not available. To use this shipping method, please contact us.</specificerrmsg>
                 <widget_tabs>DELIVERY,STORE,PICKUP</widget_tabs>
                 <widget_nominated_date>1</widget_nominated_date>
+                <widget_section_mode>TAB</widget_section_mode>
                 <widget_default_tab>DELIVERY</widget_default_tab>
                 <widget_shipping_options_limit>5</widget_shipping_options_limit>
                 <widget_pickup_locations_page_limit>5</widget_pickup_locations_page_limit>
                 <widget_pickup_locations_limit>30</widget_pickup_locations_limit>
                 <widget_initial_pickup_locations>5</widget_initial_pickup_locations>
                 <insurance_value>0</insurance_value>
+                <housenumber_default_value>1</housenumber_default_value>
             </paazlshipping>
         </carriers>
     </default>

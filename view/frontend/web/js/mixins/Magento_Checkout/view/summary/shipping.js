@@ -19,6 +19,14 @@ define([], function () {
                 && totals['extension_attributes']['shipping_methods'][0]['carrier_code'] === 'paazlshipping'
             ) {
                 let shippingMethod = totals['extension_attributes']['shipping_methods'][0];
+                if (window.checkoutConfig.totalsData.extension_attributes) {
+                    window.checkoutConfig.totalsData.extension_attributes[0]
+                        = totals['extension_attributes']['shipping_methods'][0]
+                }
+                return shippingMethod['carrier_title'] + ' - ' + shippingMethod['method_title'];
+            } else if (window.checkoutConfig.totalsData.extension_attributes
+                && window.checkoutConfig.totalsData.extension_attributes[0]) {
+                let shippingMethod = window.checkoutConfig.totalsData.extension_attributes[0];
                 return shippingMethod['carrier_title'] + ' - ' + shippingMethod['method_title'];
             }
 

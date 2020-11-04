@@ -21,6 +21,13 @@ class LanguageProvider implements ConfigProviderInterface
      */
     private $resolver;
 
+    private $allowedCodes = [
+        'en' => 'eng',
+        'nl' => 'nld',
+        'de' => 'deu',
+        'pl' => 'pol'
+    ];
+
     /**
      * LanguageProvider constructor.
      *
@@ -39,10 +46,13 @@ class LanguageProvider implements ConfigProviderInterface
      */
     public function getConfig()
     {
-        $languageCode = 'en';
+        $languageCode = 'eng';
         if ($this->resolver->getLocale()) {
             $locale = $this->resolver->getLocale();
             $languageCode = explode('_', $locale)[0];
+            if (isset($this->allowedCodes[$languageCode])) {
+                $languageCode = $this->allowedCodes[$languageCode];
+            }
         }
 
         return [
