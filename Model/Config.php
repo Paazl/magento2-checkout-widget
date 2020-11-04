@@ -184,6 +184,16 @@ class Config
      *
      * @return mixed
      */
+    public function getWidgetSectionToggle($store = null)
+    {
+        return $this->getValue(self::API_CONFIG_PATH . '/widget_section_mode', $store);
+    }
+
+    /**
+     * @param null|Store|int|string $store
+     *
+     * @return mixed
+     */
     public function getDefaultTab($store = null)
     {
         return $this->getValue(self::API_CONFIG_PATH . '/widget_default_tab', $store);

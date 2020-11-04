@@ -58,6 +58,11 @@
                     <comment>Select the widget tabs that you want to display.</comment>
                     <validate>required-entry</validate>
                 </field>
+                <field id="widget_section_mode" translate="label" type="select" sortOrder="23" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Widget Toggle</label>
+                    <source_model>Paazl\CheckoutWidget\Model\System\Config\Source\WidgetSections</source_model>
+                    <comment>Select sections toggle appearance for the Paazl widget.</comment>
+                </field>
                 <field id="widget_default_tab" translate="label" type="select" sortOrder="24" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Widget Default Tab</label>
                     <source_model>Paazl\CheckoutWidget\Model\System\Config\Source\AvailableTabs</source_model>

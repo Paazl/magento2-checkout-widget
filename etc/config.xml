@@ -25,6 +25,7 @@
                 <specificerrmsg>This shipping method is not available. To use this shipping method, please contact us.</specificerrmsg>
                 <widget_tabs>DELIVERY,STORE,PICKUP</widget_tabs>
                 <widget_nominated_date>1</widget_nominated_date>
+                <widget_section_mode>TAB</widget_section_mode>
                 <widget_default_tab>DELIVERY</widget_default_tab>
                 <widget_shipping_options_limit>5</widget_shipping_options_limit>
                 <widget_pickup_locations_page_limit>5</widget_pickup_locations_page_limit>
