@@ -107,7 +107,7 @@ class Order
         $defaultHouseNumber = $this->config->getHouseNumberDefaultOption() ? 0 : '';
 
         $result = [
-            'additionalInstruction' => $order->getCustomerNote(),
+            'additionalInstruction' => '',
             'consignee'             => [
                 'email'       => $order->getCustomerEmail(),
                 'name'        => $shippingAddress->getName(),
