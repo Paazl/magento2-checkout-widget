@@ -31,6 +31,7 @@
                 <widget_pickup_locations_limit>30</widget_pickup_locations_limit>
                 <widget_initial_pickup_locations>5</widget_initial_pickup_locations>
                 <insurance_value>0</insurance_value>
+                <housenumber_default_value>1</housenumber_default_value>
             </paazlshipping>
         </carriers>
     </default>

@@ -104,6 +104,7 @@ class Order
             $shippingAddress = $order->getBillingAddress();
         }
         $address = $this->parseAddress($shippingAddress);
+        $defaultHouseNumber = $this->config->getHouseNumberDefaultOption() ? 0 : '';
 
         $result = [
             'additionalInstruction' => $order->getCustomerNote(),
@@ -117,8 +118,8 @@ class Order
                     'country'              => $shippingAddress->getCountryId(),
                     'postalCode'           => $shippingAddress->getPostcode(),
                     'province'             => $shippingAddress->getRegionCode(),
-                    'street'               => $address['street'],
-                    'houseNumber'          => $address['houseNumber'],
+                    'street'               => $address['street'] ?? '',
+                    'houseNumber'          => $address['houseNumber'] ?? $defaultHouseNumber,
                     'houseNumberExtension' => $address['houseNumberExtension'] ?? '',
                 ]
             ],
@@ -176,10 +177,19 @@ class Order
      * @param Address $shippingAddress
      *
      * @return array
+     * @throws LocalizedException
      */
     public function parseAddress(Address $shippingAddress)
     {
-        $street = implode(' ', $shippingAddress->getStreet());
+        $street = $shippingAddress->getStreet();
+        if ($this->config->housenumberExtensionOnThirdStreet()) {
+            return [
+                'street'               => trim($street[0] ?? null),
+                'houseNumber'          => trim(isset($street[1]) ? $street[1] : null),
+                'houseNumberExtension' => trim(isset($street[2]) ? $street[2] : null),
+            ];
+        }
+        $street = implode(' ', $street);
         $street = trim(str_replace("\t", ' ', $street));
         $houseExtensionPattern = '(?<houseNumber>\d{1,5})[[:punct:]\-\/\s]*(?<houseNumberExtension>[^[:space:]]{1,2})?';
         $streetPattern = '(?<street>.+)';
@@ -197,9 +207,9 @@ class Order
             }
 
             return [
-                'street'               => trim($matches['street'] ?? ''),
-                'houseNumber'          => trim($matches['houseNumber'] ?? ''),
-                'houseNumberExtension' => trim($matches['houseNumberExtension'] ?? ''),
+                'street'               => trim($matches['street'] ?? null),
+                'houseNumber'          => trim($matches['houseNumber'] ?? null),
+                'houseNumberExtension' => trim($matches['houseNumberExtension'] ?? null),
             ];
         }
 
@@ -252,15 +262,17 @@ class Order
             return $probably;
         }
 
-        /**
-         * Fallback to full address on street and housenumber set to 0
-         * This is a new requirement from Paazl API.
-         */
-        return [
-            'street' => $street,
-            'houseNumber' => 0,
-            'houseNumberExtension' => null,
-        ];
+        if ($this->config->getHouseNumberDefaultOption()) {
+            return [
+                'street' => $street,
+                'houseNumber' => null,
+                'houseNumberExtension' => null,
+            ];
+        } else {
+            throw new LocalizedException(
+                __('This order cannot be committed to Paazl, please make sure the address has a valid housenumber.')
+            );
+        }
     }
 
     /**
