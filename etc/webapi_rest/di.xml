@@ -13,4 +13,9 @@
         <plugin name="paazl_shipping_information_management"
                 type="Paazl\CheckoutWidget\Plugin\Checkout\ShippingInformationManagementPlugin"/>
     </type>
+
+    <type name="Magento\Quote\Api\CartTotalRepositoryInterface">
+        <plugin name="paazl_checkoutwidget"
+                type="Paazl\CheckoutWidget\Plugin\Quote\CartTotalRepositoryPlugin"/>
+    </type>
 </config>
