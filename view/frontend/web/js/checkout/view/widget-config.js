@@ -69,7 +69,7 @@ define([
     }
 
     return Component.extend({
-        configJson: {},
+        configJson: null,
         customerAddressId: null,
         locked: false,
         state: {
@@ -83,7 +83,7 @@ define([
         },
 
         initWidget: function () {
-            this.configJson = widgetConfig || {};
+            this.configJson = this.configJson || widgetConfig;
             this.initMap();
         },
 
@@ -190,6 +190,29 @@ define([
             };
 
             self.customerAddressId = quote.shippingAddress()['customerAddressId'];
+
+            require([this.getJsName()], infoUpdate);
+        },
+
+        reloadWidget: function (data) {
+            this.initWidget();
+            data = data || this.configJson;
+
+            if (!data) {
+                return;
+            }
+            this.configJson = data;
+            console.log(this.configJson);
+            var container = $('#' + data.mountElementId);
+
+            if (!container.length || !container.data('paazlactive')) {
+                return;
+            }
+
+            var infoUpdate = function (paazlCheckout) {
+                container.html('');
+                paazlCheckout.init(data);
+            };
 
             require([this.getJsName()], infoUpdate);
         }

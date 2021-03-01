@@ -35,6 +35,12 @@ var config = {
             },
             'Onestepcheckout_Iosc/js/shipping': {
                 'Paazl_CheckoutWidget/js/mixins/Onestepcheckout_Iosc/shipping-mixin': true
+            },
+            'Magento_SalesRule/js/action/set-coupon-code': {
+                'Paazl_CheckoutWidget/js/mixins/Magento_SalesRule/action/set-coupon-code-mixin': true
+            },
+            'Magento_SalesRule/js/action/cancel-coupon': {
+                'Paazl_CheckoutWidget/js/mixins/Magento_SalesRule/action/cancel-coupon-mixin': true
             }
         }
     }
