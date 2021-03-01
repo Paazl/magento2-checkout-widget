@@ -6,6 +6,7 @@
 
 namespace Paazl\CheckoutWidget\Test\Unit\Model\Api\Builder;
 
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\TestFramework\Unit\Helper\ObjectManager as ObjectManagerHelper;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Model\Order\Address;
@@ -189,10 +190,26 @@ class OrderTest extends TestCase
     public function testParseAddressUnknown(array $street, array $expect)
     {
         $addressMock = $this->getMockBuilder(Address::class)->disableOriginalConstructor()->getMock();
-        $addressMock->expects($this->once())->method('getStreet')->willReturn($street);
+        $addressMock->expects($this->atLeastOnce())->method('getStreet')->willReturn($street);
 
+        $this->configMock->method('getHouseNumberDefaultOption')->willReturn(false);
+        $this->expectException(LocalizedException::class);
         $result = $this->entity->parseAddress($addressMock);
+    }
 
+    /**
+     * @param array $street
+     * @param array $expect
+     *
+     * @dataProvider parseAddressUnknownProvider
+     */
+    public function testParseAddressUnknownDefaultHousenumber(array $street, array $expect)
+    {
+        $addressMock = $this->getMockBuilder(Address::class)->disableOriginalConstructor()->getMock();
+        $addressMock->expects($this->atLeastOnce())->method('getStreet')->willReturn($street);
+
+        $this->configMock->method('getHouseNumberDefaultOption')->willReturn(true);
+        $result = $this->entity->parseAddress($addressMock);
         $this->assertEquals($expect, $result);
     }
 
@@ -201,15 +218,19 @@ class OrderTest extends TestCase
         return [
             [
                 ['spaarne'],
-                ['street' => 'spaarne', 'houseNumber' => '0', 'houseNumberExtension' => '']
+                ['street' => 'spaarne', 'houseNumber' => null, 'houseNumberExtension' => null]
             ],
             [
                 [' Diemerkade str. '],
-                ['street' => 'Diemerkade str.', 'houseNumber' => '0', 'houseNumberExtension' => '']
+                ['street' => 'Diemerkade str.', 'houseNumber' => null, 'houseNumberExtension' => null]
             ],
             [
                 ['Straat72test'],
-                ['street' => 'Straat72test', 'houseNumber' => '0', 'houseNumberExtension' => '']
+                ['street' => 'Straat72test', 'houseNumber' => null, 'houseNumberExtension' => null]
+            ],
+            [
+                ['', '', '0'],
+                ['street' => '0', 'houseNumber' => null, 'houseNumberExtension' => null]
             ],
         ];
     }
