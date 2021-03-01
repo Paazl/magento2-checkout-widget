@@ -1,25 +1,25 @@
-  name: Unit Tests
+name: Unit Tests
 
-  on: pull_request
+on: pull_request
 
-  jobs:
-    build:
-      strategy:
-        matrix:
-          PHP_VERSION: [php71-fpm, php72-fpm]
-          MAGENTO_VERSION: [2.2.11, 2.3.4]
-          exclude:
-            - PHP_VERSION: php72-fpm
-              MAGENTO_VERSION: 2.2.11
-      runs-on: ubuntu-latest
-      steps:
-        - uses: actions/checkout@v1
+jobs:
+  build:
+    strategy:
+      matrix:
+        PHP_VERSION: [php71-fpm, php72-fpm]
+        MAGENTO_VERSION: [2.2.11, 2.3.4]
+        exclude:
+          - PHP_VERSION: php72-fpm
+            MAGENTO_VERSION: 2.2.11
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
 
-        - name: Start Docker
-          run: PHP_VERSION=${{ matrix.PHP_VERSION }} MAGENTO_VERSION=magento${{ matrix.MAGENTO_VERSION }} docker-compose -f .github/workflows/templates/docker-compose.yml up -d
+      - name: Start Docker
+        run: PHP_VERSION=${{ matrix.PHP_VERSION }} MAGENTO_VERSION=magento${{ matrix.MAGENTO_VERSION }} docker-compose -f .github/workflows/templates/docker-compose.yml up -d
 
-        - name: Upload our code into the docker container
-          run: docker cp $(pwd)/. magento-project-community-edition:/data/extensions && docker exec magento-project-community-edition composer require paazl/magento2-checkout-widget:@dev
+      - name: Upload our code into the docker container
+        run: docker cp $(pwd)/. magento-project-community-edition:/data/extensions/workdir && docker exec magento-project-community-edition composer require paazl/magento2-checkout-widget:@dev
 
-        - name: Run tests
-          run: docker exec magento-project-community-edition bash -c "vendor/bin/phpunit extensions/Test/Unit"
+      - name: Run tests
+        run: docker exec magento-project-community-edition bash -c "vendor/bin/phpunit extensions/workdir/Test/Unit"
