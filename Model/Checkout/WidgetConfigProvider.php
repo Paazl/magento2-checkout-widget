@@ -73,6 +73,11 @@ class WidgetConfigProvider implements ConfigProviderInterface
     private $productRepository;
 
     /**
+     * @var Quote
+     */
+    private $quote;
+
+    /**
      * Widget constructor.
      *
      * @param Config            $scopeConfig
@@ -169,9 +174,9 @@ class WidgetConfigProvider implements ConfigProviderInterface
                 "sortOrder" => "ASC"
             ],
             "shipmentParameters"         => [
-                "totalWeight"   => $this->getTotalWeight(),
-                "totalPrice"    => $this->getQuote()->getSubtotalWithDiscount(),
-                "numberOfGoods" => $this->getProductsCount(),
+                "totalWeight"   => (float)$this->getTotalWeight(),
+                "totalPrice"    => (float)$this->getQuote()->getSubtotalWithDiscount(),
+                "numberOfGoods" => (int)$this->getProductsCount(),
                 "goods"         => $goods
             ],
             "shippingOptionsLimit"       => $this->getShippingOptionsLimit(),
@@ -192,7 +197,21 @@ class WidgetConfigProvider implements ConfigProviderInterface
      */
     public function getQuote()
     {
-        return $this->checkoutHelper->getQuote();
+        if (!$this->quote) {
+            return $this->checkoutHelper->getQuote();
+        }
+
+        return $this->quote;
+    }
+
+    /**
+     * @param Quote|null $quote
+     * @return $this
+     */
+    public function setQuote(Quote $quote = null)
+    {
+        $this->quote = $quote;
+        return $this;
     }
 
     /**

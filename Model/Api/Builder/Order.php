@@ -234,7 +234,7 @@ class Order
             if (!trim($parser)) {
                 continue;
             }
-            if (!preg_match('~[0-9]+~' , $parser)
+            if (!preg_match('~[0-9]+~', $parser)
                 && strlen($parser) > 2) {
                 $probably['street'][] = $parser;
             } elseif (ctype_digit($parser)) {
@@ -254,9 +254,15 @@ class Order
         }
 
         $probably = [
-            'street' => implode(' ', $probably['street']),
-            'houseNumber' => implode('', $probably['houseNumber']),
-            'houseNumberExtension' => implode('', $probably['houseNumberExtension'])
+            'street' => is_array($probably['street'])
+                ? implode(' ', $probably['street'])
+                : $probably['street'],
+            'houseNumber' => is_array($probably['houseNumber'])
+                ? implode('', $probably['houseNumber'])
+                : $probably['houseNumber'],
+            'houseNumberExtension' => is_array($probably['houseNumberExtension'])
+                ? implode('', $probably['houseNumberExtension'])
+                : $probably['houseNumberExtension']
         ];
         if ($probably['street'] && $probably['houseNumber']) {
             return $probably;
