@@ -212,4 +212,16 @@ class Info implements ArgumentInterface
     {
         return $this->getOrderInfo()->getLocationName();
     }
+
+    /**
+     * @return string
+     */
+    public function getLocationCode()
+    {
+        try {
+            return (string)$this->getOrderInfo()->getLocationCode();
+        } catch (NoSuchEntityException $e) {
+            return '';
+        }
+    }
 }

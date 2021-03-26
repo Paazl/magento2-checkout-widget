@@ -181,3 +181,8 @@ section.paazl.method-select section.paazl__body.body form.options {
     max-height: 400px;
     overflow-y: auto;
 }
+
+.pickup-info-wrapper .store-code-wrapper {
+    margin-top: 1.5em;
+    margin-bottom: 1.5em;
+}
