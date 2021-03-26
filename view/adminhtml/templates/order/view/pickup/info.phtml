@@ -16,6 +16,13 @@ $viewModel = $block->getData('pickupViewModel');
     <?= $block->escapeHtml($viewModel->getLocationName()) ?>
     <div class="pickup-info-wrapper">
         <?= /* @escapeNotVerified */ $pickupAddress ?>
+
+        <?php if ($viewModel->getLocationCode()): ?>
+            <div class="store-code-wrapper">
+                <strong><?= /* @noEscape */ __('Pick-up location ID') ?>:</strong><br/>
+                <?= $block->escapeHtml($viewModel->getLocationCode())?>
+            </div>
+        <?php endif; ?>
     </div>
 <?php endif;?>
 
