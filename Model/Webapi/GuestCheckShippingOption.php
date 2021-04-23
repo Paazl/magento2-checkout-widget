@@ -10,8 +10,9 @@ namespace Paazl\CheckoutWidget\Model\Webapi;
 use Magento\Quote\Model\QuoteIdMask;
 use Magento\Quote\Model\QuoteIdMaskFactory;
 use Paazl\CheckoutWidget\Api\Data\CheckQuoteResultInterface;
+use Paazl\CheckoutWidget\Api\Webapi\GuestCheckShippingOptionInterface;
 
-class GuestCheckShippingOption
+class GuestCheckShippingOption implements GuestCheckShippingOptionInterface
 {
     /**
      * @var QuoteIdMaskFactory
@@ -38,9 +39,7 @@ class GuestCheckShippingOption
     }
 
     /**
-     * @param string $cartId
-     * @return \Paazl\CheckoutWidget\Api\Data\CheckQuoteResultInterface
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * {@inheritDoc}
      */
     public function get($cartId)
     {

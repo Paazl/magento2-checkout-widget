@@ -99,7 +99,7 @@ class SendToService
             throw new LocalizedException(__('Reference information not found'));
         }
 
-        if ($reference->isSent() && !$force) {
+        if ($reference->isSent() && !$force && !$reference->getInvalid()) {
             throw new LocalizedException(__('Order was sent to Paazl already'));
         }
 
@@ -107,7 +107,12 @@ class SendToService
             $orderInfo = $this->orderBuilder->getCreateOrderData($order);
             /** @var PaazlApi $paazlApi */
             $paazlApi = $this->paazlApiFactory->create($order->getStoreId());
-            $paazlApi->addOrder($orderInfo);
+            if ($reference->isSent() && $reference->getInvalid()) {
+                $modify = true;
+            } else {
+                $modify = false;
+            }
+            $paazlApi->addOrder($orderInfo, $modify);
             $this->markOrderAsSent->process($order);
         } catch (\Exception $e) {
             $this->generalHelper->addTolog('exception', $e->getMessage());

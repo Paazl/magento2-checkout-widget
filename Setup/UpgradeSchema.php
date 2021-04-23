@@ -43,6 +43,10 @@ class UpgradeSchema implements UpgradeSchemaInterface
         if (version_compare($currentVersion, '1.0.6', '<')) {
             $this->createQuoteTable($setup);
         }
+
+        if (version_compare($currentVersion, '1.6.0', '<')) {
+            $this->addInvalidColumnToOrderTable($setup);
+        }
     }
 
     /**
@@ -179,5 +183,21 @@ class UpgradeSchema implements UpgradeSchemaInterface
             ;
             $connection->createTable($table);
         }
+    }
+
+    /**
+     * @param SchemaSetupInterface $setup
+     */
+    private function addInvalidColumnToOrderTable($setup)
+    {
+        $setup->getConnection()->addColumn(
+            $setup->getTable(OrderReference::MAIN_TABLE),
+            OrderReferenceInterface::EXT_INVALID,
+            [
+                'type' => \Magento\Framework\DB\Ddl\Table::TYPE_SMALLINT,
+                'nullable' => true,
+                'comment' => 'Invalid'
+            ]
+        );
     }
 }

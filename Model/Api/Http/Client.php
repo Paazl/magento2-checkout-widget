@@ -6,12 +6,12 @@
 
 namespace Paazl\CheckoutWidget\Model\Api\Http;
 
-use Magento\Framework\HTTP\Client\Curl;
+use Paazl\CheckoutWidget\Model\Api\CurlExtra;
 
 /**
  * Extension of the core's HTTP client - we need PUT method
  */
-class Client extends Curl
+class Client extends CurlExtra
 {
     private $skipNextHeader = false;
 

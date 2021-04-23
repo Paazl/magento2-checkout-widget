@@ -59,6 +59,7 @@ class MarkOrderAsSent
         }
 
         $reference->setExtSentAt($this->dateTime->gmtDate());
+        $reference->setInvalid(0);
 
         try {
             $this->orderReferenceRepository->save($reference);

@@ -115,26 +115,37 @@ class PaazlApi
      * Sends order to Paazl
      *
      * @param array $orderData
+     * @param bool $modify
      * @return boolean
      * @throws ApiException
      */
-    public function addOrder(array $orderData)
+    public function addOrder(array $orderData, bool $modify = false)
     {
         $url = $this->urlProvider->getOrderUrl();
 
         $httpClient = $this->getAuthorizedClient();
 
-        $this->generalHelper->addTolog('AddOrder request: ', $orderData);
-
         $httpClient->addHeader('Content-Type', 'application/json;charset=UTF-8');
         $httpClient->addHeader('Accept', 'application/json;charset=UTF-8');
 
-        $httpClient->post($url, json_encode($orderData));
-        $body = $httpClient->getBody();
-        $status = $httpClient->getStatus();
+        if ($modify == false) {
+            $this->generalHelper->addTolog('AddOrder request: ', $orderData);
+            $httpClient->post($url, json_encode($orderData));
+            $body = $httpClient->getBody();
+            $status = $httpClient->getStatus();
 
-        $this->generalHelper->addTolog('AddOrder response status: ', $status);
-        $this->generalHelper->addTolog('AddOrder response body: ', $body);
+            $this->generalHelper->addTolog('AddOrder response status: ', $status);
+            $this->generalHelper->addTolog('AddOrder response body: ', $body);
+        } else {
+            $this->generalHelper->addTolog('ModifyOrder request: ', $orderData);
+            $httpClient->put($url, json_encode($orderData));
+            $body = $httpClient->getBody();
+            $status = $httpClient->getStatus();
+
+            $this->generalHelper->addTolog('ModifyOrder response status: ', $status);
+            $this->generalHelper->addTolog('ModifyOrder response body: ', $body);
+        }
+
         if ($status >= 400 && $status < 500) {
             throw ApiException::fromErrorResponse($body, $status);
         }

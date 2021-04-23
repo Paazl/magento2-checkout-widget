@@ -3,14 +3,14 @@
         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
 
     <route url="/V1/guest-carts/:cartId/paazl-check-shipping-option" method="GET">
-        <service class="Paazl\CheckoutWidget\Model\Webapi\GuestCheckShippingOption" method="get"/>
+        <service class="Paazl\CheckoutWidget\Api\Webapi\GuestCheckShippingOptionInterface" method="get"/>
         <resources>
             <resource ref="anonymous" />
         </resources>
     </route>
 
     <route url="/V1/carts/mine/paazl-check-shipping-option" method="GET">
-        <service class="Paazl\CheckoutWidget\Model\Webapi\CheckShippingOption" method="get"/>
+        <service class="Paazl\CheckoutWidget\Api\Webapi\CheckShippingOptionInterface" method="get"/>
         <resources>
             <resource ref="self" />
         </resources>

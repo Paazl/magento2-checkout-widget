@@ -13,7 +13,7 @@
             </argument>
         </arguments>
     </type>
-    
+
     <type name="Paazl\CheckoutWidget\Ui\Component\Order\View\PaazlModal\AvailableShippingMethods\Options">
         <arguments>
             <argument name="session" xsi:type="object">Magento\Backend\Model\Session\Proxy</argument>
@@ -36,5 +36,10 @@
         <arguments>
             <argument name="context" xsi:type="object">Magento\Backend\Block\Template\Context\Proxy</argument>
         </arguments>
+    </type>
+
+    <type name="Magento\Sales\Controller\Adminhtml\Order\AddressSave">
+        <plugin name="paazl_checkoutwidget_admin_order_address_save"
+                type="Paazl\CheckoutWidget\Plugin\Sales\Adminhtml\Order\AddressSavePlugin"/>
     </type>
 </config>
