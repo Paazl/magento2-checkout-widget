@@ -19,8 +19,9 @@ use Paazl\CheckoutWidget\Model\Checkout\WidgetConfigProviderFactory;
 use Paazl\CheckoutWidget\Model\Quote\CheckQuoteShippingOption;
 use Paazl\CheckoutWidget\Model\Webapi\CheckShippingOption\Result;
 use Paazl\CheckoutWidget\Model\Webapi\CheckShippingOption\ResultFactory;
+use Paazl\CheckoutWidget\Api\Webapi\CheckShippingOptionInterface;
 
-class CheckShippingOption
+class CheckShippingOption implements CheckShippingOptionInterface
 {
     /**
      * @var CheckQuoteShippingOption
@@ -87,9 +88,7 @@ class CheckShippingOption
     }
 
     /**
-     * @param integer $cartId
-     * @return \Paazl\CheckoutWidget\Api\Data\CheckQuoteResultInterface
-     * @throws NoSuchEntityException
+     * {@inheritDoc}
      */
     public function get($cartId)
     {

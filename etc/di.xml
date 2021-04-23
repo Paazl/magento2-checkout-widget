@@ -15,6 +15,11 @@
     <preference for="Paazl\CheckoutWidget\Api\Data\Quote\QuoteReferenceInterface"
                 type="Paazl\CheckoutWidget\Model\Quote\QuoteReference"/>
 
+    <preference for="Paazl\CheckoutWidget\Api\Webapi\CheckShippingOptionInterface"
+                type="Paazl\CheckoutWidget\Model\Webapi\CheckShippingOption"/>
+    <preference for="Paazl\CheckoutWidget\Api\Webapi\GuestCheckShippingOptionInterface"
+                type="Paazl\CheckoutWidget\Model\Webapi\CheckShippingOption"/>
+
     <type name="Magento\Quote\Model\Cart\ShippingMethodConverter">
         <plugin name="add_infotext_to_carrier" type="Paazl\CheckoutWidget\Plugin\Carrier\Infotext" disabled="false"
                 sortOrder="70"/>
