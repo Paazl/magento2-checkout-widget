@@ -20,6 +20,9 @@
                 sortOrder="70"/>
     </type>
 
+    <preference for="Magento\Framework\HTTP\Client\Curl"
+                type="Paazl\CheckoutWidget\Model\Api\CurlExtra"/>
+
     <type name="Paazl\CheckoutWidget\Logger\PaazlHandler">
         <arguments>
             <argument name="filesystem" xsi:type="object">Magento\Framework\Filesystem\Driver\File</argument>

@@ -79,6 +79,24 @@ class OrderReference extends AbstractModel implements OrderReferenceInterface
     }
 
     /**
+     * @param int $value
+     *
+     * @return $this
+     */
+    public function setInvalid($value)
+    {
+        return $this->setData(self::EXT_INVALID, $value);
+    }
+
+    /**
+     * @return int
+     */
+    public function getInvalid()
+    {
+        return (int)$this->getData(self::EXT_INVALID);
+    }
+
+    /**
      * @return bool
      */
     public function isSent()

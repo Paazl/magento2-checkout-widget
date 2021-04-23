@@ -21,7 +21,7 @@ use Paazl\CheckoutWidget\Ui\Component\Order\Listing\Column\Status\Options;
         <?= /* @escapeNotVerified */ __('Paazl Order Status: '); ?>
         </span>
         <span id="paazl-order-status">
-        <?php if ($paazlOrder->isSent()) : ?>
+        <?php if ($paazlOrder->isSent() && !$paazlOrder->getInvalid()) : ?>
             <span class="paazl-status successfully-updated"></span>
             <?= /* @escapeNotVerified */ __(Options::LABEL_SUCCESSFULLY_UPDATED . ' at %1', $paazlOrder->getExtSentAt()); ?>
         <?php else: ?>

@@ -23,6 +23,7 @@ interface OrderReferenceInterface
     const ORDER_ID = 'order_id';
     const EXT_SHIPPING_INFO = 'ext_shipping_info';
     const EXT_SENT_AT = 'ext_sent_at';
+    const EXT_INVALID = 'invalid';
     /**#@-*/
 
     /**
@@ -60,6 +61,18 @@ interface OrderReferenceInterface
      * @return string
      */
     public function getExtSentAt();
+
+    /**
+     * @param int $value
+     *
+     * @return $this
+     */
+    public function setInvalid($value);
+
+    /**
+     * @return int
+     */
+    public function getInvalid();
 
     /**
      * @return bool
