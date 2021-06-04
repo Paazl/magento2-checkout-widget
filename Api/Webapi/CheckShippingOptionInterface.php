@@ -7,9 +7,6 @@ declare(strict_types=1);
 
 namespace Paazl\CheckoutWidget\Api\Webapi;
 
-use Magento\Framework\Exception\NoSuchEntityException;
-use Paazl\CheckoutWidget\Api\Data\CheckQuoteResultInterface;
-
 /**
  * Interface CheckShippingOptionInterface
  */
@@ -17,8 +14,8 @@ interface CheckShippingOptionInterface
 {
     /**
      * @param string $cartId
-     * @return CheckQuoteResultInterface
-     * @throws NoSuchEntityException
+     * @return \Paazl\CheckoutWidget\Api\Data\CheckQuoteResultInterface
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function get($cartId);
 }

@@ -55,8 +55,7 @@ class Infotext
     {
         $carrierCode = $result->getCarrierCode();
         $infotext = $this->scopeConfig->getValue(
-            'carriers/' . $carrierCode . '/infotext',
-            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+            'carriers/' . $carrierCode . '/infotext'
         );
         $extensibleAttribute = ($result->getExtensionAttributes())
             ? $result->getExtensionAttributes()
