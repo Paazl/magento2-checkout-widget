@@ -296,6 +296,26 @@ class Config
     /**
      * @param null|Store|int|string $store
      *
+     * @return string
+     */
+    public function getFreeShippingMatrixLetter($store = null)
+    {
+        return (string)$this->getValue(self::API_CONFIG_PATH . '/freeshipping_matrix_letter', $store);
+    }
+
+    /**
+     * @param null|Store|int|string $store
+     *
+     * @return mixed
+     */
+    public function isFreeShippingEnabled($store = null)
+    {
+        return $this->getValue(self::API_CONFIG_PATH . '/freeshipping_enabled', $store);
+    }
+
+    /**
+     * @param null|Store|int|string $store
+     *
      * @return mixed
      */
     public function isEnabled($store = null)

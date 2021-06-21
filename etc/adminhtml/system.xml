@@ -251,7 +251,18 @@
                     </depends>
                     <comment><![CDATA[Fill in a valid Google Maps API Key obtained from your <a href="https://developers.google.com/maps/documentation/javascript/get-api-key" target="_blank">Google Account</a>]]></comment>
                 </field>
-                <field id="debug" translate="label" type="select" sortOrder="65" showInDefault="1" showInWebsite="1" showInStore="0">
+                <field id="freeshipping_enabled" translate="label" type="select" sortOrder="65" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Free Shipping Enabled</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="freeshipping_matrix_letter" translate="label comment" type="text" sortOrder="66" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Matrix Letter</label>
+                    <depends>
+                        <field id="freeshipping_enabled">1</field>
+                    </depends>
+                    <comment><![CDATA[API Matrix letter for free shipping]]></comment>
+                </field>
+                <field id="debug" translate="label" type="select" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Debug</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>Write API calls to var/log/paazl.log. Not recommended in Paazl's production environment for performance reasons.</comment>

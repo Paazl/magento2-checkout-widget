@@ -185,6 +185,10 @@ class WidgetConfigProvider implements ConfigProviderInterface
             "initialPickupLocations"     => $this->getInitialPickupLocations()
         ];
 
+        if ($this->isFreeShippingEnabled() && $shippingAddress->getFreeShipping()) {
+            $config['shipmentParameters']['startMatrix'] = $this->getFreeShippingMatrixLetter();
+        }
+
         $config = array_merge($config, $this->languageProvider->getConfig());
 
         $this->generalHelper->addTolog('request', $config);
@@ -398,6 +402,14 @@ class WidgetConfigProvider implements ConfigProviderInterface
     }
 
     /**
+     * @return mixed
+     */
+    public function getFreeShippingMatrixLetter()
+    {
+        return $this->scopeConfig->getFreeShippingMatrixLetter($this->getQuote()->getStoreId());
+    }
+
+    /**
      * Gets delivery matrix from product
      *
      * @param AbstractItem $item
@@ -432,5 +444,15 @@ class WidgetConfigProvider implements ConfigProviderInterface
         preg_match('/^[A-Z]{1,2}$/', $value, $matches);
 
         return count($matches) === 1;
+    }
+
+    /**
+     * Check if free shipping enabled in store config
+     *
+     * @return bool
+     */
+    protected function isFreeShippingEnabled()
+    {
+        return $this->scopeConfig->isFreeShippingEnabled($this->getQuote()->getStoreId());
     }
 }
