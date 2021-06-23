@@ -25,6 +25,11 @@
                 sortOrder="70"/>
     </type>
 
+    <type name="Magento\Quote\Model\Quote">
+        <plugin name="paazlAfterAddProduct"
+                type="Paazl\CheckoutWidget\Plugin\Quote\AfterAddProduct" sortOrder="1" disabled="false" />
+    </type>
+
     <preference for="Magento\Framework\HTTP\Client\Curl"
                 type="Paazl\CheckoutWidget\Model\Api\CurlExtra"/>
 

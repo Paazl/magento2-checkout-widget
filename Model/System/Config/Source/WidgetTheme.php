@@ -29,6 +29,7 @@ class WidgetTheme implements ArrayInterface
         if (!$this->options) {
             $this->options = [
                 ['value' => 'DEFAULT', 'label' => __('Default')],
+                ['value' => 'MINIMAL', 'label' => __('Minimal')],
                 ['value' => 'GREEN', 'label' => __('Green')],
                 ['value' => 'LIGHT-GREEN', 'label' => __('Light Green')],
                 ['value' => 'BROWN', 'label' => __('Brown')],
@@ -37,7 +38,6 @@ class WidgetTheme implements ArrayInterface
                 ['value' => 'CUSTOM', 'label' => __('Custom')],
             ];
         }
-
         return $this->options;
     }
 }
