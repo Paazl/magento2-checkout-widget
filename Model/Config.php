@@ -459,6 +459,16 @@ class Config
      *
      * @return mixed
      */
+    public function getTotalPrice($store = null)
+    {
+        return $this->getValue(self::API_CONFIG_PATH . '/total_price', $store);
+    }
+
+    /**
+     * @param null|Store|int|string $store
+     *
+     * @return mixed
+     */
     public function getProductAttributeDeliveryMatrix($store = null)
     {
         return $this->getValue(self::API_CONFIG_PATH . '/delivery_matrix_attribute', $store);

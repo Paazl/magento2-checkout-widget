@@ -33,6 +33,7 @@
                 <widget_initial_pickup_locations>5</widget_initial_pickup_locations>
                 <insurance_value>0</insurance_value>
                 <housenumber_default_value>1</housenumber_default_value>
+                <total_price>subtotal_incl_discount</total_price>
             </paazlshipping>
         </carriers>
     </default>

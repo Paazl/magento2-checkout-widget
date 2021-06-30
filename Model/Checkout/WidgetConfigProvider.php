@@ -188,6 +188,9 @@ class WidgetConfigProvider implements ConfigProviderInterface
         if ($this->isFreeShippingEnabled() && $shippingAddress->getFreeShipping()) {
             $config['shipmentParameters']['startMatrix'] = $this->getFreeShippingMatrixLetter();
         }
+        if ($this->scopeConfig->getTotalPrice() == 'grand_total') {
+            $config['shipmentParameters']['totalPrice'] = (float)$this->getQuote()->getGrandTotal();
+        }
 
         $config = array_merge($config, $this->languageProvider->getConfig());
 
