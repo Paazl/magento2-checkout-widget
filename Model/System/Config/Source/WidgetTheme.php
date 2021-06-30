@@ -31,7 +31,7 @@ class WidgetTheme implements ArrayInterface
                 ['value' => 'DEFAULT', 'label' => __('Default')],
                 ['value' => 'MINIMAL', 'label' => __('Minimal')],
                 ['value' => 'GREEN', 'label' => __('Green')],
-                ['value' => 'LIGHT-GREEN', 'label' => __('Light Green')],
+                ['value' => 'LIGHT_GREEN', 'label' => __('Light Green')],
                 ['value' => 'BROWN', 'label' => __('Brown')],
                 ['value' => 'BLUE', 'label' => __('Blue')],
                 ['value' => 'RED', 'label' => __('Red')],
