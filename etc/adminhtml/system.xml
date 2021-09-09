@@ -267,6 +267,11 @@
                     </depends>
                     <comment><![CDATA[API Matrix letter for free shipping]]></comment>
                 </field>
+                <field id="price_incl_tax" translate="label" type="select" sortOrder="67" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Price Includes Tax</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>If yes - shipping price will always includes tax regardless Magento settings</comment>
+                </field>
                 <field id="debug" translate="label" type="select" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Debug</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>

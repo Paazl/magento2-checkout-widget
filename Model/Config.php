@@ -314,6 +314,14 @@ class Config
     }
 
     /**
+     * @return mixed
+     */
+    public function isPriceIncludesTax($store = null)
+    {
+        return $this->getValue(self::API_CONFIG_PATH . '/price_incl_tax', $store);
+    }
+
+    /**
      * @param null|Store|int|string $store
      *
      * @return mixed
