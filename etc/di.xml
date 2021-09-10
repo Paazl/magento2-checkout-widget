@@ -30,6 +30,10 @@
                 type="Paazl\CheckoutWidget\Plugin\Quote\AfterAddProduct" sortOrder="1" disabled="false" />
     </type>
 
+    <type name="Magento\Tax\Model\Config">
+        <plugin name="tax_config_plugin" type="Paazl\CheckoutWidget\Plugin\Tax\Config" disabled="false"/>
+    </type>
+
     <preference for="Magento\Framework\HTTP\Client\Curl"
                 type="Paazl\CheckoutWidget\Model\Api\CurlExtra"/>
 

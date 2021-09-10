@@ -314,6 +314,14 @@ class Config
     }
 
     /**
+     * @return mixed
+     */
+    public function isPriceIncludesTax($store = null)
+    {
+        return $this->getValue(self::API_CONFIG_PATH . '/price_incl_tax', $store);
+    }
+
+    /**
      * @param null|Store|int|string $store
      *
      * @return mixed
@@ -452,6 +460,16 @@ class Config
             return $this->getValue(self::API_CONFIG_PATH . '/googlemaps_key', $store);
         }
         return null;
+    }
+
+    /**
+     * @param null|Store|int|string $store
+     *
+     * @return mixed
+     */
+    public function getTotalPrice($store = null)
+    {
+        return $this->getValue(self::API_CONFIG_PATH . '/total_price', $store);
     }
 
     /**

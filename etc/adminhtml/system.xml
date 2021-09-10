@@ -251,6 +251,11 @@
                     </depends>
                     <comment><![CDATA[Fill in a valid Google Maps API Key obtained from your <a href="https://developers.google.com/maps/documentation/javascript/get-api-key" target="_blank">Google Account</a>]]></comment>
                 </field>
+                <field id="total_price" translate="label" type="select" sortOrder="64" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Total Price</label>
+                    <source_model>Paazl\CheckoutWidget\Model\System\Config\Source\TotalPrice</source_model>
+                    <comment>Select the price which will be used for totalPrice.</comment>
+                </field>
                 <field id="freeshipping_enabled" translate="label" type="select" sortOrder="65" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Free Shipping Enabled</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
@@ -261,6 +266,11 @@
                         <field id="freeshipping_enabled">1</field>
                     </depends>
                     <comment><![CDATA[API Matrix letter for free shipping]]></comment>
+                </field>
+                <field id="price_incl_tax" translate="label" type="select" sortOrder="67" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Price Includes Tax</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>If yes - shipping price will always includes tax regardless Magento settings</comment>
                 </field>
                 <field id="debug" translate="label" type="select" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Debug</label>
