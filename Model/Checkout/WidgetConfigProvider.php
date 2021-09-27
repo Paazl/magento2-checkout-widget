@@ -128,12 +128,22 @@ class WidgetConfigProvider implements ConfigProviderInterface
 
         $numberOfProcessingDays = self::DEFAULT_NUMBER_OF_PROCESSING_DAYS;
         $goods = [];
+        $widthAttribute = $this->scopeConfig->getProductAttributeWidth();
+        $heightAttribute = $this->scopeConfig->getProductAttributeHeight();
+        $lengthAttribute = $this->scopeConfig->getProductAttributeLength();
+        $useDimensions = $widthAttribute && $lengthAttribute && $heightAttribute;
         foreach ($this->getQuote()->getAllVisibleItems() as $item) {
             $goodsItem = [
                 "quantity" => (int)$item->getQty(),
                 "weight"   => doubleval($item->getWeight()),
                 "price"    => $this->itemHandler->getPriceValue($item)
             ];
+            if ($useDimensions) {
+                $product = $this->productRepository->getById($item->getProduct()->getId());
+                $goodsItem["length"] = $product->getData($lengthAttribute);
+                $goodsItem["width"] = $product->getData($widthAttribute);
+                $goodsItem["height"] = $product->getData($heightAttribute);
+            }
 
             if (($itemNumberOfProcessingDays = $this->getProductNumberOfProcessingDays($item))
                 && $itemNumberOfProcessingDays > $numberOfProcessingDays) {
