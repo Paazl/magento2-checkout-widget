@@ -35,7 +35,9 @@
        attr="'aria-labelledby': 'label_method_' + method.method_code + '_' + method.carrier_code + ' ' + 'label_carrier_' + method.method_code + '_' + method.carrier_code" />
 <!-- /ko -->
 <tr class="row info">
-  <td class="col" colspan="4" style="border-top:none;padding:0;"><div class="infoblock" attr="'id': 'infotext_' + method.method_code + '_' + method.carrier_code" if="method.extension_attributes" style="display:block" text="method.extension_attributes.infotext"></div></td>
+  <td class="col" colspan="4" style="border-top:none;padding:0;">
+      <div class="infoblock" attr="'id': 'infotext_' + method.method_code + '_' + method.carrier_code" if="method.extension_attributes" style="display:block" text="method.extension_attributes.infotext"></div>
+  </td>
 </tr>
 <tr class="row info" data-bind="visible: $parent.canShowPaazlWidget() == 'paazlshipping'">
   <td class="col" colspan="4" style="border-top:none;padding:0;"><div attr="'id': 'widget_' + method.method_code + '_' + method.carrier_code"></div></td>
