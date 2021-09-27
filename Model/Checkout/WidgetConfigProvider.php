@@ -190,6 +190,8 @@ class WidgetConfigProvider implements ConfigProviderInterface
         }
         if ($this->scopeConfig->getTotalPrice() == 'grand_total') {
             $config['shipmentParameters']['totalPrice'] = (float)$this->getQuote()->getGrandTotal();
+        } elseif ($this->scopeConfig->getTotalPrice() == 'subtotal_excl_discount') {
+            $config['shipmentParameters']['totalPrice'] = (float)$this->getQuote()->getSubtotal();
         }
 
         $config = array_merge($config, $this->languageProvider->getConfig());
