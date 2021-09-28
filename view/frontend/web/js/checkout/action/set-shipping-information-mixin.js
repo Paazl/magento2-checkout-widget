@@ -28,7 +28,9 @@ define(
                         return;
                     }
 
-                    var methods = res.extension_attributes && res.extension_attributes.shipping_methods || [];
+                    var methods = res.totals.extension_attributes
+                        && res.totals.extension_attributes.shipping_methods
+                        || [];
                     var found = _.find(methods, function (m) {
                         return m.carrier_code === shippingMethod.carrier_code
                             && m.method_code === shippingMethod.method_code;

@@ -141,6 +141,14 @@
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment><![CDATA[If you use the third 'street' field as a separate house-number-addition field, enable this option.]]></comment>
                 </field>
+                <field id="infotext" translate="label comment" type="textarea" sortOrder="46" showInDefault="1"
+                       showInWebsite="1" showInStore="1">
+                    <label>Infotext</label>
+                    <depends>
+                        <field id="active">1</field>
+                    </depends>
+                    <comment>Use this to show some info on checkout shipping method.</comment>
+                </field>
                 <field id="reference_prefix" translate="label comment" type="text" sortOrder="47" showInDefault="1"
                        showInWebsite="1" showInStore="1">
                     <label>Order reference prefix</label>

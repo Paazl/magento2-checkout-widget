@@ -33,7 +33,7 @@ class Infotext
      * Infotext constructor.
      *
      * @param ShippingMethodExtensionFactory $extensionFactory
-     * @param Config                         $scopeConfig
+     * @param Config $scopeConfig
      */
     public function __construct(
         ShippingMethodExtensionFactory $extensionFactory,
@@ -54,15 +54,18 @@ class Infotext
     public function afterModelToDataObject(ShippingMethodConverter $subject, ShippingMethodInterface $result)
     {
         $carrierCode = $result->getCarrierCode();
-        $infotext = $this->scopeConfig->getValue(
-            'carriers/' . $carrierCode . '/infotext'
-        );
-        $extensibleAttribute = ($result->getExtensionAttributes())
-            ? $result->getExtensionAttributes()
-            : $this->extensionFactory->create();
+        if ($carrierCode == 'paazlshipping') {
+            $infotext = $this->scopeConfig->getValue(
+                'carriers/' . $carrierCode . '/infotext'
+            );
+            $extensibleAttribute = ($result->getExtensionAttributes())
+                ? $result->getExtensionAttributes()
+                : $this->extensionFactory->create();
 
-        $extensibleAttribute->setInfotext($infotext);
-        $result->setExtensionAttributes($extensibleAttribute);
+            $extensibleAttribute->setInfotext($infotext);
+            $result->setExtensionAttributes($extensibleAttribute);
+        }
+
         return $result;
     }
 }
