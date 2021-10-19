@@ -32,10 +32,13 @@ class Client extends CurlExtra
         }
         if ($this->_headerCount == 0) {
             $line = explode(" ", trim($data), 3);
-            if (count($line) != 3) {
+            if (count($line) < 2) {
                 $this->doError("Invalid response line returned from server: " . $data);
             }
             $code = intval($line[1]);
+            if (!HttpCode::execute($code)) {
+                $this->doError("Invalid response line returned from server: " . $data);
+            }
             if ($code === 100) {
                 // Handle status 100 Continue
                 $this->skipNextHeader = true;
