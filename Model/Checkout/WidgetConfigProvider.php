@@ -140,9 +140,9 @@ class WidgetConfigProvider implements ConfigProviderInterface
             ];
             if ($useDimensions) {
                 $product = $this->productRepository->getById($item->getProduct()->getId());
-                $goodsItem["length"] = $product->getData($lengthAttribute);
-                $goodsItem["width"] = $product->getData($widthAttribute);
-                $goodsItem["height"] = $product->getData($heightAttribute);
+                $goodsItem["length"] = (int) $product->getData($lengthAttribute);
+                $goodsItem["width"] = (int) $product->getData($widthAttribute);
+                $goodsItem["height"] = (int) $product->getData($heightAttribute);
             }
 
             if (($itemNumberOfProcessingDays = $this->getProductNumberOfProcessingDays($item))
