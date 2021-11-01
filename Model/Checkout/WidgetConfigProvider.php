@@ -126,7 +126,6 @@ class WidgetConfigProvider implements ConfigProviderInterface
             $postcode = $shippingAddress->getPostcode();
         }
 
-        $numberOfProcessingDays = self::DEFAULT_NUMBER_OF_PROCESSING_DAYS;
         $goods = [];
         $widthAttribute = $this->scopeConfig->getProductAttributeWidth();
         $heightAttribute = $this->scopeConfig->getProductAttributeHeight();
@@ -150,6 +149,19 @@ class WidgetConfigProvider implements ConfigProviderInterface
                     $goodsItem["startMatrix"] = $deliveryMatrixCode;
                 }
                 $goods[] = $goodsItem;
+            }
+        }
+
+        $numberOfProcessingDays = self::DEFAULT_NUMBER_OF_PROCESSING_DAYS;
+        foreach ($this->getQuote()->getAllItems() as $item) {
+            if ($item->getProductType() == 'simple') {
+                $itemNumberOfProcessingDays = $this->getProductNumberOfProcessingDays($item);
+                if (!$itemNumberOfProcessingDays && $item->getParentItem()) {
+                    $itemNumberOfProcessingDays = $this->getProductNumberOfProcessingDays($item->getParentItem());
+                }
+                if ($itemNumberOfProcessingDays && ($itemNumberOfProcessingDays > $numberOfProcessingDays)) {
+                    $numberOfProcessingDays = (int)$itemNumberOfProcessingDays;
+                }
             }
         }
 
