@@ -293,7 +293,15 @@ class Order
 
         /** @var Item $item */
         foreach ($order->getItems() as $item) {
-            if ($item->getProductType() !== Type::TYPE_SIMPLE && $item->getProductType() !== Grouped::TYPE_CODE) {
+            if ($item->getProductType() !== Type::TYPE_SIMPLE
+                && $item->getProductType() !== Type::TYPE_BUNDLE
+                && $item->getProductType() !== Grouped::TYPE_CODE
+            ) {
+                continue;
+            }
+
+            // Skip a simple product if the parent is a bundle
+            if ($this->hasBundleParent($item)) {
                 continue;
             }
 
@@ -398,5 +406,19 @@ class Order
         }
 
         return $dimensionArray;
+    }
+
+    /**
+     * Check if parent item is bundle
+     *
+     * @param $item
+     * @return bool
+     */
+    private function hasBundleParent($item): bool
+    {
+        if ($item->getParentItemId() > 0) {
+            return $item->getParentItem()->getProductType() === Type::TYPE_BUNDLE;
+        }
+        return false;
     }
 }
