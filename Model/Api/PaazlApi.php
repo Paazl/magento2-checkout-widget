@@ -138,6 +138,7 @@ class PaazlApi
             $this->generalHelper->addTolog('AddOrder response body: ', $body);
         } else {
             $this->generalHelper->addTolog('ModifyOrder request: ', $orderData);
+            unset($orderData['products']);
             $httpClient->put($url, json_encode($orderData));
             $body = $httpClient->getBody();
             $status = $httpClient->getStatus();
