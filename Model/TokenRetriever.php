@@ -162,29 +162,6 @@ class TokenRetriever
     }
 
     /**
-     * Refreshes API token in quote reference
-     *
-     * @param QuoteReferenceInterface $reference
-     * @param string $token
-     * @throws LocalizedException
-     */
-    protected function refreshQuoteReferenceApiToken(QuoteReferenceInterface $reference, $token)
-    {
-        try {
-            $gmtNow = $this->timezone->date(null, null, false);
-            // @codingStandardsIgnoreLine
-            $gmtNow->add(new \DateInterval('P30D'));
-            $reference
-                ->setToken($token)
-                ->setTokenExpiresAt($this->dateTime->gmtDate(null, $gmtNow));
-
-            $this->quoteReferenceRepository->save($reference);
-        } catch (\Exception $exception) {
-            throw new LocalizedException(__($exception->getMessage()), $exception);
-        }
-    }
-
-    /**
      * Retrieves Quote Reference
      *
      * @param Quote $quote
