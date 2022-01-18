@@ -8,6 +8,10 @@
     <type name="Magento\Quote\Model\Quote\Address\RateCollectorInterface">
         <plugin name="paazl_checkoutwidget" type="\Paazl\CheckoutWidget\Plugin\Shipping\RateCollectorPlugin"/>
     </type>
+    <type name="Magento\Multishipping\Block\Checkout\Shipping">
+        <plugin name="paazl_disable_multishipping"
+                type="Paazl\CheckoutWidget\Plugin\Multishipping\Block\Checkout\Address"/>
+    </type>
 
     <type name="Magento\Checkout\Model\CompositeConfigProvider">
         <arguments>
