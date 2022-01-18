@@ -193,7 +193,7 @@ define([
          * @return {string}
          */
         getJsName: function () {
-            var name = 'checkoutjs';
+            var name = shippingConfig.useLocalCopyOfWidgetJs ? 'checkoutjs_local' : 'checkoutjs';
             if (shippingConfig.mode === 'test') {
                 name += '_test';
             } else {

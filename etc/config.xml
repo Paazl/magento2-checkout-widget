@@ -34,6 +34,7 @@
                 <insurance_value>0</insurance_value>
                 <housenumber_default_value>1</housenumber_default_value>
                 <total_price>subtotal_incl_discount</total_price>
+                <use_local_js_for_widget>0</use_local_js_for_widget>
             </paazlshipping>
         </carriers>
     </default>

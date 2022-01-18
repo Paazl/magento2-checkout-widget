@@ -294,6 +294,11 @@
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>OneStepCheckout, Custom Checkout etc.</comment>
                 </field>
+                <field id="use_local_js_for_widget" translate="label" type="select" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+                    <label>Use local JS file for widget initialization?</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Local copy will be used instead of external JS (from *.paazl.com).</comment>
+                </field>
             </group>
         </section>
     </system>
