@@ -9,8 +9,9 @@ define([
     'jquery',
     'domReady',
     'Magento_Checkout/js/model/shipping-save-processor',
-    'Magento_Checkout/js/model/quote'
-], function (ko, Component, $, domReady, shippingSaveProcessor, quote) {
+    'Magento_Checkout/js/model/quote',
+    'Paazl_CheckoutWidget/js/checkout/model/shipping-locations'
+    ], function (ko, Component, $, domReady, shippingSaveProcessor, quote, shippingLocations) {
     'use strict';
 
     var shippingConfig = window.checkoutConfig.paazlshipping || {};
@@ -67,6 +68,60 @@ define([
             }
         }
     }
+
+        function isLocationUrl(url) {
+            var locationsUrl = shippingConfig.baseApiUrl;
+            locationsUrl += 'pickuplocations';
+            return (locationsUrl.indexOf(url) === 0);
+        }
+
+        var openOrig = window.XMLHttpRequest.prototype.open;
+        window.XMLHttpRequest.prototype.open = function (method, url, async, user, password) {
+            if (isLocationUrl(url)) {
+                this.removeEventListener('load', onLocationLoadEnd);
+                this.addEventListener('load', onLocationLoadEnd);
+            }
+
+            return openOrig.apply(this, arguments);
+        };
+
+        var sendOrig = window.XMLHttpRequest.prototype.send;
+        window.XMLHttpRequest.prototype.send = function (body) {
+            this.removeEventListener('load', onLocationSelect);
+            this.addEventListener('load', onLocationSelect.bind(this, body));
+            return sendOrig.apply(this, arguments);
+        };
+
+        function onLocationLoadEnd(event) {
+            var ready =
+                (this.readyState === 4)
+                && event.target
+                && event.target.response
+                && (event.target.status === 200);
+
+            if (ready) {
+                shippingLocations.locationsList([]);
+                var locations = JSON.parse(event.target.response);
+                if (locations && locations.pickupLocations.length) {
+                    shippingLocations.locationsList(locations.pickupLocations);
+                }
+            }
+        }
+
+        function onLocationSelect(body, event) {
+            var ready =
+                (this.readyState === 4)
+                && event.target
+                && this.responseURL
+                && (event.target.status === 200);
+            if (ready && isCheckoutUrl(this.responseURL)) {
+                shippingLocations.selectedLocationCode(null);
+                var selectedLocation = JSON.parse(body);
+                if(selectedLocation && selectedLocation.pickupLocation){
+                    shippingLocations.selectedLocationCode(selectedLocation.pickupLocation.code);
+                }
+            }
+        }
 
     return Component.extend({
         configJson: null,
