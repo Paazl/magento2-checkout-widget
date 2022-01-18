@@ -134,7 +134,7 @@ class WidgetConfigProvider implements ConfigProviderInterface
         foreach ($this->getQuote()->getAllItems() as $item) {
             if ($item->getProductType() == 'simple') {
                 $goodsItem = [
-                    "quantity" => (int)$item->getQty(),
+                    "quantity" => $item->getParentItem() ? (int)($item->getParentItem()->getQty()) : (int)$item->getQty(),
                     "weight"   => doubleval($item->getWeight()),
                     "price"    => $this->itemHandler->getPriceValue($item)
                 ];
@@ -193,7 +193,7 @@ class WidgetConfigProvider implements ConfigProviderInterface
                 "sortOrder" => "ASC"
             ],
             "shipmentParameters"         => [
-                "totalWeight"   => (float)$this->getTotalWeight(),
+                "totalWeight"   => (float)$this->getTotalWeight($goods),
                 "totalPrice"    => (float)$this->getQuote()->getSubtotalWithDiscount(),
                 "numberOfGoods" => (int)$this->getProductsCount(),
                 "goods"         => $goods
@@ -335,12 +335,14 @@ class WidgetConfigProvider implements ConfigProviderInterface
     /**
      * @return float
      */
-    public function getTotalWeight()
+    public function getTotalWeight($goods)
     {
         $weight = 0;
         $quote = $this->getQuote();
-        foreach ($quote->getAllVisibleItems() as $_item) {
-            $weight += $_item->getWeight();
+        foreach ($goods as $good) {
+            if (isset($good['weight']) && isset($good['quantity'])) {
+                $weight += ($good['weight'] * $good['quantity']);
+            }
         }
         return $weight;
     }
