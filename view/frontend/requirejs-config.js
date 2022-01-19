@@ -9,6 +9,9 @@ var config = {
             'Magento_Checkout/js/action/set-shipping-information': {
                 'Paazl_CheckoutWidget/js/checkout/action/set-shipping-information-mixin': true
             },
+            'Magento_Checkout/js/view/billing-address': {
+                'Paazl_CheckoutWidget/js/checkout/view/billing-address-mixin': true
+            },
             'Magento_Checkout/js/model/checkout-data-resolver': {
                 'Paazl_CheckoutWidget/js/checkout/model/checkout-data-resolver-mixin': true
             },

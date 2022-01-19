@@ -507,6 +507,16 @@ class Config
      *
      * @return bool
      */
+    public function isUseLocalCopyOfWidgetJs($store = null)
+    {
+        return !!$this->getValue(self::API_CONFIG_PATH . '/use_local_js_for_widget', $store);
+    }
+
+    /**
+     * @param null|Store|int|string $store
+     *
+     * @return bool
+     */
     public function showWidgetOnFirstLoad($store = null)
     {
         return !!$this->getValue(self::API_CONFIG_PATH . '/show_on_firstload', $store);

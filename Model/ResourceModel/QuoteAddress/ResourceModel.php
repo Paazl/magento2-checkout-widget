@@ -12,7 +12,7 @@ use Magento\Quote\Model\ResourceModel\Quote\Address;
 /**
  * Class Resource
  */
-class Resource extends Address
+class ResourceModel extends Address
 {
     /**
      * @param int $quoteId

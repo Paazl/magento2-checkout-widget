@@ -10,12 +10,20 @@ var config = {
             widgetConfig: 'Paazl_CheckoutWidget/js/checkout/view/widget-config',
             paazlShippingModal: 'Paazl_CheckoutWidget/js/admin/order/create/paazl-shipping/modal',
             customJs: 'Paazl_CheckoutWidget/js/custom',
-            checkoutjs_test: "https://widget-acc.paazl.com/v1/checkout.js",
-            checkoutjs_live: "https://widget.paazl.com/v1/checkout.js"
+            checkoutjs_local_test: "Paazl_CheckoutWidget/js/checkout/lib/checkout_local_test",
+            checkoutjs_local_live: "Paazl_CheckoutWidget/js/checkout/lib/checkout_local_live"
         }
     },
     paths: {
-       paazlCheckout: 'Paazl_CheckoutWidget/js/checkout'
+       paazlCheckout: 'Paazl_CheckoutWidget/js/checkout',
+        checkoutjs_test: [
+            "https://widget-acc.paazl.com/v1/checkout",
+            "Paazl_CheckoutWidget/js/checkout/lib/checkout_local_test"
+        ],
+        checkoutjs_live: [
+            "https://widget.paazl.com/v1/checkout",
+            "Paazl_CheckoutWidget/js/checkout/lib/checkout_local_live"
+        ],
     },
     shim: {
         'Paazl_CheckoutWidget/js/checkout': {

@@ -10,7 +10,7 @@ use Magento\Tax\Model\Config as TaxConfigModel;
 use Paazl\CheckoutWidget\Helper\Order as OrderHelper;
 use Paazl\CheckoutWidget\Model\Config as PaazlConfig;
 use Magento\Checkout\Model\Session;
-use Paazl\CheckoutWidget\Model\ResourceModel\QuoteAddress\Resource as QuoteAddressResource;
+use Paazl\CheckoutWidget\Model\ResourceModel\QuoteAddress\ResourceModel as QuoteAddressResource;
 
 /**
  * Tax Config Plugin
