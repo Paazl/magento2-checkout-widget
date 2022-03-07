@@ -6,6 +6,7 @@
 
 namespace Paazl\CheckoutWidget\Plugin\Tax;
 
+use Magento\Store\Model\StoreManagerInterface;
 use Magento\Tax\Model\Config as TaxConfigModel;
 use Paazl\CheckoutWidget\Helper\Order as OrderHelper;
 use Paazl\CheckoutWidget\Model\Config as PaazlConfig;
@@ -37,23 +38,31 @@ class Config
     private $quoteAddressResource;
 
     /**
+     * @var StoreManagerInterface
+     */
+    private $storeManager;
+
+    /**
      * Config constructor.
      *
      * @param OrderHelper $orderHelper
      * @param PaazlConfig $paazlConfig
      * @param Session $session
      * @param QuoteAddressResource $quoteAddressResource
+     * @param StoreManagerInterface $storeManager
      */
     public function __construct(
         OrderHelper $orderHelper,
         PaazlConfig $paazlConfig,
         Session $session,
-        QuoteAddressResource $quoteAddressResource
+        QuoteAddressResource $quoteAddressResource,
+        StoreManagerInterface $storeManager
     ) {
         $this->orderHelper = $orderHelper;
         $this->paazlConfig = $paazlConfig;
         $this->session = $session;
         $this->quoteAddressResource = $quoteAddressResource;
+        $this->storeManager = $storeManager;
     }
 
     /**
@@ -68,7 +77,7 @@ class Config
         bool $result,
         $store = null
     ) {
-        $cartId = $this->session->getQuoteId();
+        $cartId = $this->session->getData($this->getQuoteIdKey());
         $shippingMethod = $this->quoteAddressResource->getShippingMethodByQuoteId((int)$cartId);
         if ($shippingMethod
             && $this->orderHelper->isPaazlShippingMethod($shippingMethod)
@@ -78,5 +87,13 @@ class Config
         }
 
         return $result;
+    }
+
+    /**
+     * @return string
+     */
+    private function getQuoteIdKey()
+    {
+        return 'quote_id_' . $this->storeManager->getStore()->getWebsiteId();
     }
 }
