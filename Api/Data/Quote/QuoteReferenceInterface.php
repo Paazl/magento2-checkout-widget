@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2019 Paazl. All rights reserved.
+ * Copyright © Paazl. All rights reserved.
  * See COPYING.txt for license details.
  */
 
@@ -19,11 +19,11 @@ interface QuoteReferenceInterface
      *
      * @var string
      */
-    const ENTITY_ID = 'entity_id';
-    const QUOTE_ID = 'quote_id';
-    const EXT_SHIPPING_INFO = 'ext_shipping_info';
-    const TOKEN = 'token';
-    const TOKEN_EXPIRES_AT = 'token_expires_at';
+    public const ENTITY_ID = 'entity_id';
+    public const QUOTE_ID = 'quote_id';
+    public const EXT_SHIPPING_INFO = 'ext_shipping_info';
+    public const TOKEN = 'token';
+    public const TOKEN_EXPIRES_AT = 'token_expires_at';
     /**#@-*/
 
     /**

@@ -7,7 +7,7 @@
         xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
     <table name="mm_paazl_order" engine="innodb" resource="sales" comment="Paazl Order Table">
         <column name="entity_id" xsi:type="int" identity="true" unsigned="true" nullable="false" comment="Entity ID"/>
-        <column name="order_id" xsi:type="int" unsigned="true" nullable="false" comment="Magento Order Id"/>
+        <column name="order_id" xsi:type="int" padding="10" unsigned="true" nullable="false" comment="Magento Order Id"/>
         <column name="ext_shipping_info" xsi:type="text" nullable="true" comment="Customer selection of the Paazl delivery"/>
         <column name="ext_sent_at" xsi:type="datetime" nullable="true" comment="When order has been synced with Paazl"/>
         <column name="invalid" xsi:type="smallint" nullable="true" comment="Invalid"/>
@@ -25,7 +25,7 @@
 
     <table name="mm_paazl_quote" engine="innodb" resource="sales" comment="Paazl Quote Table">
         <column name="entity_id" xsi:type="int" identity="true" unsigned="true" nullable="false" comment="Entity ID"/>
-        <column name="quote_id" xsi:type="int" unsigned="true" nullable="false" comment="Quote Id"/>
+        <column name="quote_id" xsi:type="int" padding="10" unsigned="true" nullable="false" comment="Quote Id"/>
         <column name="ext_shipping_info" xsi:type="text" nullable="true" comment="Shipping information"/>
         <column name="token" xsi:type="varchar" length="255" nullable="true" comment="Token"/>
         <column name="token_expires_at" xsi:type="datetime" nullable="true" comment="Token expires at"/>

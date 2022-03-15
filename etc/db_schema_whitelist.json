@@ -1,0 +1,33 @@
+{
+  "mm_paazl_order": {
+    "column": {
+      "entity_id": true,
+      "order_id": true,
+      "ext_shipping_info": true,
+      "ext_sent_at": true,
+      "invalid": true
+    },
+    "index": {
+      "MM_PAAZL_ORDER_EXT_SENT_AT": true
+    },
+    "constraint": {
+      "PRIMARY": true,
+      "MM_PAAZL_ORDER_ORDER_ID": true,
+      "MM_PAAZL_ORDER_ORDER_ID_SALES_ORDER_ENTITY_ID": true
+    }
+  },
+  "mm_paazl_quote": {
+    "column": {
+      "entity_id": true,
+      "quote_id": true,
+      "ext_shipping_info": true,
+      "token": true,
+      "token_expires_at": true
+    },
+    "constraint": {
+      "PRIMARY": true,
+      "MM_PAAZL_QUOTE_QUOTE_ID": true,
+      "MM_PAAZL_QUOTE_QUOTE_ID_QUOTE_ENTITY_ID": true
+    }
+  }
+}

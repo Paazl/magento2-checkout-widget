@@ -6,6 +6,9 @@
 
 namespace Paazl\CheckoutWidget\Model\Api;
 
+use Throwable;
+use Magento\Framework\Exception\NoSuchEntityException;
+
 /**
  * Class ApiException
  *
@@ -13,35 +16,25 @@ namespace Paazl\CheckoutWidget\Model\Api;
  */
 class ApiException extends \Exception
 {
-    /**
-     * @param \Exception|null $previous
-     * @return ApiException
-     */
-    public static function error(\Exception $previous = null)
-    {
-        return new static('API error', 0, $previous);
-    }
 
-    /**
-     * @param string $message
-     * @param int|string $code
-     * @param \Exception|null $previous
-     * @return ApiException
-     */
-    public static function fromErrorResponse($message, $code, \Exception $previous = null)
-    {
-        // Parsing errors
-        $code = (int)$code;
-        $errors = json_decode($message, true);
-        $message = 'API error';
-        if ($errors !== null && !empty($errors['errors']) && is_array($errors['errors'])) {
-            $messages = array_map(function ($error) {
-                return isset($error['message']) ? $error['message'] : null;
-            }, $errors['errors']);
+    public function __construct(
+        $message = "",
+        $code = 0,
+        Throwable $previous = null,
+        $response = false
+    ) {
+        if ($response) {
+            $code = (int)$code;
+            $errors = json_decode($message, true);
+            $message = 'API error';
+            if ($errors !== null && !empty($errors['errors']) && is_array($errors['errors'])) {
+                $messages = array_map(function ($error) {
+                    return isset($error['message']) ? $error['message'] : null;
+                }, $errors['errors']);
 
-            $message = implode(', ', $messages);
+                $message = implode(', ', $messages);
+            }
         }
-
-        return new static($message, $code, $previous);
+        parent::__construct($message, $code, $previous);
     }
 }

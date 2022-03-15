@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2019 Paazl. All rights reserved.
+ * Copyright © Paazl. All rights reserved.
  * See COPYING.txt for license details.
  */
 
@@ -28,7 +28,7 @@ class OrderSendCommand extends Command
     /**
      * @var string
      */
-    const ARG_ORDER = 'order';
+    public const ARG_ORDER = 'order';
 
     /**
      * @var OrderRepositoryInterface
@@ -98,8 +98,9 @@ class OrderSendCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         try {
-            $this->state->setAreaCode(Area::AREA_ADMINHTML);
+            $this->state->getAreaCode();
         } catch (LocalizedException $e) {
+            $this->state->setAreaCode(Area::AREA_ADMINHTML);
         }
 
         $orderIds = $input->getArgument(OrderSendCommand::ARG_ORDER);

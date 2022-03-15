@@ -25,7 +25,7 @@ class SendOrders
     /**
      * Retry time in seconds
      */
-    const RETRY_TIME_SECONDS = 50400;
+    public const RETRY_TIME_SECONDS = 50400;
 
     /**
      * @var SendToService

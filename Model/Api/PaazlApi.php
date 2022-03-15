@@ -6,6 +6,7 @@
 
 namespace Paazl\CheckoutWidget\Model\Api;
 
+use Exception;
 use Magento\Framework\HTTP\ClientInterface;
 use Paazl\CheckoutWidget\Helper\General as GeneralHelper;
 use Paazl\CheckoutWidget\Model\Api\Http\ClientFactory;
@@ -104,11 +105,11 @@ class PaazlApi
                 $token = $this->tokenBuilder->setResponse($body)->create();
                 return $token;
             }
-        } catch (\Exception $e) {
-            throw ApiException::error($e);
+        } catch (Exception $e) {
+            throw new ApiException('API error', 0, $e);
         }
 
-        throw ApiException::error();
+        throw new ApiException('API error', 0);
     }
 
     /**
@@ -148,14 +149,14 @@ class PaazlApi
         }
 
         if ($status >= 400 && $status < 500) {
-            throw ApiException::fromErrorResponse($body, $status);
+            throw new ApiException($body, $status, null, true);
         }
 
         if ($status >= 200 && $status < 300) {
             return true;
         }
 
-        throw ApiException::error();
+        throw new ApiException('API error', 0);
     }
 
     /**
@@ -182,14 +183,14 @@ class PaazlApi
         $this->generalHelper->addTolog('getShippingOptions response status: ', $status);
         $this->generalHelper->addTolog('getShippingOptions response: ', $body);
         if ($status >= 400 && $status < 500) {
-            throw ApiException::fromErrorResponse($body, $status);
+            throw new ApiException($body, $status, null, true);
         }
 
         if ($status >= 200 && $status < 300) {
             return $body;
         }
 
-        throw ApiException::error();
+        throw new ApiException('API error', 0);
     }
 
     /**
@@ -197,13 +198,13 @@ class PaazlApi
      *
      * @return mixed|null
      * @throws ApiException
+     * @throws Exception
      */
     public function fetchCheckoutData($reference)
     {
         $url = $this->urlProvider->getCheckoutUrl();
-
         $httpClient = $this->getAuthorizedClient();
-        $result = null;
+
         try {
             $url .= '?' . http_build_query([
                     'reference' => $reference
@@ -218,17 +219,17 @@ class PaazlApi
             $body = $httpClient->getBody();
             $this->generalHelper->addTolog('fetchCheckoutData response status: ', $body);
             $this->generalHelper->addTolog('fetchCheckoutData response: ', $body);
-            if ($status !== 200) {
-                // @codingStandardsIgnoreLine
-                throw new \Exception('Cannot obtain checkout info');
-            }
-            $result = json_decode($body, true);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->generalHelper->addTolog('exception', $e->getMessage());
-            throw ApiException::error($e);
+            throw new ApiException('API error', 0, $e);
         }
 
-        return $result;
+        if ($status !== 200) {
+            // @codingStandardsIgnoreLine
+            throw new Exception('Cannot obtain checkout info');
+        }
+
+        return json_decode($body, true);
     }
 
     /**

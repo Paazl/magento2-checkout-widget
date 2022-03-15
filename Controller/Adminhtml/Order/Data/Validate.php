@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2019 Paazl. All rights reserved.
+ * Copyright © Paazl. All rights reserved.
  * See COPYING.txt for license details.
  */
 
@@ -22,7 +22,7 @@ use Paazl\CheckoutWidget\Model\Api\Processor\SendToService;
  */
 class Validate extends Order
 {
-    const DEFAULT_MESSAGE_KEY = 'message';
+    public const DEFAULT_MESSAGE_KEY = 'message';
 
     /**
      * @var SerializerInterface

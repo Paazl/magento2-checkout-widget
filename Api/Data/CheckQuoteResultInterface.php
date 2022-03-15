@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2019 Paazl. All rights reserved.
+ * Copyright © Paazl. All rights reserved.
  * See COPYING.txt for license details.
  */
 
@@ -13,9 +13,9 @@ namespace Paazl\CheckoutWidget\Api\Data;
  */
 interface CheckQuoteResultInterface
 {
-    const RELOAD_WIDGET = 'reload_widget';
-    const RELOAD_WIDGET_CONFIG_JSON = 'reload_widget_config';
-    const TOTALS = 'totals';
+    public const RELOAD_WIDGET = 'reload_widget';
+    public const RELOAD_WIDGET_CONFIG_JSON = 'reload_widget_config';
+    public const TOTALS = 'totals';
 
     /**
      * @return boolean

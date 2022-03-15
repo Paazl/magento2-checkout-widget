@@ -18,7 +18,8 @@ use Paazl\CheckoutWidget\Model\Config;
 class BeforeQuoteSave
 {
 
-    const ORIGIN = 'shipping/origin/country_id';
+    public const ORIGIN = 'shipping/origin/country_id';
+
     /**
      * @var ScopeConfigInterface
      */

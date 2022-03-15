@@ -28,7 +28,7 @@ class WidgetConfigProvider implements ConfigProviderInterface
     /**#@+
      * Constants
      */
-    const DEFAULT_NUMBER_OF_PROCESSING_DAYS = 0;
+    public const DEFAULT_NUMBER_OF_PROCESSING_DAYS = 0;
     /**#@-*/
 
     /**

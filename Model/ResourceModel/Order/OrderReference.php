@@ -16,7 +16,7 @@ use Paazl\CheckoutWidget\Api\Data\Order\OrderReferenceInterface;
  */
 class OrderReference extends AbstractDb
 {
-    const MAIN_TABLE = 'mm_paazl_order';
+    public const MAIN_TABLE = 'mm_paazl_order';
 
     /**
      * Resource initialization
