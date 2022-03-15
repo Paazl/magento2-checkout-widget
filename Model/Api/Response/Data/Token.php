@@ -19,7 +19,7 @@ class Token extends DataObject
     /**
      * @var string
      */
-    const TOKEN = 'token';
+    public const TOKEN = 'token';
 
     /**
      * @return string

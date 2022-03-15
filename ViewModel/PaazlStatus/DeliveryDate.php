@@ -22,7 +22,7 @@ use Paazl\CheckoutWidget\Api\Data\Order\OrderReferenceInterface;
  */
 class DeliveryDate implements ArgumentInterface
 {
-    const PARENT_BLOCK_NAME = 'shipping_and_handling_info.paazl_status';
+    public const PARENT_BLOCK_NAME = 'shipping_and_handling_info.paazl_status';
 
     /**
      * @var DataObjectHelper

@@ -34,7 +34,7 @@ class Paazlshipping extends AbstractCarrier implements CarrierInterface
     /**
      * @var string
      */
-    const CODE = 'paazlshipping';
+    public const CODE = 'paazlshipping';
 
     /**
      * Carrier's code

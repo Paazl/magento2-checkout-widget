@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2019 Paazl. All rights reserved.
+ * Copyright © Paazl. All rights reserved.
  * See COPYING.txt for license details.
  */
 
@@ -19,19 +19,19 @@ class ShippingInfo extends DataObject
     /**#@+
      * @var string
      */
-    const TYPE = 'type';
-    const IDENTIFIER = 'identifier';
-    const PICKUP_CODE = 'pickup_code';
-    const PICKUP_ACCOUNT_NUMBER = 'pickup_account_number';
-    const PICKUP_DATE = 'pickup_date';
-    const PICKUP_NAME = 'pickup_name';
-    const PICKUP_ADDRESS = 'pickup_address';
-    const PRICE = 'price';
-    const TITLE = 'title';
-    const OPTION_TITLE = 'option_title';
-    const ADDRESS = 'address';
-    const PREFERRED_DELIVERY_DATE = 'preferred_delivery_date';
-    const CARRIER_PICKUP_DATE = 'carrier_pickup_date';
+    public const TYPE = 'type';
+    public const IDENTIFIER = 'identifier';
+    public const PICKUP_CODE = 'pickup_code';
+    public const PICKUP_ACCOUNT_NUMBER = 'pickup_account_number';
+    public const PICKUP_DATE = 'pickup_date';
+    public const PICKUP_NAME = 'pickup_name';
+    public const PICKUP_ADDRESS = 'pickup_address';
+    public const PRICE = 'price';
+    public const TITLE = 'title';
+    public const OPTION_TITLE = 'option_title';
+    public const ADDRESS = 'address';
+    public const PREFERRED_DELIVERY_DATE = 'preferred_delivery_date';
+    public const CARRIER_PICKUP_DATE = 'carrier_pickup_date';
     /**#@- */
 
     /**

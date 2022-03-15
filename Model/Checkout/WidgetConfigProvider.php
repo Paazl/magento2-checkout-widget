@@ -29,7 +29,7 @@ class WidgetConfigProvider implements ConfigProviderInterface
     /**#@+
      * Constants
      */
-    const DEFAULT_NUMBER_OF_PROCESSING_DAYS = 0;
+    public const DEFAULT_NUMBER_OF_PROCESSING_DAYS = 0;
     /**#@-*/
 
     /**
@@ -134,7 +134,9 @@ class WidgetConfigProvider implements ConfigProviderInterface
         foreach ($this->getQuote()->getAllItems() as $item) {
             if ($item->getProductType() == 'simple') {
                 $goodsItem = [
-                    "quantity" => $item->getParentItem() ? (int)($item->getParentItem()->getQty()) : (int)$item->getQty(),
+                    "quantity" => $item->getParentItem()
+                        ? (int)($item->getParentItem()->getQty())
+                        : (int)$item->getQty(),
                     "weight"   => doubleval($item->getWeight()),
                     "price"    => $this->itemHandler->getPriceValue($item)
                 ];

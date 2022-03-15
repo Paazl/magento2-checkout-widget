@@ -14,6 +14,6 @@ namespace Paazl\CheckoutWidget\Model\Api\Field;
 class DeliveryType
 {
 
-    const PICKUP = 'PICKUP_LOCATION';
-    const DELIVERY = 'HOME';
+    public const PICKUP = 'PICKUP_LOCATION';
+    public const DELIVERY = 'HOME';
 }

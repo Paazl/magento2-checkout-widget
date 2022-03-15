@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2019 Paazl. All rights reserved.
+ * Copyright © Paazl. All rights reserved.
  * See COPYING.txt for license details.
  */
 
@@ -16,8 +16,8 @@ class UrlProvider
     /**#@+
      * @var string
      */
-    const BASE_URL_LIVE = 'https://api.paazl.com/v1/';
-    const BASE_URL_TEST = 'https://api-acc.paazl.com/v1/';
+    private const BASE_URL_LIVE = 'https://api.paazl.com/v1/';
+    private const BASE_URL_TEST = 'https://api-acc.paazl.com/v1/';
     /**#@- */
 
     /**

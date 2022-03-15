@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2019 Paazl. All rights reserved.
+ * Copyright © Paazl. All rights reserved.
  * See COPYING.txt for license details.
  */
 
@@ -15,8 +15,9 @@ use Magento\Framework\Option\ArrayInterface;
  */
 class ApiMode implements ArrayInterface
 {
-    const MODE_PRODUCTION = 1;
-    const MODE_STAGING = 0;
+
+    public const MODE_PRODUCTION = 1;
+    public const MODE_STAGING = 0;
 
     /**
      * @var array

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2019 Paazl. All rights reserved.
+ * Copyright © Paazl. All rights reserved.
  * See COPYING.txt for license details.
  */
 
@@ -19,11 +19,11 @@ interface OrderReferenceInterface
      *
      * @var string
      */
-    const ENTITY_ID = 'entity_id';
-    const ORDER_ID = 'order_id';
-    const EXT_SHIPPING_INFO = 'ext_shipping_info';
-    const EXT_SENT_AT = 'ext_sent_at';
-    const EXT_INVALID = 'invalid';
+    public const ENTITY_ID = 'entity_id';
+    public const ORDER_ID = 'order_id';
+    public const EXT_SHIPPING_INFO = 'ext_shipping_info';
+    public const EXT_SENT_AT = 'ext_sent_at';
+    public const EXT_INVALID = 'invalid';
     /**#@-*/
 
     /**

@@ -13,12 +13,12 @@ use Magento\Framework\Data\OptionSourceInterface;
  */
 class Options implements OptionSourceInterface
 {
-    const VALUE_NOT_PAAZL = '0';
-    const LABEL_NOT_PAAZL = 'Not Paazl';
-    const VALUE_NEED_TO_BE_UPDATED = '1';
-    const LABEL_NEED_TO_BE_UPDATED = 'Need to be updated to Paazl';
-    const VALUE_SUCCESSFULLY_UPDATED = '2';
-    const LABEL_SUCCESSFULLY_UPDATED = 'Successfully Updated';
+    public const VALUE_NOT_PAAZL = '0';
+    public const LABEL_NOT_PAAZL = 'Not Paazl';
+    public const VALUE_NEED_TO_BE_UPDATED = '1';
+    public const LABEL_NEED_TO_BE_UPDATED = 'Need to be updated to Paazl';
+    public const VALUE_SUCCESSFULLY_UPDATED = '2';
+    public const LABEL_SUCCESSFULLY_UPDATED = 'Successfully Updated';
 
     /**
      * @var array

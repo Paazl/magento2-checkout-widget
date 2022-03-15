@@ -16,7 +16,7 @@ use Paazl\CheckoutWidget\Api\Data\Quote\QuoteReferenceInterface;
  */
 class QuoteReference extends AbstractDb
 {
-    const MAIN_TABLE = 'mm_paazl_quote';
+    public const MAIN_TABLE = 'mm_paazl_quote';
 
     /**
      * Resource initialization

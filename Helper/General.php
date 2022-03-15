@@ -24,7 +24,7 @@ class General extends AbstractHelper
     /**
      * @var string
      */
-    const MODULE_CODE = 'Paazl_CheckoutWidget';
+    public const MODULE_CODE = 'Paazl_CheckoutWidget';
 
     /**
      * @var ModuleListInterface

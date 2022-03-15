@@ -23,9 +23,9 @@ class Config
     /**#@+
      * Constants
      */
-    const API_CONFIG_PATH = 'carriers/paazlshipping';
-    const MIN_NUMBER_OF_PROCESSING_DAYS = 1;
-    const MAX_NUMBER_OF_PROCESSING_DAYS = 99;
+    public const API_CONFIG_PATH = 'carriers/paazlshipping';
+    public const MIN_NUMBER_OF_PROCESSING_DAYS = 1;
+    public const MAX_NUMBER_OF_PROCESSING_DAYS = 99;
     /**#@-*/
 
     /**
