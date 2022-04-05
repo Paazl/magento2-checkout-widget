@@ -80,7 +80,7 @@ class Config
         $cartId = $this->session->getData($this->getQuoteIdKey());
         $shippingMethod = $this->quoteAddressResource->getShippingMethodByQuoteId((int)$cartId);
         if ($shippingMethod
-            && $this->orderHelper->isPaazlShippingMethod($shippingMethod)
+            && $this->orderHelper->isPaazlShippingMethod((string)$shippingMethod)
             && $this->paazlConfig->isPriceIncludesTax($store)
         ) {
             return true;

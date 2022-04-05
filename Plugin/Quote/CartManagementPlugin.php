@@ -66,7 +66,7 @@ class CartManagementPlugin
         }
 
         $shippingMethod = $quote->getShippingAddress()->getShippingMethod();
-        if (!$this->orderHelper->isPaazlShippingMethod($shippingMethod)) {
+        if (!$this->orderHelper->isPaazlShippingMethod((string)$shippingMethod)) {
             return null;
         }
 
