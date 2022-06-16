@@ -17,6 +17,9 @@ use Magento\Quote\Model\Quote\Address\RateResult\ErrorFactory;
 use Magento\Quote\Model\Quote\Address\RateResult\MethodFactory;
 use Magento\Quote\Model\Quote\Address\RateRequest;
 use Paazl\CheckoutWidget\Logger\PaazlLogger;
+use Paazl\CheckoutWidget\Model\Api\Converter\ShippingOptions;
+use Paazl\CheckoutWidget\Model\Api\PaazlApiFactory;
+use Paazl\CheckoutWidget\Model\Checkout\WidgetConfigProvider;
 use Paazl\CheckoutWidget\Model\ExtInfoHandler;
 use Paazl\CheckoutWidget\Model\Config;
 use Magento\Framework\App\State as AppState;
@@ -86,6 +89,21 @@ class Paazlshipping extends AbstractCarrier implements CarrierInterface
     private $tokenRetriever;
 
     /**
+     * @var PaazlApiFactory
+     */
+    private $apiFactory;
+
+    /**
+     * @var ShippingOptions
+     */
+    private $shippingOptionsConverter;
+
+    /**
+     * @var WidgetConfigProvider
+     */
+    private $configProvider;
+
+    /**
      * Paazlshipping constructor.
      *
      * @param ScopeConfigInterface $scopeConfig
@@ -111,12 +129,17 @@ class Paazlshipping extends AbstractCarrier implements CarrierInterface
         ExtInfoHandler $extInfoHandler,
         TokenRetriever $tokenRetriever,
         PaazlLogger $paazlLogger,
+        PaazlApiFactory $apiFactory,
+        ShippingOptions $shippingOptionsConverter,
+        WidgetConfigProvider $configProvider,
         array $data = []
     ) {
         $this->rateResultFactory = $rateResultFactory;
         $this->rateMethodFactory = $rateMethodFactory;
         $this->logger = $paazlLogger;
-
+        $this->apiFactory = $apiFactory;
+        $this->shippingOptionsConverter = $shippingOptionsConverter;
+        $this->configProvider = $configProvider;
         parent::__construct($scopeConfig, $rateErrorFactory, $logger, $data);
         $this->extInfoHandler = $extInfoHandler;
         $this->config = $config;
@@ -190,6 +213,25 @@ class Paazlshipping extends AbstractCarrier implements CarrierInterface
         }
 
         try {
+            $countryId = $quote->getShippingAddress()->getCountryId() ?
+                $quote->getShippingAddress()->getCountryId() :
+                $this->configProvider->getDefaultCountry();
+            $postcode = $quote->getShippingAddress()->getPostcode() ?
+                $quote->getShippingAddress()->getPostcode() :
+                $this->configProvider->getDefaultPostcode();
+            if ($countryId && $postcode) {
+                $api = $this->apiFactory->create($quote->getStoreId());
+                $config = $this->configProvider->setQuote($quote)->getConfig();
+                $shippingOptions = $this->shippingOptionsConverter->convert(
+                    $api->getShippingOptions($config)
+                );
+                if (isset($shippingOptions['shippingOptions'][0])) {
+                    $firstOption = $shippingOptions['shippingOptions'][0];
+                    $shippingPrice = $firstOption['rate'];
+                    $method->setMethodTitle($firstOption['name']);
+                }
+            }
+
             $this->tokenRetriever->retrieveByQuote($quote);
 
             $info = $this->extInfoHandler->getInfoFromQuote($quote);
