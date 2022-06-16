@@ -18,17 +18,11 @@ use Paazl\CheckoutWidget\Model\ExtInfoHandler;
 use Paazl\CheckoutWidget\Model\Handler\Item;
 use Paazl\CheckoutWidget\Model\ResourceModel\Order\OrderReferenceRepository;
 use Paazl\CheckoutWidget\Model\ShippingInfo;
+use Paazl\CheckoutWidget\Test\Unit\UnitTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
 
-class OrderTest extends TestCase
+class OrderTest extends UnitTestCase
 {
-
-    /**
-     * @var ObjectManagerHelper
-     */
-    private $objectManager;
-
     /**
      * @var Order
      */
@@ -49,10 +43,8 @@ class OrderTest extends TestCase
      */
     private $configMock;
 
-    protected function setUp()
+    protected function setUpWithoutVoid()
     {
-        $this->objectManager = (new ObjectManagerHelper($this));
-
         $extInfoHandlerMock = $this->getMockBuilder(ExtInfoHandler::class)->disableOriginalConstructor()->getMock();
         $this->extInfoHandlerMock = $extInfoHandlerMock;
 
