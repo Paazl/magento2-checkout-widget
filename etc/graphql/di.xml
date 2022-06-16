@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!--
+  ~ Copyright © Paazl. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Quote\Model\Quote\Address\RateCollectorInterface">
+        <plugin name="paazl_checkoutwidget" type="\Paazl\CheckoutWidget\Plugin\Shipping\RateCollectorPlugin"/>
+    </type>
+
+    <type name="Magento\Checkout\Model\ShippingInformationManagement">
+        <plugin name="paazl_shipping_information_management"
+                type="Paazl\CheckoutWidget\Plugin\Checkout\ShippingInformationManagementPlugin"/>
+    </type>
+
+    <type name="Magento\Quote\Api\CartTotalRepositoryInterface">
+        <plugin name="paazl_checkoutwidget"
+                type="Paazl\CheckoutWidget\Plugin\Quote\CartTotalRepositoryPlugin"/>
+    </type>
+</config>

@@ -1,0 +1,54 @@
+type Query {
+    paazlConfiguration(cart_id: String! @doc(description: "The ID of the cart.")): PaazlConfiguration @resolver(class: "Paazl\\CheckoutWidget\\GraphQL\\Resolver\\ConfigurationResolver")
+}
+
+type PaazlConfiguration {
+    mountElementId: String @doc(description: "The id of the mount element")
+    apiKey: String @doc(description: "The api key")
+    token: String @doc(description: "The token")
+    loadPaazlBasedData: Boolean @doc(description: "Whether to load paazl based data")
+    loadCarrierBasedData: Boolean @doc(description: "Whether to load carrier based data")
+    availableTabs: [String] @doc(description: "The available tabs")
+    headerTabType: String @doc(description: "The header tab type")
+    defaultTab: String @doc(description: "The default tab")
+    style: String @doc(description: "The style")
+    nominatedDateEnabled: Boolean @doc(description: "Whether to enable the nominated date")
+    consigneeCountryCode: String @doc(description: "The consignee country code")
+    consigneePostalCode: String @doc(description: "The consignee postal code")
+    numberOfProcessingDays: Int @doc(description: "The number of processing days")
+    deliveryDateOptions: PaazlDeliveryDateOptions @doc(description: "The delivery date options")
+    currency: String @doc(description: "The currency")
+    deliveryOptionDateFormat: String @doc(description: "The delivery option date format")
+    deliveryEstimateDateFormat: String @doc(description: "The delivery estimate date format")
+    pickupOptionDateFormat: String @doc(description: "The pickup option date format")
+    pickupEstimateDateFormat: String @doc(description: "The pickup estimate date format")
+    sortingModel: PaazlSortingModel @doc(description: "The sorting model")
+    shipmentParameters: PaazlShipmentParameters @doc(description: "The shipment parameters")
+    shippingOptionsLimit: Int @doc(description: "The shipping options limit")
+    pickupLocationsPageLimit: Int @doc(description: "The pickup locations page limit")
+    pickupLocationsLimit: Int @doc(description: "The pickup locations limit")
+    initialPickupLocations: String @doc(description: "The initial pickup locations")
+}
+
+type PaazlDeliveryDateOptions {
+    startDate: String @doc(description: "The start date")
+    numberOfDays: Int @doc(description: "The number of days")
+}
+
+type PaazlSortingModel {
+    orderBy: String @doc(description: "The order by")
+    sortOrder: String @doc(description: "The sort order")
+}
+
+type PaazlShipmentParameters {
+    totalWeight: Float @doc(description: "The total weight")
+    totalPrice: Float @doc(description: "The total price")
+    numberOfGoods: Int @doc(description: "The number of goods")
+    goods: [PaazlGoodsItem] @doc(description: "The goods")
+}
+
+type PaazlGoodsItem {
+    quantity: Int @doc(description: "The quantity")
+    weight: Float @doc(description: "The weight")
+    price: Float @doc(description: "The price")
+}

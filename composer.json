@@ -2,7 +2,7 @@
   "name": "paazl/magento2-checkout-widget",
   "description": "Paazl checkoutWidget for Magento 2",
   "type": "magento2-module",
-  "version": "1.11.2",
+  "version": "1.12.0",
   "keywords": [
     "Paazl",
     "Magento 2",
@@ -16,7 +16,8 @@
   },
   "autoload": {
     "files": [
-      "registration.php"
+      "registration.php",
+      "GraphQL/Replaces/ResolverInterface.php"
     ],
     "psr-4": {
       "Paazl\\CheckoutWidget\\": ""

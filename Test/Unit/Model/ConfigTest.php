@@ -8,12 +8,11 @@ declare(strict_types=1);
 namespace Paazl\CheckoutWidget\Test\Unit\Model;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
-use Magento\Framework\TestFramework\Unit\Helper\ObjectManager as ObjectManagerHelper;
 use Paazl\CheckoutWidget\Model\Config;
+use Paazl\CheckoutWidget\Test\Unit\UnitTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
 
-class ConfigTest extends TestCase
+class ConfigTest extends UnitTestCase
 {
 
     /**
@@ -22,20 +21,12 @@ class ConfigTest extends TestCase
     private $entity;
 
     /**
-     * @var ObjectManagerHelper
-     */
-    private $objectManager;
-
-    /**
      * @var ScopeConfigInterface|MockObject
      */
     private $scopeConfigMock;
 
-    protected function setUp()
+    protected function setUpWithoutVoid()
     {
-        /** @var ObjectManagerHelper objectManager */
-        $this->objectManager = (new ObjectManagerHelper($this));
-
         /** @var ScopeConfigInterface|MockObject $scopeConfigMock */
         $scopeConfigMock = $this->createMock(ScopeConfigInterface::class);
         $this->scopeConfigMock = $scopeConfigMock;

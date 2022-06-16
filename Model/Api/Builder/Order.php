@@ -207,9 +207,9 @@ class Order
             }
 
             return [
-                'street'               => trim($matches['street'] ?? null),
-                'houseNumber'          => trim($matches['houseNumber'] ?? null),
-                'houseNumberExtension' => trim($matches['houseNumberExtension'] ?? null),
+                'street'               => trim($matches['street'] ?? ''),
+                'houseNumber'          => trim($matches['houseNumber'] ?? ''),
+                'houseNumberExtension' => trim($matches['houseNumberExtension'] ?? ''),
             ];
         }
 
