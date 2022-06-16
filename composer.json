@@ -16,7 +16,8 @@
   },
   "autoload": {
     "files": [
-      "registration.php"
+      "registration.php",
+      "GraphQL/Replaces/ResolverInterface.php"
     ],
     "psr-4": {
       "Paazl\\CheckoutWidget\\": ""
