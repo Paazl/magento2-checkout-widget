@@ -219,7 +219,7 @@ class WidgetConfigProvider implements ConfigProviderInterface
     public function getQuote()
     {
         if (!$this->quote) {
-            return $this->checkoutHelper->getQuote();
+            $this->quote = $this->checkoutHelper->getQuote();
         }
 
         return $this->quote;
