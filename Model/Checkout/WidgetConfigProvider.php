@@ -13,7 +13,6 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Quote\Model\Quote;
 use Magento\Quote\Model\Quote\Item\AbstractItem;
-use Magento\Sales\Model\OrderFactory;
 use Paazl\CheckoutWidget\Helper\General as GeneralHelper;
 use Paazl\CheckoutWidget\Model\Config;
 use Paazl\CheckoutWidget\Model\Handler\Item as ItemHandler;
@@ -41,11 +40,6 @@ class WidgetConfigProvider implements ConfigProviderInterface
      * @var Data
      */
     private $checkoutHelper;
-
-    /**
-     * @var OrderFactory
-     */
-    private $order;
 
     /**
      * @var GeneralHelper
@@ -82,7 +76,6 @@ class WidgetConfigProvider implements ConfigProviderInterface
      *
      * @param Config            $scopeConfig
      * @param Data              $checkoutHelper
-     * @param OrderFactory      $order
      * @param GeneralHelper     $generalHelper
      * @param ItemHandler       $itemHandler
      * @param TokenRetriever    $tokenRetriever
@@ -92,7 +85,6 @@ class WidgetConfigProvider implements ConfigProviderInterface
     public function __construct(
         Config $scopeConfig,
         Data $checkoutHelper,
-        OrderFactory $order,
         GeneralHelper $generalHelper,
         ItemHandler $itemHandler,
         TokenRetriever $tokenRetriever,
@@ -101,7 +93,6 @@ class WidgetConfigProvider implements ConfigProviderInterface
     ) {
         $this->scopeConfig = $scopeConfig;
         $this->checkoutHelper = $checkoutHelper;
-        $this->order = $order;
         $this->generalHelper = $generalHelper;
         $this->itemHandler = $itemHandler;
         $this->tokenRetriever = $tokenRetriever;
