@@ -200,12 +200,24 @@ class WidgetConfigProvider implements ConfigProviderInterface
         if ($this->isFreeShippingEnabled() && $shippingAddress->getFreeShipping()) {
             $config['shipmentParameters']['startMatrix'] = $this->getFreeShippingMatrixLetter();
         }
-        if ($this->scopeConfig->getTotalPrice() == 'grand_total') {
-            $config['shipmentParameters']['totalPrice'] = (float)$this->getQuote()->getGrandTotal();
-        } elseif ($this->scopeConfig->getTotalPrice() == 'subtotal_excl_discount') {
-            $config['shipmentParameters']['totalPrice'] = (float)$this->getQuote()->getSubtotal();
+
+        switch ($this->scopeConfig->getTotalPrice()) {
+            case "grand_total":
+                $totalPriceValue = (float) $this->getQuote()->getShippingAddress()->getGrandTotal();
+                break;
+            case "subtotal_excl_discount":
+                $totalPriceValue = (float) $this->getQuote()->getShippingAddress()->getSubtotalInclTax();
+                break;
+            case "subtotal_incl_discount":
+            default: // default from config.xml = "subtotal_incl_discount"
+                $totalPriceValue = (
+                    (float) $this->getQuote()->getShippingAddress()->getSubtotalInclTax() +
+                    (float) $this->getQuote()->getShippingAddress()->getDiscountAmount()
+                );
+                break;
         }
 
+        $config['shipmentParameters']['totalPrice'] = $totalPriceValue;
         $config = array_merge($config, $this->languageProvider->getConfig());
 
         $this->generalHelper->addTolog('request', $config);
