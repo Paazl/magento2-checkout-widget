@@ -203,16 +203,16 @@ class WidgetConfigProvider implements ConfigProviderInterface
 
         switch ($this->scopeConfig->getTotalPrice()) {
             case "grand_total":
-                $totalPriceValue = (float) $this->getQuote()->getShippingAddress()->getGrandTotal();
+                $totalPriceValue = (float) $shippingAddress->getGrandTotal();
                 break;
             case "subtotal_excl_discount":
-                $totalPriceValue = (float) $this->getQuote()->getShippingAddress()->getSubtotalInclTax();
+                $totalPriceValue = (float) $shippingAddress->getSubtotalInclTax();
                 break;
             case "subtotal_incl_discount":
             default: // default from config.xml = "subtotal_incl_discount"
                 $totalPriceValue = (
-                    (float) $this->getQuote()->getShippingAddress()->getSubtotalInclTax() +
-                    (float) $this->getQuote()->getShippingAddress()->getDiscountAmount()
+                    (float) $shippingAddress->getSubtotalInclTax() +
+                    (float) $shippingAddress->getDiscountAmount()
                 );
                 break;
         }
