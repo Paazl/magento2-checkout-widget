@@ -8,7 +8,7 @@
     <default>
         <carriers>
             <paazlshipping>
-                <version>v1.12.0</version>
+                <version>v1.12.1</version>
                 <active>0</active>
                 <sallowspecific>0</sallowspecific>
                 <price>0</price>
