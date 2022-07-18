@@ -13,7 +13,6 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Quote\Model\Quote;
 use Magento\Quote\Model\Quote\Item\AbstractItem;
-use Magento\Sales\Model\OrderFactory;
 use Paazl\CheckoutWidget\Helper\General as GeneralHelper;
 use Paazl\CheckoutWidget\Model\Config;
 use Paazl\CheckoutWidget\Model\Handler\Item as ItemHandler;
@@ -41,11 +40,6 @@ class WidgetConfigProvider implements ConfigProviderInterface
      * @var Data
      */
     private $checkoutHelper;
-
-    /**
-     * @var OrderFactory
-     */
-    private $order;
 
     /**
      * @var GeneralHelper
@@ -82,7 +76,6 @@ class WidgetConfigProvider implements ConfigProviderInterface
      *
      * @param Config            $scopeConfig
      * @param Data              $checkoutHelper
-     * @param OrderFactory      $order
      * @param GeneralHelper     $generalHelper
      * @param ItemHandler       $itemHandler
      * @param TokenRetriever    $tokenRetriever
@@ -92,7 +85,6 @@ class WidgetConfigProvider implements ConfigProviderInterface
     public function __construct(
         Config $scopeConfig,
         Data $checkoutHelper,
-        OrderFactory $order,
         GeneralHelper $generalHelper,
         ItemHandler $itemHandler,
         TokenRetriever $tokenRetriever,
@@ -101,7 +93,6 @@ class WidgetConfigProvider implements ConfigProviderInterface
     ) {
         $this->scopeConfig = $scopeConfig;
         $this->checkoutHelper = $checkoutHelper;
-        $this->order = $order;
         $this->generalHelper = $generalHelper;
         $this->itemHandler = $itemHandler;
         $this->tokenRetriever = $tokenRetriever;
@@ -196,7 +187,7 @@ class WidgetConfigProvider implements ConfigProviderInterface
             ],
             "shipmentParameters"         => [
                 "totalWeight"   => (float)$this->getTotalWeight($goods),
-                "totalPrice"    => (float)$this->getQuote()->getSubtotalWithDiscount(),
+                "totalPrice"    => 0.0000,
                 "numberOfGoods" => (int)$this->getProductsCount(),
                 "goods"         => $goods
             ],
@@ -209,12 +200,24 @@ class WidgetConfigProvider implements ConfigProviderInterface
         if ($this->isFreeShippingEnabled() && $shippingAddress->getFreeShipping()) {
             $config['shipmentParameters']['startMatrix'] = $this->getFreeShippingMatrixLetter();
         }
-        if ($this->scopeConfig->getTotalPrice() == 'grand_total') {
-            $config['shipmentParameters']['totalPrice'] = (float)$this->getQuote()->getGrandTotal();
-        } elseif ($this->scopeConfig->getTotalPrice() == 'subtotal_excl_discount') {
-            $config['shipmentParameters']['totalPrice'] = (float)$this->getQuote()->getSubtotal();
+
+        switch ($this->scopeConfig->getTotalPrice()) {
+            case "grand_total":
+                $totalPriceValue = (float) $shippingAddress->getGrandTotal();
+                break;
+            case "subtotal_excl_discount":
+                $totalPriceValue = (float) $shippingAddress->getSubtotalInclTax();
+                break;
+            case "subtotal_incl_discount":
+            default: // default from config.xml = "subtotal_incl_discount"
+                $totalPriceValue = (
+                    (float) $shippingAddress->getSubtotalInclTax() +
+                    (float) $shippingAddress->getDiscountAmount()
+                );
+                break;
         }
 
+        $config['shipmentParameters']['totalPrice'] = $totalPriceValue;
         $config = array_merge($config, $this->languageProvider->getConfig());
 
         $this->generalHelper->addTolog('request', $config);
@@ -228,7 +231,7 @@ class WidgetConfigProvider implements ConfigProviderInterface
     public function getQuote()
     {
         if (!$this->quote) {
-            return $this->checkoutHelper->getQuote();
+            $this->quote = $this->checkoutHelper->getQuote();
         }
 
         return $this->quote;
