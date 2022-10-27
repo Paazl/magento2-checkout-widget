@@ -69,15 +69,6 @@ class ToShippingInfo
             $result = $this->json->unserialize($response);
         }
 
-        // Checking required options
-        if (empty($result['deliveryType'])) {
-            throw new LocalizedException(__('Delivery Type missed'));
-        }
-
-        if (empty($result['shippingOption']['identifier'])) {
-            throw new LocalizedException(__('Shipping option missed'));
-        }
-
         $info->setType($this->arrayManager->get('deliveryType', $result));
         $info->setIdenfifier($this->arrayManager->get('shippingOption/identifier', $result));
         $info->setPrice(floatval($this->arrayManager->get('shippingOption/rate', $result)));

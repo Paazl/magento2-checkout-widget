@@ -121,4 +121,8 @@
     <type name="\Magento\Framework\App\Action\AbstractAction">
         <plugin name="paazlshipping" type="Paazl\CheckoutWidget\Plugin\Framework\App\ActionPlugin"/>
     </type>
+
+    <type name="Hyva\ReactCheckout\ViewModel\CheckoutConfigProvider">
+        <plugin name="paazl_hyva_checkout_config" type="Paazl\CheckoutWidget\Plugin\Hyva\ReactCheckout\ViewModel\CheckoutConfigProviderPlugin" />
+    </type>
 </config>
