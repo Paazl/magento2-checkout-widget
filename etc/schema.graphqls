@@ -28,6 +28,7 @@ type PaazlConfiguration {
     pickupLocationsPageLimit: Int @doc(description: "The pickup locations page limit")
     pickupLocationsLimit: Int @doc(description: "The pickup locations limit")
     initialPickupLocations: String @doc(description: "The initial pickup locations")
+    language: String @doc(description: "The language")
 }
 
 type PaazlDeliveryDateOptions {
