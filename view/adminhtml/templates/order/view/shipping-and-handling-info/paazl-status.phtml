@@ -43,10 +43,26 @@ use Paazl\CheckoutWidget\Ui\Component\Order\Listing\Column\Status\Options;
                 <span class="value"><?= /* @escapeNotVerified */ $preferredDeliveryDate; ?></span>
             </span>
             <?php endif; ?>
+            <?php if ($estimatedDeliveryRange = $shippingInfo->getEstimatedDeliveryRange()) : ?>
+            <span class="estimated-delivery-range date-wrapper">
+                <span class="label"><?= /* @escapeNotVerified */ __('Earliest Delivery Date'); ?></span>:
+                <span class="value"><?= /* @escapeNotVerified */ $estimatedDeliveryRange['earliestDate']; ?></span>
+            </span>
+                <span class="estimated-delivery-range date-wrapper">
+                <span class="label"><?= /* @escapeNotVerified */ __('Latest Delivery Date'); ?></span>:
+                <span class="value"><?= /* @escapeNotVerified */ $estimatedDeliveryRange['latestDate']; ?></span>
+            </span>
+            <?php endif; ?>
             <?php if ($carrierPickupDate = $shippingInfo->getCarrierPickupDate()) : ?>
             <span class="carrier-pickup-date date-wrapper">
                 <span class="label"><?= /* @escapeNotVerified */ __('Carrier Pickup Date'); ?></span>:
                 <span class="value"><?= /* @escapeNotVerified */ $carrierPickupDate; ?></span>
+            </span>
+            <?php endif; ?>
+            <?php if (!$preferredDeliveryDate && !$estimatedDeliveryRange && !$carrierPickupDate) : ?>
+                <span class="no-delivery-date date-wrapper">
+                <span class="label"><?= /* @escapeNotVerified */ __('Delivery Date'); ?></span>:
+                <span class="value"><?= /* @escapeNotVerified */ __('No information available'); ?></span>
             </span>
             <?php endif; ?>
         </div>

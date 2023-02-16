@@ -8,12 +8,13 @@
     <default>
         <carriers>
             <paazlshipping>
-                <version>v1.13.0</version>
+                <version>v1.14.0</version>
                 <active>0</active>
                 <sallowspecific>0</sallowspecific>
                 <price>0</price>
                 <api_key backend_model="Magento\Config\Model\Config\Backend\Encrypted" />
                 <api_secret backend_model="Magento\Config\Model\Config\Backend\Encrypted" />
+                <sync_method>0</sync_method>
                 <api_timeout>300</api_timeout>
                 <model>Paazl\CheckoutWidget\Model\Carrier\Paazlshipping</model>
                 <name>Paazl</name>

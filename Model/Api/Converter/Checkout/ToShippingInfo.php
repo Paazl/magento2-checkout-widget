@@ -74,6 +74,7 @@ class ToShippingInfo
         $info->setPrice(floatval($this->arrayManager->get('shippingOption/rate', $result)));
         $info->setOptionTitle($this->arrayManager->get('shippingOption/name', $result));
         $info->setPreferredDeliveryDate($this->arrayManager->get('preferredDeliveryDate', $result));
+        $info->setEstimatedDeliveryRange($this->arrayManager->get('shippingOption/estimatedDeliveryRange', $result));
         $info->setCarrierPickupDate($this->arrayManager->get('pickupDate', $result));
 
         if ($info->getType() === DeliveryType::PICKUP) {

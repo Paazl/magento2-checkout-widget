@@ -31,6 +31,7 @@ class ShippingInfo extends DataObject
     public const OPTION_TITLE = 'option_title';
     public const ADDRESS = 'address';
     public const PREFERRED_DELIVERY_DATE = 'preferred_delivery_date';
+    public const ESTIMATED_DELIVERY_RANGE = 'estimated_delivery_range';
     public const CARRIER_PICKUP_DATE = 'carrier_pickup_date';
     /**#@- */
 
@@ -238,6 +239,23 @@ class ShippingInfo extends DataObject
     public function getPreferredDeliveryDate()
     {
         return $this->getData(self::PREFERRED_DELIVERY_DATE);
+    }
+
+    /**
+     * @param string $value
+     * @return $this
+     */
+    public function setEstimatedDeliveryRange($value)
+    {
+        return $this->setData(self::ESTIMATED_DELIVERY_RANGE, $value);
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getEstimatedDeliveryRange()
+    {
+        return $this->getData(self::ESTIMATED_DELIVERY_RANGE);
     }
 
     /**
