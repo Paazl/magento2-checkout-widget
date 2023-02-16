@@ -7,12 +7,14 @@
 namespace Paazl\CheckoutWidget\Cron;
 
 use Exception;
-use Zend_Db_Expr;
 use Magento\Sales\Model\ResourceModel\Order\Collection\Factory;
 use Magento\Sales\Model\ResourceModel\Order\CollectionFactory;
-use Paazl\CheckoutWidget\Model\Api\Processor\SendToService;
-use Paazl\CheckoutWidget\Model\ResourceModel\Order\OrderReference;
 use Paazl\CheckoutWidget\Helper\General as GeneralHelper;
+use Paazl\CheckoutWidget\Model\Api\Processor\SendToService;
+use Paazl\CheckoutWidget\Model\Config;
+use Paazl\CheckoutWidget\Model\ResourceModel\Order\OrderReference;
+use Paazl\CheckoutWidget\Model\System\Config\Source\SyncMethod;
+use Zend_Db_Expr;
 
 /**
  * Class SendOrders
@@ -43,20 +45,28 @@ class SendOrders
     private $generalHelper;
 
     /**
+     * @var Config
+     */
+    private $config;
+
+    /**
      * SendOrders constructor.
      *
-     * @param SendToService     $sendToService
+     * @param SendToService $sendToService
      * @param CollectionFactory $orderCollectionFactory
-     * @param GeneralHelper     $generalHelper
+     * @param GeneralHelper $generalHelper
+     * @param Config $config
      */
     public function __construct(
         SendToService $sendToService,
         CollectionFactory $orderCollectionFactory,
-        GeneralHelper $generalHelper
+        GeneralHelper $generalHelper,
+        Config $config
     ) {
         $this->sendToService = $sendToService;
         $this->orderCollectionFactory = $orderCollectionFactory;
         $this->generalHelper = $generalHelper;
+        $this->config = $config;
     }
 
     /**
@@ -64,7 +74,9 @@ class SendOrders
      */
     public function execute()
     {
-        $messages = [];
+        if ($this->config->getSyncMethod() != SyncMethod::SYNC_METHOD_CRON) {
+            return [];
+        }
 
         $collection = $this->orderCollectionFactory->create();
         $collection->getSelect()
@@ -86,6 +98,6 @@ class SendOrders
             }
         }
 
-        return $messages;
+        return [];
     }
 }

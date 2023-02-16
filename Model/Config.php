@@ -125,6 +125,16 @@ class Config
      *
      * @return int
      */
+    public function getSyncMethod($store = null): int
+    {
+        return (int)$this->getValue(self::API_CONFIG_PATH . '/sync_method', $store);
+    }
+
+    /**
+     * @param null|Store|int|string $store
+     *
+     * @return int
+     */
     public function getApiTimeout($store = null)
     {
         $result = (int)$this->getValue(self::API_CONFIG_PATH . '/api_timeout', $store);
