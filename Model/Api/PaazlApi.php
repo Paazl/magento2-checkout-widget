@@ -217,7 +217,7 @@ class PaazlApi
             $httpClient->get($url);
             $status = $httpClient->getStatus();
             $body = $httpClient->getBody();
-            $this->generalHelper->addTolog('fetchCheckoutData response status: ', $body);
+            $this->generalHelper->addTolog('fetchCheckoutData response status: ', $status);
             $this->generalHelper->addTolog('fetchCheckoutData response: ', $body);
         } catch (Exception $e) {
             $this->generalHelper->addTolog('exception', $e->getMessage());
