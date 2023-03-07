@@ -8,6 +8,7 @@ namespace Paazl\CheckoutWidget\Console\Command;
 
 use Magento\Framework\App\Area;
 use Magento\Framework\App\State;
+use Magento\Framework\Console\Cli;
 use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Api\OrderRepositoryInterface;
@@ -90,10 +91,11 @@ class OrderSendCommand extends Command
     }
 
     /**
-     * @param InputInterface  $input
+     * @param InputInterface $input
      * @param OutputInterface $output
      *
-     * @return int|void|null
+     * @return int
+     * @throws LocalizedException
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -119,5 +121,7 @@ class OrderSendCommand extends Command
                 $output->writeln("<error>Order ID {$item}: {$e->getMessage()}</error>");
             }
         }
+
+        return Cli::RETURN_SUCCESS;
     }
 }
