@@ -5,16 +5,19 @@
         <policy id="script-src">
             <values>
                 <value id="paazl-widget-checkout" type="host">https://widget-acc.paazl.com</value>
+                <value id="paazl-api-checkout" type="host">https://api-acc.paazl.com/</value>
             </values>
         </policy>
         <policy id="style-src">
             <values>
                 <value id="paazl-widget-checkout-css" type="host">https://widget-acc.paazl.com</value>
+                <value id="paazl-api-checkout-css" type="host">https://api-acc.paazl.com/</value>
             </values>
         </policy>
         <policy id="connect-src">
             <values>
                 <value id="paazl-widget-checkout-connect" type="host">https://widget-acc.paazl.com</value>
+                <value id="paazl-api-checkout-connect" type="host">https://api-acc.paazl.com/</value>
             </values>
         </policy>
     </policies>
