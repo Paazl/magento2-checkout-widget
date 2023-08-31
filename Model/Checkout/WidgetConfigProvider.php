@@ -128,8 +128,8 @@ class WidgetConfigProvider implements ConfigProviderInterface
                     "quantity" => $item->getParentItem()
                         ? (int)($item->getParentItem()->getQty())
                         : (int)$item->getQty(),
-                    "weight"   => doubleval($item->getWeight()),
-                    "price"    => $this->itemHandler->getPriceValue($item)
+                    "weight" => doubleval($item->getWeight()),
+                    "price" => $this->itemHandler->getPriceValue($item)
                 ];
                 if ($useDimensions) {
                     $product = $this->productRepository->getById($item->getProduct()->getId());
@@ -187,7 +187,8 @@ class WidgetConfigProvider implements ConfigProviderInterface
             ],
             "shipmentParameters"         => [
                 "totalWeight"   => (float)$this->getTotalWeight($goods),
-                "totalPrice"    => 0.0000,
+                "totalPrice"    => (float)$this->getQuote()->getSubtotalWithDiscount() -
+                    $this->getQuote()->getShippingAddress()->getShippingAmount(),
                 "numberOfGoods" => (int)$this->getProductsCount(),
                 "goods"         => $goods
             ],
@@ -203,16 +204,19 @@ class WidgetConfigProvider implements ConfigProviderInterface
 
         switch ($this->scopeConfig->getTotalPrice()) {
             case "grand_total":
-                $totalPriceValue = (float) $shippingAddress->getGrandTotal();
+                $totalPriceValue = (float) $shippingAddress->getGrandTotal() -
+                    $this->getQuote()->getShippingAddress()->getShippingAmount();
                 break;
             case "subtotal_excl_discount":
-                $totalPriceValue = (float) $shippingAddress->getSubtotalInclTax();
+                $totalPriceValue = (float) $shippingAddress->getSubtotalInclTax() -
+                    $this->getQuote()->getShippingAddress()->getShippingAmount();
                 break;
             case "subtotal_incl_discount":
             default: // default from config.xml = "subtotal_incl_discount"
                 $totalPriceValue = (
                     (float) $shippingAddress->getSubtotalInclTax() +
-                    (float) $shippingAddress->getDiscountAmount()
+                    (float) $shippingAddress->getDiscountAmount() -
+                    $this->getQuote()->getShippingAddress()->getShippingAmount()
                 );
                 break;
         }
