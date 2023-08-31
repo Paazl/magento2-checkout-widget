@@ -30,7 +30,8 @@ class AvailableTabs implements ArrayInterface
             $this->options = [
                 ['value' => 'DELIVERY', 'label' => __('Delivery')],
                 ['value' => 'STORE', 'label' => __('Store')],
-                ['value' => 'PICKUP', 'label' => __('Pickup')]
+                ['value' => 'PICKUP', 'label' => __('Pickup')],
+                ['value' => 'PARCEL_LOCKER', 'label' => __('Parcel Locker')]
             ];
         }
 
