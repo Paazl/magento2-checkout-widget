@@ -1,23 +1,17 @@
 <?php
 /**
- * Copyright © 2019 Paazl. All rights reserved.
+ * Copyright © Paazl. All rights reserved.
  * See COPYING.txt for license details.
  */
 
 namespace Paazl\CheckoutWidget\Block\Checkout;
 
 use Magento\Framework\View\Element\Template;
+use Magento\Framework\View\Element\Template\Context;
 use Paazl\CheckoutWidget\Model\Api\UrlProvider;
 use Paazl\CheckoutWidget\Model\Api\UrlProviderFactory;
-use Paazl\CheckoutWidget\Model\Checkout\WidgetConfigProvider;
 use Paazl\CheckoutWidget\Model\Config;
-use Magento\Framework\View\Element\Template\Context;
 
-/**
- * Class Widget
- *
- * @package Paazl\CheckoutWidget\Block\Checkout
- */
 class Widget extends Template
 {
 
@@ -27,11 +21,6 @@ class Widget extends Template
     private $scopeConfig;
 
     /**
-     * @var WidgetConfigProvider
-     */
-    private $widgetConfigProvider;
-
-    /**
      * @var UrlProvider
      */
     private $urlProvider;
@@ -39,26 +28,21 @@ class Widget extends Template
     /**
      * Widget constructor.
      *
-     * @param Context              $context
-     * @param Config               $scopeConfig
-     * @param UrlProviderFactory   $urlProviderFactory
-     * @param WidgetConfigProvider $widgetConfigProvider
-     * @param array                $data
+     * @param Context $context
+     * @param Config $scopeConfig
+     * @param UrlProviderFactory $urlProviderFactory
+     * @param array $data
      */
     public function __construct(
         Context $context,
         Config $scopeConfig,
         UrlProviderFactory $urlProviderFactory,
-        WidgetConfigProvider $widgetConfigProvider,
         array $data = []
     ) {
         $this->scopeConfig = $scopeConfig;
-        $this->widgetConfigProvider = $widgetConfigProvider;
         $this->urlProvider = $urlProviderFactory->create();
         parent::__construct($context, $data);
     }
-
-    // ---
 
     /**
      * @return mixed
@@ -71,17 +55,35 @@ class Widget extends Template
     /**
      * @return boolean
      */
-    public function isEnabled()
+    public function getGoogleMapKey()
     {
-        return $this->scopeConfig->isEnabled();
+        return $this->scopeConfig->getGoogleMapKey();
+    }
+
+    /**
+     * @return string
+     */
+    public function getApiBaseUrl()
+    {
+        return $this->urlProvider->getBaseUrl();
     }
 
     /**
      * @return boolean
      */
-    public function getGoogleMapKey()
+    public function useLocal(): bool
     {
-        return $this->scopeConfig->getGoogleMapKey();
+        return $this->scopeConfig->isUseLocalCopyOfWidgetJs();
+    }
+
+    /**
+     * @return string
+     */
+    public function getLocalResourceUrl(): string
+    {
+        $cssFile = 'paazl-checkout.min.css';
+        $url = $this->getViewFileUrl('Paazl_CheckoutWidget::css/' . $cssFile);
+        return str_replace($cssFile, '', $url);
     }
 
     /**
@@ -97,10 +99,10 @@ class Widget extends Template
     }
 
     /**
-     * @return string
+     * @return boolean
      */
-    public function getApiBaseUrl()
+    public function isEnabled()
     {
-        return $this->urlProvider->getBaseUrl();
+        return $this->scopeConfig->isEnabled();
     }
 }
