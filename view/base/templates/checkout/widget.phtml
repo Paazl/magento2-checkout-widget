@@ -11,7 +11,13 @@
 <?php if ($block->getApiBaseUrl()) : ?>
 <script type="text/javascript">
     window.PAAZL_CHECKOUT_WIDGET_API_URL = '<?= /* @escapeNotVerified */ $block->getApiBaseUrl(); ?>';
+    window.PAAZL_CHECKOUT_WIDGET_LOCAL_RESOURCE_URL = '<?= /* @escapeNotVerified */ $block->getLocalResourceUrl(); ?>';
 </script>
+<?php endif; ?>
+<?php if ($block->useLocal()) : ?>
+    <script type="text/javascript">
+        window.PAAZL_CHECKOUT_WIDGET_RESOURCE_URL = '<?= /* @escapeNotVerified */ $block->getLocalResourceUrl(); ?>';
+    </script>
 <?php endif; ?>
 <?php if ($block->getCustomCss() != '') : ?>
 <style>:root {<?= /* @escapeNotVerified */ $block->getCustomCss() ?>}</style>
