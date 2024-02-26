@@ -384,6 +384,16 @@ class Config
      *
      * @return mixed
      */
+    public function getDimensionsMetric($store = null)
+    {
+        return $this->getValue(self::API_CONFIG_PATH . '/dimensions_metric', $store);
+    }
+
+    /**
+     * @param null|Store|int|string $store
+     *
+     * @return mixed
+     */
     public function getProductAttributeWidth($store = null)
     {
         return $this->getValue(self::API_CONFIG_PATH . '/width_attribute', $store);
@@ -407,6 +417,26 @@ class Config
     public function getProductAttributeHeight($store = null)
     {
         return $this->getValue(self::API_CONFIG_PATH . '/height_attribute', $store);
+    }
+
+    /**
+     * @param null|Store|int|string $store
+     *
+     * @return mixed
+     */
+    public function getProductAttributeVolume($store = null)
+    {
+        return $this->getValue(self::API_CONFIG_PATH . '/volume_attribute', $store);
+    }
+
+    /**
+     * @param null|Store|int|string $store
+     *
+     * @return mixed
+     */
+    public function addVolume($store = null)
+    {
+        return $this->getValue(self::API_CONFIG_PATH . '/add_volume', $store);
     }
 
     /**

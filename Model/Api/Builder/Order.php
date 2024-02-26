@@ -20,6 +20,7 @@ use Paazl\CheckoutWidget\Model\Api\Field\DeliveryType;
 use Paazl\CheckoutWidget\Model\Config;
 use Paazl\CheckoutWidget\Model\ExtInfoHandler;
 use Paazl\CheckoutWidget\Model\Handler\Item as ItemHandler;
+use Paazl\CheckoutWidget\Model\System\Config\Source\DimensionsMetric;
 
 /**
  * Class Order
@@ -387,19 +388,33 @@ class Order
         $dimensionArray = [];
         $product = $item->getProduct();
 
+        switch ($this->scopeConfig->getDimensionsMetric()) {
+            case DimensionsMetric::METRIC_MM:
+                $k = 0.1;
+                break;
+            case DimensionsMetric::METRIC_CM:
+                $k = 1;
+                break;
+            case DimensionsMetric::METRIC_M:
+                $k = 100;
+                break;
+            default:
+                $k = 1;
+        }
+
         if ($widthAttribute = $this->config->getProductAttributeWidth()) {
-            if ($width = $product->getData($widthAttribute)) {
+            if ($width = $product->getData($widthAttribute) * $k) {
                 $dimensionArray['width'] = (int)$width;
             }
         }
 
         if ($heightAttribute = $this->config->getProductAttributeHeight()) {
-            if ($height = $product->getData($heightAttribute)) {
+            if ($height = $product->getData($heightAttribute) * $k) {
                 $dimensionArray['height'] = (int)$height;
             }
         }
 
-        if ($lengthAttribute = $this->config->getProductAttributeLength()) {
+        if ($lengthAttribute = $this->config->getProductAttributeLength() * $k) {
             if ($length = $product->getData($lengthAttribute)) {
                 $dimensionArray['length'] = (int)$length;
             }

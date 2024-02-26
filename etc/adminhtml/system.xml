@@ -178,128 +178,156 @@
                     <label>Product Attributes</label>
                     <frontend_model>Paazl\CheckoutWidget\Block\Adminhtml\Paazl\Heading</frontend_model>
                 </field>
-                <field id="use_custom_description" translate="label" type="select" sortOrder="51" showInDefault="2" showInWebsite="1" showInStore="0">
-                    <label>Use Custom Value for Item Description</label>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <comment>By default the product name is used as description. Set to yes, to use a custom value for item description.</comment>
-                </field>
-                <field id="custom_description" translate="label" type="text" sortOrder="52" showInDefault="2" showInWebsite="1" showInStore="0">
-                    <label>Custom Item Description</label>
-                    <depends>
-                        <field id="use_custom_description">1</field>
-                    </depends>
-                </field>
-                <field id="length_attribute" translate="label" type="select" sortOrder="53" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Length Attribute (in cm)</label>
-                    <source_model>Paazl\CheckoutWidget\Model\System\Config\Source\Attributes</source_model>
-                    <comment>The length specified in the selected product definition.</comment>
-                </field>
-                <field id="width_attribute" translate="label" type="select" sortOrder="54" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Width Attribute (in cm)</label>
-                    <source_model>Paazl\CheckoutWidget\Model\System\Config\Source\Attributes</source_model>
-                    <comment>The width specified in the selected product definition.</comment>
-                </field>
-                <field id="height_attribute" translate="label" type="select" sortOrder="55" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Height Attribute (in cm)</label>
-                    <source_model>Paazl\CheckoutWidget\Model\System\Config\Source\Attributes</source_model>
-                    <comment>The height specified in the selected product definition.</comment>
-                </field>
-                <field id="number_of_processing_days_attribute" translate="label" type="select" sortOrder="56" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="number_of_processing_days_attribute" translate="label" type="select" sortOrder="51" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Processing Days</label>
                     <source_model>Paazl\CheckoutWidget\Model\System\Config\Source\Attributes</source_model>
                     <comment>The number of days a warehouse needs to get an order ready for pick-up by a carrier.</comment>
                 </field>
-                <field id="country_of_manufacture_attribute" translate="label" type="select" sortOrder="57" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="country_of_manufacture_attribute" translate="label" type="select" sortOrder="52" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Country of Manufacture</label>
                     <source_model>Paazl\CheckoutWidget\Model\System\Config\Source\AttributesWithStatic</source_model>
                     <comment>This setting is only required for international shipments.</comment>
                 </field>
-                <field id="country_of_manufacture_static" translate="label" type="text" sortOrder="58" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="country_of_manufacture_static" translate="label" type="text" sortOrder="53" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Country of Manufacture - Static</label>
                     <comment>This value applies to all products.</comment>
                     <depends>
                         <field id="country_of_manufacture_attribute">paazl-static-option</field>
                     </depends>
                 </field>
-                <field id="hs_tariff_code_attribute" translate="label" type="select" sortOrder="59" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="hs_tariff_code_attribute" translate="label" type="select" sortOrder="54" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>HS Code</label>
                     <source_model>Paazl\CheckoutWidget\Model\System\Config\Source\AttributesWithStatic</source_model>
                     <comment>This setting is only required for international shipments</comment>
                 </field>
-                <field id="hs_tariff_code_static" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="hs_tariff_code_static" translate="label" type="text" sortOrder="55" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>HS Code - Static</label>
                     <comment>This value applies to all products.</comment>
                     <depends>
                         <field id="hs_tariff_code_attribute">paazl-static-option</field>
                     </depends>
                 </field>
-                <field id="delivery_matrix_attribute" translate="label" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="delivery_matrix_attribute" translate="label" type="select" sortOrder="56" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Delivery Matrix</label>
                     <source_model>Paazl\CheckoutWidget\Model\System\Config\Source\Attributes</source_model>
                     <comment><![CDATA[One- or two-letter code identifying <a href="https://support.paazl.com/hc/en-us/articles/360007580074-About-delivery-matrices" target="_blank">delivery matrix</a> column used to determine shipping option.]]></comment>
                 </field>
-                <field id="heading_fallback" translate="label comment" type="text" sortOrder="61" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="use_custom_description" translate="label" type="select" sortOrder="57" showInDefault="2" showInWebsite="1" showInStore="0">
+                    <label>Use Custom Value for Item Description</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>By default the product name is used as description. Set to yes, to use a custom value for item description.</comment>
+                </field>
+                <field id="custom_description" translate="label" type="text" sortOrder="58" showInDefault="2" showInWebsite="1" showInStore="0">
+                    <label>Custom Item Description</label>
+                    <depends>
+                        <field id="use_custom_description">1</field>
+                    </depends>
+                </field>
+
+
+                <field id="heading_sizes" translate="label comment" type="text" sortOrder="59" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Product Sizes</label>
+                    <frontend_model>Paazl\CheckoutWidget\Block\Adminhtml\Paazl\Heading</frontend_model>
+                </field>
+
+                <field id="add_volume" translate="label" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Add volume to Shipment Parameters</label>
+                    <source_model>Paazl\CheckoutWidget\Model\System\Config\Source\CalculateVolume</source_model>
+                </field>
+
+                <field id="volume_attribute" translate="label" type="select" sortOrder="61" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Volume Attribute</label>
+                    <source_model>Paazl\CheckoutWidget\Model\System\Config\Source\Attributes</source_model>
+                    <comment>The volume specified in the selected product definition.</comment>
+                </field>
+
+
+
+                <field id="length_attribute" translate="label" type="select" sortOrder="62" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Length Attribute</label>
+                    <source_model>Paazl\CheckoutWidget\Model\System\Config\Source\Attributes</source_model>
+                    <comment>The length specified in the selected product definition.</comment>
+                </field>
+
+                <field id="width_attribute" translate="label" type="select" sortOrder="63" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Width Attribute</label>
+                    <source_model>Paazl\CheckoutWidget\Model\System\Config\Source\Attributes</source_model>
+                    <comment>The width specified in the selected product definition.</comment>
+                </field>
+                <field id="height_attribute" translate="label" type="select" sortOrder="64" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Height Attribute</label>
+                    <source_model>Paazl\CheckoutWidget\Model\System\Config\Source\Attributes</source_model>
+                    <comment>The height specified in the selected product definition.</comment>
+                </field>
+
+                <field id="dimensions_metric" translate="label" type="select" sortOrder="65" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Dimensions Metric</label>
+                    <source_model>Paazl\CheckoutWidget\Model\System\Config\Source\DimensionsMetric</source_model>
+                    <comment>Please specify the metric you us, as we will automatically calculate values based on your selection.</comment>
+                </field>
+
+                <field id="heading_fallback" translate="label comment" type="text" sortOrder="66" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Advanced Settings</label>
                     <frontend_model>Paazl\CheckoutWidget\Block\Adminhtml\Paazl\Heading</frontend_model>
                 </field>
-                <field id="sync_method" translate="label" type="select" sortOrder="61" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="sync_method" translate="label" type="select" sortOrder="67" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Sync method</label>
                     <source_model>Paazl\CheckoutWidget\Model\System\Config\Source\SyncMethod</source_model>
                     <comment>Choose method to push orders to API.</comment>
                 </field>
-                <field id="api_timeout" translate="label" type="text" sortOrder="62" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="api_timeout" translate="label" type="text" sortOrder="68" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>API Timeout</label>
                     <comment>Time threshold in seconds after which API is treated as not responding.</comment>
                     <validate>validate-not-negative-number integer</validate>
                 </field>
-                <field id="googlemaps" translate="label" type="select" sortOrder="63" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="googlemaps" translate="label" type="select" sortOrder="69" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Use Custom Google API Key</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>Choose whether you want to use your own Google MAP API key or Paazl's inbuilt key.</comment>
                 </field>
-                <field id="googlemaps_key" translate="label comment" type="text" sortOrder="64" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="googlemaps_key" translate="label comment" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Google Maps API key</label>
                     <depends>
                         <field id="googlemaps">1</field>
                     </depends>
                     <comment><![CDATA[Fill in a valid Google Maps API Key obtained from your <a href="https://developers.google.com/maps/documentation/javascript/get-api-key" target="_blank">Google Account</a>]]></comment>
                 </field>
-                <field id="total_price" translate="label" type="select" sortOrder="64" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="total_price" translate="label" type="select" sortOrder="71" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Total Price</label>
                     <source_model>Paazl\CheckoutWidget\Model\System\Config\Source\TotalPrice</source_model>
                     <comment>Select the price which will be used for totalPrice.</comment>
                 </field>
-                <field id="freeshipping_enabled" translate="label" type="select" sortOrder="65" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="freeshipping_enabled" translate="label" type="select" sortOrder="72" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Free Shipping Enabled</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
-                <field id="freeshipping_matrix_letter" translate="label comment" type="text" sortOrder="66" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="freeshipping_matrix_letter" translate="label comment" type="text" sortOrder="73" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Matrix Letter</label>
                     <depends>
                         <field id="freeshipping_enabled">1</field>
                     </depends>
                     <comment><![CDATA[API Matrix letter for free shipping]]></comment>
                 </field>
-                <field id="price_incl_tax" translate="label" type="select" sortOrder="67" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="price_incl_tax" translate="label" type="select" sortOrder="74" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Price Includes Tax</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>If yes - shipping price will always includes tax regardless Magento settings</comment>
                 </field>
-                <field id="debug" translate="label" type="select" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="0">
+                <field id="debug" translate="label" type="select" sortOrder="75" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Debug</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>Write API calls to var/log/paazl.log. Not recommended in Paazl's production environment for performance reasons.</comment>
                 </field>
-                <field id="sort_order" translate="label" type="text" sortOrder="75" showInDefault="1" showInWebsite="1" showInStore="0">
+                <field id="sort_order" translate="label" type="text" sortOrder="76" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Sort Order</label>
                     <comment><![CDATA[If you display non-Paazl shipping options, choose where you want Paazl's shipping options to be displayed in the list. "1" = top of displayed list.]]></comment>
                 </field>
-                <field id="onestep_checkout_used" translate="label" type="select" sortOrder="85" showInDefault="1" showInWebsite="1" showInStore="0">
+                <field id="onestep_checkout_used" translate="label" type="select" sortOrder="77" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Is there a one step checkout used?</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>OneStepCheckout, Custom Checkout etc.</comment>
                 </field>
-                <field id="use_local_js_for_widget" translate="label" type="select" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+                <field id="use_local_js_for_widget" translate="label" type="select" sortOrder="78" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
                     <label>Use local JS file for widget initialization?</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>Local copy will be used instead of external JS (from *.paazl.com).</comment>
