@@ -4,6 +4,12 @@
  */
 
 var config = {
+    map: {
+        '*': {
+            'Magento_InventoryInStorePickupFrontend/js/view/shipping-information-ext': 'Paazl_CheckoutWidget/js/view/shipping-information-ext'
+        },
+    },
+
     config: {
         mixins: {
             'Magento_Checkout/js/action/set-shipping-information': {
@@ -41,6 +47,9 @@ var config = {
             },
             'Magento_SalesRule/js/action/set-coupon-code': {
                 'Paazl_CheckoutWidget/js/mixins/Magento_SalesRule/action/set-coupon-code-mixin': true
+            },
+            'Magento_SalesRule/js/action/cancel-coupon': {
+                'Paazl_CheckoutWidget/js/mixins/Magento_SalesRule/action/cancel-coupon-mixin': true
             },
             'Magento_SalesRule/js/action/cancel-coupon': {
                 'Paazl_CheckoutWidget/js/mixins/Magento_SalesRule/action/cancel-coupon-mixin': true

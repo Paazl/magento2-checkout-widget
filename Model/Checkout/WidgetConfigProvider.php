@@ -16,6 +16,8 @@ use Magento\Quote\Model\Quote\Item\AbstractItem;
 use Paazl\CheckoutWidget\Helper\General as GeneralHelper;
 use Paazl\CheckoutWidget\Model\Config;
 use Paazl\CheckoutWidget\Model\Handler\Item as ItemHandler;
+use Paazl\CheckoutWidget\Model\System\Config\Source\CalculateVolume;
+use Paazl\CheckoutWidget\Model\System\Config\Source\DimensionsMetric;
 use Paazl\CheckoutWidget\Model\TokenRetriever;
 
 /**
@@ -118,12 +120,14 @@ class WidgetConfigProvider implements ConfigProviderInterface
         }
 
         $goods = [];
+
         $widthAttribute = $this->scopeConfig->getProductAttributeWidth();
         $heightAttribute = $this->scopeConfig->getProductAttributeHeight();
         $lengthAttribute = $this->scopeConfig->getProductAttributeLength();
         $useDimensions = $widthAttribute || $lengthAttribute || $heightAttribute;
         foreach ($this->getQuote()->getAllItems() as $item) {
             if ($item->getProductType() == 'simple') {
+                $product = $this->productRepository->getById($item->getProduct()->getId());
                 $goodsItem = [
                     "quantity" => $item->getParentItem()
                         ? (int)($item->getParentItem()->getQty())
@@ -132,10 +136,28 @@ class WidgetConfigProvider implements ConfigProviderInterface
                     "price" => $this->itemHandler->getPriceValue($item)
                 ];
                 if ($useDimensions) {
-                    $product = $this->productRepository->getById($item->getProduct()->getId());
-                    $goodsItem["length"] = (float)$product->getData($lengthAttribute);
-                    $goodsItem["width"] = (float)$product->getData($widthAttribute);
-                    $goodsItem["height"] = (float)$product->getData($heightAttribute);
+                    switch ($this->scopeConfig->getDimensionsMetric()) {
+                        case DimensionsMetric::METRIC_MM:
+                            $k = 0.1;
+                            break;
+                        case DimensionsMetric::METRIC_CM:
+                            $k = 1;
+                            break;
+                        case DimensionsMetric::METRIC_M:
+                            $k = 100;
+                            break;
+                        default:
+                            $k = 1;
+                    }
+                    $goodsItem["length"] =
+                        (float)str_replace(',', '.', $product->getData($lengthAttribute)) * $k;
+                    $goodsItem["width"] =
+                        (float)str_replace(',', '.', $product->getData($widthAttribute)) * $k;
+                    $goodsItem["height"] =
+                        (float)str_replace(',', '.', $product->getData($heightAttribute)) * $k;
+                }
+                if ($this->scopeConfig->addVolume()) {
+                    $goodsItem["volume"] = $this->getProductVolume($product);
                 }
 
                 if ($deliveryMatrixCode = $this->getProductDeliveryMatrix($item)) {
@@ -200,6 +222,10 @@ class WidgetConfigProvider implements ConfigProviderInterface
 
         if ($this->isFreeShippingEnabled() && $shippingAddress->getFreeShipping()) {
             $config['shipmentParameters']['startMatrix'] = $this->getFreeShippingMatrixLetter();
+        }
+
+        if ($this->scopeConfig->addVolume()) {
+            $config['shipmentParameters']['totalVolume'] = $this->getTotalVolume($goods);
         }
 
         switch ($this->scopeConfig->getTotalPrice()) {
@@ -359,6 +385,21 @@ class WidgetConfigProvider implements ConfigProviderInterface
     /**
      * @return float
      */
+    public function getTotalVolume($goods): float
+    {
+        $volume = 0;
+        $quote = $this->getQuote();
+        foreach ($goods as $good) {
+            if (isset($good['volume']) && isset($good['quantity'])) {
+                $volume += ($good['volume'] * $good['quantity']);
+            }
+        }
+        return (float)$volume;
+    }
+
+    /**
+     * @return float
+     */
     public function getProductsCount()
     {
         $count = 0;
@@ -489,5 +530,52 @@ class WidgetConfigProvider implements ConfigProviderInterface
     protected function isFreeShippingEnabled()
     {
         return $this->scopeConfig->isFreeShippingEnabled($this->getQuote()->getStoreId());
+    }
+
+    /**
+     * @param $product
+     * @return float
+     */
+    private function getProductVolume($product): float
+    {
+        switch ($this->scopeConfig->addVolume()) {
+            case CalculateVolume::CALCULATE_VOLUME_USE_ATTRIBUTE:
+                return $product->getData($this->scopeConfig->getProductAttributeVolume());
+            case CalculateVolume::CALCULATE_VOLUME_CALCULATE:
+                return $this->calculateVolumeByDimensions($product);
+            case CalculateVolume::CALCULATE_VOLUME_CALCULATE_IF_MISSED:
+                return $product->getData($this->scopeConfig->getProductAttributeVolume()) ?:
+                    $this->calculateVolumeByDimensions($product);
+        }
+    }
+
+    /**
+     * Calculate volume in m^3 using dimensions in cm
+     *
+     * @param $product
+     * @return float
+     */
+    private function calculateVolumeByDimensions($product): float
+    {
+        switch ($this->scopeConfig->getDimensionsMetric()) {
+            case DimensionsMetric::METRIC_MM:
+                $k = 0.000000001;
+                break;
+            case DimensionsMetric::METRIC_CM:
+                $k = 0.000001;
+                break;
+            case DimensionsMetric::METRIC_M:
+                $k = 1;
+                break;
+            default:
+                $k = 0.000001;
+        }
+        $widthAttribute = $this->scopeConfig->getProductAttributeWidth();
+        $heightAttribute = $this->scopeConfig->getProductAttributeHeight();
+        $lengthAttribute = $this->scopeConfig->getProductAttributeLength();
+        return (float)str_replace(',', '.', $product->getData($widthAttribute)) *
+            (float)str_replace(',', '.', $product->getData($heightAttribute)) *
+            (float)str_replace(',', '.', $product->getData($lengthAttribute)) *
+            $k;
     }
 }

@@ -2,7 +2,7 @@
   "name": "paazl/magento2-checkout-widget",
   "description": "Paazl checkoutWidget for Magento 2",
   "type": "magento2-module",
-  "version": "1.15.1",
+  "version": "1.16.0",
   "keywords": [
     "Paazl",
     "Magento 2",
