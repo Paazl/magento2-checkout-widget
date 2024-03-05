@@ -388,7 +388,7 @@ class Order
         $dimensionArray = [];
         $product = $item->getProduct();
 
-        switch ($this->scopeConfig->getDimensionsMetric()) {
+        switch ($this->config->getDimensionsMetric()) {
             case DimensionsMetric::METRIC_MM:
                 $k = 0.1;
                 break;
