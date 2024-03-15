@@ -150,11 +150,11 @@ class WidgetConfigProvider implements ConfigProviderInterface
                             $k = 1;
                     }
                     $goodsItem["length"] =
-                        (float)str_replace(',', '.', $product->getData($lengthAttribute)) * $k;
+                        (float)str_replace(',', '.', $product->getData($lengthAttribute) ?? 0) * $k;
                     $goodsItem["width"] =
-                        (float)str_replace(',', '.', $product->getData($widthAttribute)) * $k;
+                        (float)str_replace(',', '.', $product->getData($widthAttribute) ?? 0) * $k;
                     $goodsItem["height"] =
-                        (float)str_replace(',', '.', $product->getData($heightAttribute)) * $k;
+                        (float)str_replace(',', '.', $product->getData($heightAttribute) ?? 0) * $k;
                 }
                 if ($this->scopeConfig->addVolume()) {
                     $goodsItem["volume"] = $this->getProductVolume($product);
@@ -573,9 +573,9 @@ class WidgetConfigProvider implements ConfigProviderInterface
         $widthAttribute = $this->scopeConfig->getProductAttributeWidth();
         $heightAttribute = $this->scopeConfig->getProductAttributeHeight();
         $lengthAttribute = $this->scopeConfig->getProductAttributeLength();
-        return (float)str_replace(',', '.', $product->getData($widthAttribute)) *
-            (float)str_replace(',', '.', $product->getData($heightAttribute)) *
-            (float)str_replace(',', '.', $product->getData($lengthAttribute)) *
+        return (float)str_replace(',', '.', $product->getData($widthAttribute) ?? 0) *
+            (float)str_replace(',', '.', $product->getData($heightAttribute) ?? 0) *
+            (float)str_replace(',', '.', $product->getData($lengthAttribute) ?? 0) *
             $k;
     }
 }

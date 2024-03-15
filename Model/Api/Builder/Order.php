@@ -414,8 +414,8 @@ class Order
             }
         }
 
-        if ($lengthAttribute = $this->config->getProductAttributeLength() * $k) {
-            if ($length = $product->getData($lengthAttribute)) {
+        if ($lengthAttribute = $this->config->getProductAttributeLength()) {
+            if ($length = $product->getData($lengthAttribute) * $k) {
                 $dimensionArray['length'] = (int)$length;
             }
         }

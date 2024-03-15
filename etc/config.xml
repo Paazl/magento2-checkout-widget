@@ -37,6 +37,7 @@
                 <total_price>subtotal_incl_discount</total_price>
                 <use_local_js_for_widget>0</use_local_js_for_widget>
                 <dimensions_metric>cm</dimensions_metric>
+                <add_volume>0</add_volume>
             </paazlshipping>
         </carriers>
     </default>
