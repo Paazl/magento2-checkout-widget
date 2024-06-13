@@ -73,6 +73,7 @@ class ToShippingInfo
         $info->setIdenfifier($this->arrayManager->get('shippingOption/identifier', $result));
         $info->setPrice(floatval($this->arrayManager->get('shippingOption/rate', $result)));
         $info->setOptionTitle($this->arrayManager->get('shippingOption/name', $result));
+        $info->setCarrierDescription($this->arrayManager->get('shippingOption/carrier/description', $result));
 
         if (!$prefferedDeliveryDate = $this->arrayManager->get('preferredDeliveryDate', $result)) {
             $prefferedDeliveryDate = $this->arrayManager->get('shippingOption/deliveryDates/0/deliveryDate', $result);
