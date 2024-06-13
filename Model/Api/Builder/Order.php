@@ -403,24 +403,37 @@ class Order
         }
 
         if ($widthAttribute = $this->config->getProductAttributeWidth()) {
-            if ($width = $product->getData($widthAttribute) * $k) {
+            if ($width = $this->reformatVolumeData($product->getData($widthAttribute)) * $k) {
                 $dimensionArray['width'] = (int)$width;
             }
         }
 
         if ($heightAttribute = $this->config->getProductAttributeHeight()) {
-            if ($height = $product->getData($heightAttribute) * $k) {
+            if ($height = $this->reformatVolumeData($product->getData($heightAttribute)) * $k) {
                 $dimensionArray['height'] = (int)$height;
             }
         }
 
-        if ($lengthAttribute = $this->config->getProductAttributeLength() * $k) {
-            if ($length = $product->getData($lengthAttribute)) {
+        if ($lengthAttribute = $this->config->getProductAttributeLength()) {
+            if ($length = $this->reformatVolumeData($product->getData($lengthAttribute)) * $k) {
                 $dimensionArray['length'] = (int)$length;
             }
         }
 
         return $dimensionArray;
+    }
+    
+    /**
+     * @param $value
+     * @return float
+     */
+    private function reformatVolumeData($value): float
+    {
+        if ($value == null) {
+            return 0.00;
+        }
+
+        return (float)str_replace(',', '.', $value);
     }
 
     /**

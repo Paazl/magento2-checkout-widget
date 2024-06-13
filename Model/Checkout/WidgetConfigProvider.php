@@ -570,12 +570,27 @@ class WidgetConfigProvider implements ConfigProviderInterface
             default:
                 $k = 0.000001;
         }
+        
         $widthAttribute = $this->scopeConfig->getProductAttributeWidth();
         $heightAttribute = $this->scopeConfig->getProductAttributeHeight();
         $lengthAttribute = $this->scopeConfig->getProductAttributeLength();
-        return (float)str_replace(',', '.', $product->getData($widthAttribute)) *
-            (float)str_replace(',', '.', $product->getData($heightAttribute)) *
-            (float)str_replace(',', '.', $product->getData($lengthAttribute)) *
+
+        return $this->reformatVolumeData($product->getData($widthAttribute)) *
+            $this->reformatVolumeData($product->getData($heightAttribute)) *
+            $this->reformatVolumeData($product->getData($lengthAttribute)) *
             $k;
+    }
+
+    /**
+     * @param $value
+     * @return float
+     */
+    private function reformatVolumeData($value): float
+    {
+        if ($value == null) {
+            return 0.00;
+        }
+
+        return (float)str_replace(',', '.', $value);
     }
 }
