@@ -224,4 +224,16 @@ class Info implements ArgumentInterface
             return '';
         }
     }
+
+    /**
+     * @return string
+     */
+    public function getCarrierDescription()
+    {
+        try {
+            return (string)$this->getOrderInfo()->getCarrierDescription();
+        } catch (NoSuchEntityException $e) {
+            return '';
+        }
+    }
 }

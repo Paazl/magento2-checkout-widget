@@ -136,7 +136,8 @@ class ShippingInformationManagementPlugin
                     ->setStreet($this->arrayManager->get('street', $pickupLocationAddress))
                     ->setCity($this->arrayManager->get('city', $pickupLocationAddress))
                     ->setCountryId($this->arrayManager->get('country', $pickupLocationAddress))
-                    ->setCompany($this->arrayManager->get('name', $pickupLocation));
+                    ->setCompany($this->arrayManager->get('name', $pickupLocation))
+                    ->setSaveInAddressBook(0);
 
                 // ... also set to quote shipping address if exists
                 if (($quoteShippingAddress = $quote->getShippingAddress())

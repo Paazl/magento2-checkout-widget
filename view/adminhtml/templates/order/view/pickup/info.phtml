@@ -23,6 +23,12 @@ $viewModel = $block->getData('pickupViewModel');
                 <?= $block->escapeHtml($viewModel->getLocationCode())?>
             </div>
         <?php endif; ?>
+        <?php if ($description = $viewModel->getCarrierDescription()): ?>
+            <div class="store-code-wrapper">
+                <strong><?= /* @noEscape */ __('Carrier Description') ?>:</strong><br/>
+                <?= $block->escapeHtml($description)?>
+            </div>
+        <?php endif; ?>
     </div>
 <?php endif;?>
 
