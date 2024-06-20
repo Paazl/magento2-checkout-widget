@@ -185,9 +185,9 @@ class Order
         $street = $shippingAddress->getStreet();
         if ($this->config->housenumberExtensionOnThirdStreet()) {
             return [
-                'street'               => trim($street[0] ?? null),
-                'houseNumber'          => trim(isset($street[1]) ? $street[1] : null),
-                'houseNumberExtension' => trim(isset($street[2]) ? $street[2] : null),
+                'street'               => trim($street[0] ?? ''),
+                'houseNumber'          => trim($street[1] ?? ''),
+                'houseNumberExtension' => trim($street[2] ?? ''),
             ];
         }
         $street = implode(' ', $street);
@@ -422,7 +422,7 @@ class Order
 
         return $dimensionArray;
     }
-    
+
     /**
      * @param $value
      * @return float
