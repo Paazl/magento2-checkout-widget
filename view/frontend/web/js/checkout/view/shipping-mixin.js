@@ -30,11 +30,9 @@ define([
         return target.extend({
             defaults: {
                 shippingMethodListTemplate: 'Paazl_CheckoutWidget/checkout/shipping-method-list',
-                shippingMethodItemTemplate: 'Paazl_CheckoutWidget/checkout/shipping-method-item',
-                shippingFormTemplate: 'Paazl_CheckoutWidget/shipping-address/form',
+                shippingMethodItemTemplate: 'Paazl_CheckoutWidget/checkout/shipping-method-item'
             },
 
-            saveInAddressBook: 0,
 
             /**
              * @return {*}
