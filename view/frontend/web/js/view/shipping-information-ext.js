@@ -29,17 +29,33 @@ define([
 
             quote.totals.subscribe(() => {
                 var shippingMethod = quote.shippingMethod(),
+                    shippingMethodTitle = '',
                     locationName = '',
                     title;
 
                 if (window.checkoutConfig.totalsData.extension_attributes[0]) {
+                    const carrier_title = shippingMethod['carrier_title'] ? `${shippingMethod['carrier_title']}` : '';
+                    const method_title = shippingMethod['method_title'] ? shippingMethod['method_title'] : '';
+
+                    if (typeof shippingMethod['method_title'] !== 'undefined') {
+                        shippingMethodTitle = carrier_title + ' - ' + method_title;
+                    }
+
                     shippingMethod = window.checkoutConfig.totalsData.extension_attributes[0];
-                    this.shippingMethodTitle(shippingMethod['carrier_title'] + ' - ' + shippingMethod['method_title']);
+                    this.shippingMethodTitle(shippingMethodTitle);
                 } else {
                     shippingMethod = quote.shippingMethod();
 
                     if (!this.isStorePickup()) {
-                        return this._super();
+                        if (!shippingMethod) return '';
+
+                        shippingMethodTitle = shippingMethod['carrier_title'];
+
+                        if (typeof shippingMethod['method_title'] !== 'undefined') {
+                            shippingMethodTitle += ' - ' + shippingMethod['method_title'];
+                        }
+            
+                        return shippingMethodTitle;
                     }
 
                     title = shippingMethod['carrier_title'] + ' - ' + shippingMethod['method_title'];

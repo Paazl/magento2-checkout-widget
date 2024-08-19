@@ -100,10 +100,10 @@ define([
                 && (event.target.status === 200);
 
             if (ready) {
-                shippingLocations.locationsList([]);
+                // shippingLocations.locationsList([]);
                 var locations = JSON.parse(event.target.response);
                 if (locations && locations.pickupLocations.length) {
-                    shippingLocations.locationsList(locations.pickupLocations);
+                    shippingLocations.locationsList([...shippingLocations.locationsList(), ...locations.pickupLocations]);
                 }
             }
         }
