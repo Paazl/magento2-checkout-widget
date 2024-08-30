@@ -55,7 +55,7 @@ define([
                 const shippingAddress = quote.billingAddress();
                 let currentAddress;
                     
-                if (isCustomerLogin) {
+                if (isCustomerLogin && Object.keys(window.checkoutConfig.customerData.addresses).length > 0) {
                     currentAddress = selectedShippingAddress === 'new-customer-address'
                         ? customerData.get('checkout-data')().shippingAddressFromData
                         : window.checkoutConfig.customerData.addresses[getAddressId()];
