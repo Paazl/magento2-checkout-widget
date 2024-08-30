@@ -275,8 +275,8 @@ class OrderTest extends UnitTestCase
     public function orderInsuredValueDataProvider()
     {
         return [
-            [0, 'EUR'],
-            [0, 'USD'],
+            [null, 'EUR'],
+            [null, 'USD'],
             [1.05, 'EUR'],
             [20.19, 'USD'],
             [201.36363, 'USD'],

@@ -164,7 +164,7 @@
                     <depends>
                         <field id="active">1</field>
                     </depends>
-                    <comment>Fill in the insurance amount as a number.</comment>
+                    <comment>Fill in the insurance amount as a number. Null will be added if the value is empty.</comment>
                 </field>
                 <field id="housenumber_default_value" translate="label comment" type="select" sortOrder="49" showInDefault="1"
                        showInWebsite="1" showInStore="1">

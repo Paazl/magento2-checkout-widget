@@ -564,11 +564,15 @@ class Config
 
     /**
      * @param null|Store|int|string $store
-     * @return float
+     * @return float|null
      */
-    public function getInsuranceValue($store = null)
+    public function getInsuranceValue($store = null): ?float
     {
-        return abs((float)$this->getValue(self::API_CONFIG_PATH . '/insurance_value', $store));
+        $value = $this->getValue(self::API_CONFIG_PATH . '/insurance_value', $store);
+        if ($value === null || $value === '') {
+            return null;
+        }
+        return abs((float)$value);
     }
 
     /**
