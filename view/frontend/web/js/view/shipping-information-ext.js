@@ -4,8 +4,9 @@
  */
 
 define([
+    'jquery',
     'Magento_Checkout/js/model/quote'
-], function (quote) {
+], function ($, quote) {
     'use strict';
 
     var storePickupShippingInformation = {
@@ -14,7 +15,26 @@ define([
             shippingMethodTitle: '',
         },
 
-        initObservable: function () {
+        initialize: function () {
+            this._super();
+
+            $(document).ajaxComplete((e, xhr, settings) => {
+                if (settings.url.includes('shipping-information')) {
+                    if (xhr.status === 200) {
+                        let response = JSON.parse(xhr.responseText);
+
+                        window.checkoutConfig.totalsData.extension_attributes[0] = {
+                            'carrier_title': response.totals.extension_attributes.shipping_methods[0].carrier_title,
+                            'method_title': response.totals.extension_attributes.shipping_methods[0].method_title
+                        }
+
+                        this.setShippingMethodTitle();
+                    }
+                }
+            });
+        },
+
+        initObservable() {
             this._super().observe(['shippingMethodTitle']);
             return this;
         },
@@ -24,50 +44,39 @@ define([
          *
          * @return {String}
          */
-        getShippingMethodTitle: function () {
+        getShippingMethodTitle() {
             this.shippingMethodTitle('');
 
+            // Trigger setting shipping method title if quote total subscribe doesn't trigger
+            this.setShippingMethodTitle();
+
             quote.totals.subscribe(() => {
-                var shippingMethod = quote.shippingMethod(),
-                    shippingMethodTitle = '',
-                    locationName = '',
-                    title;
-
-                if (window.checkoutConfig.totalsData.extension_attributes[0]) {
-                    const carrier_title = shippingMethod['carrier_title'] ? `${shippingMethod['carrier_title']}` : '';
-                    const method_title = shippingMethod['method_title'] ? shippingMethod['method_title'] : '';
-
-                    if (typeof shippingMethod['method_title'] !== 'undefined') {
-                        shippingMethodTitle = carrier_title + ' - ' + method_title;
-                    }
-
-                    shippingMethod = window.checkoutConfig.totalsData.extension_attributes[0];
-                    this.shippingMethodTitle(shippingMethodTitle);
-                } else {
-                    shippingMethod = quote.shippingMethod();
-
-                    if (!this.isStorePickup()) {
-                        if (!shippingMethod) return '';
-
-                        shippingMethodTitle = shippingMethod['carrier_title'];
-
-                        if (typeof shippingMethod['method_title'] !== 'undefined') {
-                            shippingMethodTitle += ' - ' + shippingMethod['method_title'];
-                        }
-            
-                        return shippingMethodTitle;
-                    }
-
-                    title = shippingMethod['carrier_title'] + ' - ' + shippingMethod['method_title'];
-
-                    if (quote.shippingAddress().firstname !== undefined) {
-                        locationName = quote.shippingAddress().firstname + ' ' + quote.shippingAddress().lastname;
-                        title += ' "' + locationName + '"';
-                    }
-
-                    return title;
-                }
+                this.setShippingMethodTitle();
             });
+        },
+
+        setShippingMethodTitle() {
+            if (window.checkoutConfig.totalsData.extension_attributes[0] && window.checkoutConfig.paazlshipping) {
+                const shippingMethod = window.checkoutConfig.totalsData.extension_attributes[0];
+                const carrier_title = shippingMethod['carrier_title'];
+                const method_title = shippingMethod['method_title'];
+
+                if (carrier_title && method_title) {
+                    this.shippingMethodTitle(carrier_title + ' - ' + method_title);
+                }
+            } else {
+                this.getDefaultShippingMethodTitle();
+            }
+        },
+
+        getDefaultShippingMethodTitle() {
+            const shippingMethod = quote.shippingMethod();
+            const carrier_title = shippingMethod ? shippingMethod['carrier_title'] : '';
+            const method_title = shippingMethod ? shippingMethod['method_title'] : '';
+
+            if (carrier_title && method_title) {
+                this.shippingMethodTitle(carrier_title + ' - ' + method_title);
+            }
         },
 
         /**
@@ -75,7 +84,7 @@ define([
          *
          * @returns {Boolean}
          */
-        isStorePickup: function () {
+        isStorePickup() {
             var shippingMethod = quote.shippingMethod(),
                 isStorePickup = false;
 
