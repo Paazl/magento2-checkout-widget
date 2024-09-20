@@ -44,14 +44,18 @@ use Paazl\CheckoutWidget\Ui\Component\Order\Listing\Column\Status\Options;
             </span>
             <?php endif; ?>
             <?php if ($estimatedDeliveryRange = $shippingInfo->getEstimatedDeliveryRange()) : ?>
-            <span class="estimated-delivery-range date-wrapper">
-                <span class="label"><?= /* @escapeNotVerified */ __('Earliest Delivery Date'); ?></span>:
-                <span class="value"><?= /* @escapeNotVerified */ $estimatedDeliveryRange['earliestDate']; ?></span>
-            </span>
+                <?php if (isset($estimatedDeliveryRange['earliestDate'])) : ?>
                 <span class="estimated-delivery-range date-wrapper">
-                <span class="label"><?= /* @escapeNotVerified */ __('Latest Delivery Date'); ?></span>:
-                <span class="value"><?= /* @escapeNotVerified */ $estimatedDeliveryRange['latestDate']; ?></span>
-            </span>
+                    <span class="label"><?= /* @escapeNotVerified */ __('Earliest Delivery Date'); ?></span>:
+                    <span class="value"><?= /* @escapeNotVerified */ $estimatedDeliveryRange['earliestDate']; ?></span>
+                </span>
+                <?php endif;?>
+                <?php if (isset($estimatedDeliveryRange['latestDate'])) : ?>
+                <span class="estimated-delivery-range date-wrapper">
+                    <span class="label"><?= /* @escapeNotVerified */ __('Latest Delivery Date'); ?></span>:
+                    <span class="value"><?= /* @escapeNotVerified */ $estimatedDeliveryRange['latestDate']; ?></span>
+                </span>
+                <?php endif;?>
             <?php endif; ?>
             <?php if ($carrierPickupDate = $shippingInfo->getCarrierPickupDate()) : ?>
             <span class="carrier-pickup-date date-wrapper">
