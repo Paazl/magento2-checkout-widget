@@ -7,9 +7,13 @@ define([
     'jquery',
     'underscore',
     'ko',
+    'mage/storage',
     'Magento_Checkout/js/model/quote',
+    'Magento_Checkout/js/model/shipping-save-processor/payload-extender',
+    'Magento_Checkout/js/model/resource-url-manager',
+    'Magento_Checkout/js/model/error-processor',
     'Paazl_CheckoutWidget/js/checkout/view/widget-config'
-], function ($, _, ko, quote, widgetConfig) {
+], function ($, _, ko, storage, quote, payloadExtender, resourceUrlManager, errorProcessor, widgetConfig) {
     "use strict";
 
     /**
@@ -73,9 +77,52 @@ define([
             },
 
             setShippingInformation: function () {
+                const savedSelectedShippingAddress = quote.shippingAddress();
+                let ajaxHandled = false;
+                
                 widgetConfig.prototype.lock();
                 this._super();
+
+                if (savedSelectedShippingAddress.customerAddressId !== quote.shippingAddress().customerAddressId) {
+                    quote.shippingAddress(savedSelectedShippingAddress);
+
+                    $(document).ajaxComplete((_, xhr, settings) => {
+                        if (!ajaxHandled && settings.url.includes(resourceUrlManager.getUrlForSetShippingInformation(quote))) {
+                            ajaxHandled = true;
+                            this.saveShippingInformation();
+                        }
+                    });
+                }
+
                 widgetConfig.prototype.unlock();
+            },
+
+            saveShippingInformation: function () {
+                var payload;
+
+                payload = {
+                    addressInformation: {
+                        'shipping_address': quote.shippingAddress(),
+                        'billing_address': quote.billingAddress(),
+                        'shipping_method_code': quote.shippingMethod()['method_code'],
+                        'shipping_carrier_code': quote.shippingMethod()['carrier_code']
+                    }
+                };
+    
+                payloadExtender(payload);
+    
+                return storage.post(
+                    resourceUrlManager.getUrlForSetShippingInformation(quote),
+                    JSON.stringify(payload)
+                ).done(
+                    function (response) {
+                        quote.setTotals(response.totals);
+                    }
+                ).fail(
+                    function (response) {
+                        errorProcessor.process(response);
+                    }
+                );
             }
         });
     }
