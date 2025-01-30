@@ -19,6 +19,7 @@ use Paazl\CheckoutWidget\Model\Handler\Item as ItemHandler;
 use Paazl\CheckoutWidget\Model\System\Config\Source\CalculateVolume;
 use Paazl\CheckoutWidget\Model\System\Config\Source\DimensionsMetric;
 use Paazl\CheckoutWidget\Model\TokenRetriever;
+use Magento\Catalog\Api\Data\ProductInterface;
 
 /**
  * Class WidgetConfigProvider
@@ -72,6 +73,8 @@ class WidgetConfigProvider implements ConfigProviderInterface
      * @var Quote
      */
     private $quote;
+
+    private $metricFactor = null;
 
     /**
      * Widget constructor.
@@ -136,25 +139,9 @@ class WidgetConfigProvider implements ConfigProviderInterface
                     "price" => $this->itemHandler->getPriceValue($item)
                 ];
                 if ($useDimensions) {
-                    switch ($this->scopeConfig->getDimensionsMetric()) {
-                        case DimensionsMetric::METRIC_MM:
-                            $k = 0.1;
-                            break;
-                        case DimensionsMetric::METRIC_CM:
-                            $k = 1;
-                            break;
-                        case DimensionsMetric::METRIC_M:
-                            $k = 100;
-                            break;
-                        default:
-                            $k = 1;
-                    }
-                    $goodsItem["length"] =
-                        (float)str_replace(',', '.', $product->getData($lengthAttribute)) * $k;
-                    $goodsItem["width"] =
-                        (float)str_replace(',', '.', $product->getData($widthAttribute)) * $k;
-                    $goodsItem["height"] =
-                        (float)str_replace(',', '.', $product->getData($heightAttribute)) * $k;
+                    $goodsItem["length"] = $this->getDimensionValue($product, $lengthAttribute);
+                    $goodsItem["width"] = $this->getDimensionValue($product, $widthAttribute);
+                    $goodsItem["height"] = $this->getDimensionValue($product, $heightAttribute);
                 }
                 if ($this->scopeConfig->addVolume()) {
                     $goodsItem["volume"] = $this->getProductVolume($product);
@@ -570,7 +557,7 @@ class WidgetConfigProvider implements ConfigProviderInterface
             default:
                 $k = 0.000001;
         }
-        
+
         $widthAttribute = $this->scopeConfig->getProductAttributeWidth();
         $heightAttribute = $this->scopeConfig->getProductAttributeHeight();
         $lengthAttribute = $this->scopeConfig->getProductAttributeLength();
@@ -592,5 +579,45 @@ class WidgetConfigProvider implements ConfigProviderInterface
         }
 
         return (float)str_replace(',', '.', $value);
+    }
+
+    /**
+     * Calculate dimension value based on attribute and metric.
+     *
+     * @param ProductInterface $product
+     * @param string $attribute
+     * @return float
+     */
+    private function getDimensionValue(ProductInterface $product, string $attribute): float
+    {
+        if (!$attribute) {
+            return 0.0;
+        }
+        $value = $product->getData($attribute);
+        $k = $this->getMetricFactor();
+        return $value !== null ? (float)str_replace(',', '.', $value) * $k : 0.0;
+    }
+
+    /**
+     * @return float|int
+     */
+    private function getMetricFactor()
+    {
+        if (!$this->metricFactor) {
+            switch ($this->scopeConfig->getDimensionsMetric()) {
+                case DimensionsMetric::METRIC_MM:
+                    $this->metricFactor = 0.1;
+                    break;
+                case DimensionsMetric::METRIC_CM:
+                    $this->metricFactor = 1;
+                    break;
+                case DimensionsMetric::METRIC_M:
+                    $this->metricFactor = 100;
+                    break;
+                default:
+                    $this->metricFactor = 1;
+            }
+        }
+        return $this->metricFactor;
     }
 }
