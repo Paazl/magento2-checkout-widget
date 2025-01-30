@@ -118,7 +118,8 @@ class WidgetConfigProvider implements ConfigProviderInterface
             'sortingModel'               => [
                 'orderBy'       => 'PRICE',
                 'sortOrder'     => 'ASC'
-            ]
+            ],
+            'locale'            => $this->getLocale()
         ];
         $this->generalHelper->addTolog('Request to change from admin', $config);
 
@@ -228,5 +229,23 @@ class WidgetConfigProvider implements ConfigProviderInterface
     public function getOrder()
     {
         return $this->order;
+    }
+
+    /**
+     * @return array|mixed|string|string[]
+     */
+    private function getLocale()
+    {
+        $store = $this->getOrder()->getStore();
+        $locale = $this->scopeConfig->getValue(
+            'general/locale/code',
+            $store
+        );
+
+        if ($locale == 'en_US') {
+            return 'en-GB';
+        }
+
+        return str_replace('_', '-', $locale);
     }
 }

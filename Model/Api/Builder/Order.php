@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2019 Paazl. All rights reserved.
+ * Copyright © Paazl. All rights reserved.
  * See COPYING.txt for license details.
  */
 
@@ -10,71 +10,59 @@ use Magento\Catalog\Model\Product\Type;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Exception\NotFoundException;
+use Magento\Framework\Serialize\SerializerInterface;
 use Magento\GroupedProduct\Model\Product\Type\Grouped;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Model\Order\Address;
 use Magento\Sales\Model\Order\Item;
 use Paazl\CheckoutWidget\Api\OrderReferenceRepositoryInterface;
+use Magento\Quote\Api\CartRepositoryInterface;
+use Paazl\CheckoutWidget\Model\Api\ApiException;
 use Paazl\CheckoutWidget\Model\Api\Builder\Reference as Reference;
 use Paazl\CheckoutWidget\Model\Api\Field\DeliveryType;
+use Paazl\CheckoutWidget\Model\Api\PaazlApiFactory;
 use Paazl\CheckoutWidget\Model\Config;
 use Paazl\CheckoutWidget\Model\ExtInfoHandler;
 use Paazl\CheckoutWidget\Model\Handler\Item as ItemHandler;
+use Paazl\CheckoutWidget\Model\Order\WidgetConfigProvider;
 use Paazl\CheckoutWidget\Model\System\Config\Source\DimensionsMetric;
 
 /**
  * Class Order
- *
- * @package Paazl\CheckoutWidget\Model\Api\Builder
  */
 class Order
 {
-    /**
-     * @var ExtInfoHandler
-     */
-    private $extInfoHandler;
 
-    /**
-     * @var Reference
-     */
-    private $referenceBuilder;
+    private ExtInfoHandler $extInfoHandler;
+    private Reference $referenceBuilder;
+    private Config $config;
+    private OrderReferenceRepositoryInterface $orderReferenceRepository;
+    private CartRepositoryInterface $quoteRepository;
+    private ItemHandler $itemHandler;
+    private WidgetConfigProvider $widgetConfigProvider;
+    private PaazlApiFactory $paazlApiFactory;
+    private SerializerInterface $serializer;
 
-    /**
-     * @var Config
-     */
-    private $config;
-
-    /**
-     * @var OrderReferenceRepositoryInterface
-     */
-    private $orderReferenceRepository;
-
-    /**
-     * @var ItemHandler
-     */
-    private $itemHandler;
-
-    /**
-     * Order constructor.
-     *
-     * @param ExtInfoHandler                    $extInfoHandler
-     * @param Reference                         $referenceBuilder
-     * @param Config                            $config
-     * @param OrderReferenceRepositoryInterface $orderReferenceRepository
-     * @param ItemHandler                       $itemHandler
-     */
     public function __construct(
         ExtInfoHandler $extInfoHandler,
         Reference $referenceBuilder,
         Config $config,
         OrderReferenceRepositoryInterface $orderReferenceRepository,
-        ItemHandler $itemHandler
+        CartRepositoryInterface $quoteRepository,
+        ItemHandler $itemHandler,
+        WidgetConfigProvider $widgetConfigProvider,
+        PaazlApiFactory $paazlApiFactory,
+        SerializerInterface $serializer
     ) {
         $this->extInfoHandler = $extInfoHandler;
         $this->referenceBuilder = $referenceBuilder;
         $this->config = $config;
         $this->orderReferenceRepository = $orderReferenceRepository;
+        $this->quoteRepository = $quoteRepository;
         $this->itemHandler = $itemHandler;
+        $this->widgetConfigProvider = $widgetConfigProvider;
+        $this->paazlApiFactory = $paazlApiFactory;
+        $this->serializer = $serializer;
     }
 
     /**
@@ -141,7 +129,7 @@ class Order
             'reference'             => $this->referenceBuilder->getOrderReference($order),
             'invoiceNumber'         => $this->referenceBuilder->getOrderReference($order),
             'shipping'              => [
-                'option' => $extInformation->getIdenfifier()
+                'option' => $this->getShippingOption($extInformation->getIdenfifier(), $order)
             ],
         ];
 
@@ -448,5 +436,56 @@ class Order
             return $item->getParentItem()->getProductType() === Type::TYPE_BUNDLE;
         }
         return false;
+    }
+
+    /**
+     * @param $identifier
+     * @param OrderInterface $order
+     * @return mixed|string
+     * @throws LocalizedException
+     * @throws ApiException
+    */
+    private function getShippingOption($identifier, OrderInterface $order)
+    {
+        if ($identifier !== null) {
+            return $identifier;
+        }
+
+        try {
+            $quote = $this->quoteRepository->get((int)$order->getQuoteId());
+        } catch (NoSuchEntityException $e) {
+            return '';
+        }
+
+        if ($quote == null) {
+            return '';
+        }
+
+        $extInformation = $this->extInfoHandler->getInfoFromQuote($quote);
+        if (($extInformation !== null) && ($identifier = $extInformation->getIdenfifier())) {
+            return $identifier;
+        }
+
+        //get identifier from api using shipping description
+        $shippingDescription = $order->getShippingDescription();
+        $carrierTitle = $this->config->getCarrierTitle() . ' - ';
+        $shippingDescription = str_replace($carrierTitle, '', $shippingDescription);
+
+        $orderData = $this->widgetConfigProvider
+            ->setOrder($order)
+            ->getConfig();
+        $shippingOptions = $this->serializer->unserialize(
+            $this->paazlApiFactory->create($order->getStoreId())
+                ->getShippingOptions($orderData)
+        );
+        $shippingOptions = $shippingOptions['shippingOptions'] ?? [];
+        foreach ($shippingOptions as $shippingOption) {
+            if (isset($shippingOption['name'], $shippingOption['identifier'])) {
+                if ($shippingOption['name'] == $shippingDescription) {
+                    return $shippingOption['identifier'];
+                }
+            }
+        }
+        return '';
     }
 }
