@@ -92,45 +92,73 @@ class OrderRepositoryPlugin
         OrderRepository $subject,
         OrderInterface $order
     ) {
-        $shippingMethod = $order->getShippingMethod(true);
-
-        if (!$shippingMethod) {
-            return $order;
-        }
-
-        $carrierCode = $shippingMethod->getData('carrier_code');
-
-        if ($carrierCode !== Paazlshipping::CODE) {
+        if (!$this->isPaazlShipping($order)) {
             return $order;
         }
 
         try {
+            // Check if an order reference already exists
             $this->orderReferenceRepository->getByOrderId($order->getId());
             return $order;
         } catch (NoSuchEntityException $e) {
-            // Reference not found
-            /** @var OrderReference $orderReference */
-            $orderReference = $this->orderReferenceFactory->create(['data' => [
-                OrderReferenceInterface::ORDER_ID => $order->getId(),
-            ]]);
+            // No reference found, proceed to create one
         }
 
-        try {
-            $quote = $this->cartRepository->get($order->getQuoteId());
+        $orderReference = $this->createOrderReference($order);
 
-            $quoteReference = $this->quoteReferenceRepository->getByQuoteId($quote->getId());
-        } catch (NoSuchEntityException $e) {
+        if ($orderReference === null) {
             return $order;
         }
+        $this->saveOrderReference($orderReference);
+        return $order;
+    }
 
+    /**
+     * Check if the order uses Paazl shipping.
+     *
+     * @param OrderInterface $order
+     * @return bool
+     */
+    private function isPaazlShipping(OrderInterface $order): bool
+    {
+        $shippingMethod = $order->getShippingMethod(true);
+        return $shippingMethod && $shippingMethod->getData('carrier_code') === Paazlshipping::CODE;
+    }
+
+    /**
+     * Create an order reference from the quote reference.
+     *
+     * @param OrderInterface $order
+     * @return OrderReferenceInterface|null
+     */
+    private function createOrderReference(OrderInterface $order): ?OrderReferenceInterface
+    {
+        try {
+            $quoteReference = $this->quoteReferenceRepository->getByQuoteId($order->getQuoteId());
+        } catch (NoSuchEntityException $e) {
+            return null;
+        }
+        $orderReference = $this->orderReferenceFactory->create([
+            'data' => [
+                OrderReferenceInterface::ORDER_ID => $order->getId(),
+            ],
+        ]);
         $orderReference->setExtShippingInfo($quoteReference->getExtShippingInfo());
+        return $orderReference;
+    }
 
+    /**
+     * Save the order reference and log any exceptions.
+     *
+     * @param OrderReferenceInterface $orderReference
+     * @return void
+     */
+    private function saveOrderReference(OrderReferenceInterface $orderReference): void
+    {
         try {
             $this->orderReferenceRepository->save($orderReference);
         } catch (\Exception $e) {
             $this->generalHelper->addTolog('exception', $e->getMessage());
         }
-
-        return $order;
     }
 }
