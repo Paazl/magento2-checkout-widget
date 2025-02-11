@@ -47,7 +47,7 @@ define([
             }
 
             // Update billing address after updating shipping address
-            quote.billingAddress(address);
+            // quote.billingAddress(address);
 
             function getActiveAddress() {
                 const isCustomerLogin = window.checkoutConfig.isCustomerLoggedIn;
@@ -63,10 +63,14 @@ define([
                     currentAddress = customerData.get('checkout-data')().shippingAddressFromData;
                 }
 
+                shippingAddress.firstname = currentAddress.firstname;
+                shippingAddress.lastname = currentAddress.lastname;
                 shippingAddress.countryId = currentAddress.country_id;
+                shippingAddress.region = currentAddress.region;
                 shippingAddress.city = currentAddress.city;
                 shippingAddress.postcode = currentAddress.postcode;
                 shippingAddress.street = Object.values(currentAddress.street);
+                shippingAddress.telephone = currentAddress.telephone;
 
                 return shippingAddress;
             }
