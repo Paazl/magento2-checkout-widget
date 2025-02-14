@@ -66,7 +66,9 @@ define([
                 shippingAddress.firstname = currentAddress.firstname;
                 shippingAddress.lastname = currentAddress.lastname;
                 shippingAddress.countryId = currentAddress.country_id;
-                shippingAddress.region = currentAddress.region;
+                shippingAddress.region = typeof currentAddress.region === 'object' && currentAddress.region !== null 
+                    ? currentAddress.region.region 
+                    : currentAddress.region;
                 shippingAddress.city = currentAddress.city;
                 shippingAddress.postcode = currentAddress.postcode;
                 shippingAddress.street = Object.values(currentAddress.street);
