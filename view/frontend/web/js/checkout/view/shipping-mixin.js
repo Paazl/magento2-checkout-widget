@@ -12,8 +12,22 @@ define([
     'Magento_Checkout/js/model/shipping-save-processor/payload-extender',
     'Magento_Checkout/js/model/resource-url-manager',
     'Magento_Checkout/js/model/error-processor',
-    'Paazl_CheckoutWidget/js/checkout/view/widget-config'
-], function ($, _, ko, storage, quote, payloadExtender, resourceUrlManager, errorProcessor, widgetConfig) {
+    'Paazl_CheckoutWidget/js/checkout/view/widget-config',
+    'Magento_Customer/js/model/customer',
+    'Paazl_CheckoutWidget/js/checkout/model/shipping-locations',
+], function (
+    $, 
+    _, 
+    ko, 
+    storage, 
+    quote, 
+    payloadExtender, 
+    resourceUrlManager, 
+    errorProcessor,
+    widgetConfig,
+    customer,
+    shippingLocations
+) {
     "use strict";
 
     /**
@@ -78,23 +92,51 @@ define([
 
             setShippingInformation: function () {
                 const savedSelectedShippingAddress = quote.shippingAddress();
-                let ajaxHandled = false;
                 
                 widgetConfig.prototype.lock();
                 this._super();
 
                 if (savedSelectedShippingAddress.customerAddressId !== quote.shippingAddress().customerAddressId) {
-                    quote.shippingAddress(savedSelectedShippingAddress);
+                    this.updateShippingInfo(savedSelectedShippingAddress);
+                }
 
-                    $(document).ajaxComplete((_, xhr, settings) => {
-                        if (!ajaxHandled && settings.url.includes(resourceUrlManager.getUrlForSetShippingInformation(quote))) {
-                            ajaxHandled = true;
-                            this.saveShippingInformation();
-                        }
-                    });
+                if (!shippingLocations.selectedLocationCode()) {
+                    const customerAddressId = quote.shippingAddress().customerAddressId;
+                    const customerAddressList = customer.customerData.addresses;
+
+                    if (customerAddressList) {
+                        const currentAddress = customerAddressList[customerAddressId];
+                        const shippingAddress = Object.assign({}, quote.shippingAddress(), {
+                            firstname: currentAddress.firstname,
+                            lastname: currentAddress.lastname,
+                            countryId: currentAddress.country_id,
+                            region: typeof currentAddress.region === 'object' && currentAddress.region !== null 
+                                ? currentAddress.region.region 
+                                : currentAddress.region,
+                            city: currentAddress.city,
+                            postcode: currentAddress.postcode,
+                            street: Object.values(currentAddress.street),
+                            telephone: currentAddress.telephone
+                        });
+
+                        this.updateShippingInfo(shippingAddress);
+                    }
                 }
 
                 widgetConfig.prototype.unlock();
+            },
+
+            updateShippingInfo(address) {
+                let ajaxHandled = false;
+
+                quote.shippingAddress(address);
+
+                $(document).ajaxComplete((_, xhr, settings) => {
+                    if (!ajaxHandled && settings.url.includes(resourceUrlManager.getUrlForSetShippingInformation(quote))) {
+                        ajaxHandled = true;
+                        this.saveShippingInformation();
+                    }
+                });
             },
 
             saveShippingInformation: function () {
