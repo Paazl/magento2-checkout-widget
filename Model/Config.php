@@ -583,4 +583,13 @@ class Config
     {
         return !!$this->getValue(self::API_CONFIG_PATH . '/housenumber_default_value', $store);
     }
+
+    /**
+     * @param null|Store|int|string $store
+     * @return bool
+     */
+    public function getAllowWithoutShippingOption($store = null)
+    {
+        return !!$this->getValue(self::API_CONFIG_PATH . '/allow_without_shipping_option', $store);
+    }
 }
