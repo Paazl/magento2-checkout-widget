@@ -229,6 +229,10 @@ class Paazlshipping extends AbstractCarrier implements CarrierInterface
                     $firstOption = $shippingOptions['shippingOptions'][0];
                     $shippingPrice = $firstOption['rate'];
                     $method->setMethodTitle($firstOption['name']);
+                } else {
+                    if (!$this->config->getAllowWithoutShippingOption($quote->getStoreId())) {
+                        return false;
+                    }
                 }
             }
 
