@@ -24,6 +24,22 @@ var config = {
             "https://widget.paazl.com/v1/checkout",
             "Paazl_CheckoutWidget/js/checkout/lib/checkout_local_live"
         ],
+        checkoutjs_test_stable: [
+            "https://widget-acc.paazl.com/v1/stable/checkout",
+            "Paazl_CheckoutWidget/js/checkout/lib/checkout_local_test"
+        ],
+        checkoutjs_live_stable: [
+            "https://widget.paazl.com/v1/stable/checkout",
+            "Paazl_CheckoutWidget/js/checkout/lib/checkout_local_live"
+        ],
+        checkoutjs_test_latest: [
+            "https://widget-acc.paazl.com/v1/latest/checkout",
+            "Paazl_CheckoutWidget/js/checkout/lib/checkout_local_test"
+        ],
+        checkoutjs_live_latest: [
+            "https://widget.paazl.com/v1/latest/checkout",
+            "Paazl_CheckoutWidget/js/checkout/lib/checkout_local_live"
+        ],
     },
     shim: {
         'Paazl_CheckoutWidget/js/checkout': {
