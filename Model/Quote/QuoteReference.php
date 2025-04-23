@@ -103,7 +103,7 @@ class QuoteReference extends AbstractModel implements QuoteReferenceInterface
     /**
      * @inheritDoc
      */
-    public function isTokenExpired(\DateTime $now = null)
+    public function isTokenExpired(?\DateTime $now = null)
     {
         $result = true;
         $expiresAt = $this->getTokenExpiresAt();

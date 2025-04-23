@@ -258,7 +258,7 @@ class WidgetConfigProvider implements ConfigProviderInterface
      * @param Quote|null $quote
      * @return $this
      */
-    public function setQuote(Quote $quote = null)
+    public function setQuote(?Quote $quote = null)
     {
         $this->quote = $quote;
         return $this;
