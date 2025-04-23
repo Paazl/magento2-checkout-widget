@@ -37,18 +37,17 @@
     <preference for="Magento\Framework\HTTP\Client\Curl"
                 type="Paazl\CheckoutWidget\Model\Api\CurlExtra"/>
 
-    <type name="Paazl\CheckoutWidget\Logger\PaazlHandler">
+    <virtualType name="PaazlDebugMonolog" type="Monolog\Logger">
         <arguments>
-            <argument name="filesystem" xsi:type="object">Magento\Framework\Filesystem\Driver\File</argument>
+            <argument name="name" xsi:type="string">PaazlDebug</argument>
+            <argument name="handlers" xsi:type="array">
+                <item name="debug" xsi:type="object">Paazl\CheckoutWidget\Logger\PaazlHandler</item>
+            </argument>
         </arguments>
-    </type>
-
+    </virtualType>
     <type name="Paazl\CheckoutWidget\Logger\PaazlLogger">
         <arguments>
-            <argument name="name" xsi:type="string">Magento2</argument>
-            <argument name="handlers" xsi:type="array">
-                <item name="system" xsi:type="object">Paazl\CheckoutWidget\Logger\PaazlHandler</item>
-            </argument>
+            <argument name="logger" xsi:type="object">PaazlDebugMonolog</argument>
         </arguments>
     </type>
 

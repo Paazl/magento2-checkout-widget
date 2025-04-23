@@ -46,6 +46,12 @@ class UrlProviderFactory
      */
     public function create($storeId = null): UrlProvider
     {
-        return $this->objectManager->create(UrlProvider::class, ['mode' => $this->config->getApiMode($storeId)]);
+        return $this->objectManager->create(
+            UrlProvider::class,
+            [
+                'mode' => $this->config->getApiMode($storeId),
+                'version' => $this->config->getApiVersion($storeId)
+            ]
+        );
     }
 }

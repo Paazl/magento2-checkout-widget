@@ -51,7 +51,7 @@ class ConfigurationResolver implements ResolverInterface
         $this->quoteIdMaskResource = $quoteIdMaskResource;
     }
 
-    public function resolve(Field $field, $context, ResolveInfo $info, array $value = null, array $args = null)
+    public function resolve(Field $field, $context, ResolveInfo $info, ?array $value = null, ?array $args = null)
     {
         if (!isset($args['cart_id']) || empty($args['cart_id'])) {
             throw new GraphQlInputException(__('"cart_id" is required'));

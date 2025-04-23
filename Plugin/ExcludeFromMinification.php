@@ -31,6 +31,10 @@ class ExcludeFromMinification
             $result[] = 'Paazl_CheckoutWidget/js/checkout';
             $result[] = 'https://widget-acc.paazl.com/v1/checkout.js';
             $result[] = 'https://widget.paazl.com/v1/checkout.js';
+            $result[] = 'https://widget-acc.paazl.com/v1/stable/checkout.js';
+            $result[] = 'https://widget-acc.paazl.com/v1/latest/checkout.js';
+            $result[] = 'https://widget.paazl.com/v1/stable/checkout.js';
+            $result[] = 'https://widget.paazl.com/v1/latest/checkout.js';
         }
 
         return $result;

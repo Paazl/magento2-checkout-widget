@@ -35,7 +35,12 @@
                 <field id="api_modus" translate="label" type="select" sortOrder="13" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Environment</label>
                     <source_model>Paazl\CheckoutWidget\Model\System\Config\Source\ApiMode</source_model>
-                    <comment>Choose whether you want to use the Paazl Checkout Widget in Paazl's staging or production environment.</comment>
+                    <comment>Select the Paazl Widget invironment to use: Staging or Production.</comment>
+                </field>
+                <field id="api_version" translate="label" type="select" sortOrder="14" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Version</label>
+                    <source_model>Paazl\CheckoutWidget\Model\System\Config\Source\ApiVersion</source_model>
+                    <comment>Select the Paazl Widget version to use: Stable or Latest.</comment>
                 </field>
                 <field id="heading_widget" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Widget</label>

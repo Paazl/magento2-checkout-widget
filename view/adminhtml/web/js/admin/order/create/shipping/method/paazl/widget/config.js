@@ -73,6 +73,11 @@ define([
             } else {
                 name += '_live';
             }
+            if (shippingConfig.version === 'stable') {
+                name += '_stable';
+            } else {
+                name += '_latest';
+            }
 
             return name;
         },

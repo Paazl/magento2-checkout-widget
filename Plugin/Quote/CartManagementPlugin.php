@@ -58,7 +58,7 @@ class CartManagementPlugin
     public function beforePlaceOrder(
         CartManagementInterface $subject,
         $cartId,
-        PaymentInterface $paymentMethod = null
+        ?PaymentInterface $paymentMethod = null
     ) {
         $quote = $this->quoteRepository->getActive($cartId);
         if ($quote->getIsVirtual()) {

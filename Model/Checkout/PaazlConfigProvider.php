@@ -72,6 +72,7 @@ class PaazlConfigProvider implements ConfigProviderInterface
         $config['googleMapKey'] = $this->config->getGoogleMapKey();
         $config['widgetConfig'] = $this->widgetConfigProvider->getConfig();
         $config['mode'] = $this->config->isProductionApiMode() ? 'live' : 'test';
+        $config['version'] = $this->config->getApiVersion();
         $config['showOnFirstLoad'] = $this->config->showWidgetOnFirstLoad();
         $config['useLocalCopyOfWidgetJs'] = $this->config->isUseLocalCopyOfWidgetJs();
 

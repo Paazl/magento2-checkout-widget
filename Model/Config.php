@@ -11,6 +11,7 @@ use Magento\Store\Model\ScopeInterface;
 use Magento\Store\Model\Store;
 use Paazl\CheckoutWidget\Model\Carrier\Paazlshipping;
 use Paazl\CheckoutWidget\Model\System\Config\Source\ApiMode;
+use Paazl\CheckoutWidget\Model\System\Config\Source\ApiVersion;
 
 /**
  * Class Config
@@ -118,6 +119,21 @@ class Config
         }
 
         return (int)$mode;
+    }
+
+    /**
+     * @param null|Store|int|string $store
+     *
+     * @return string
+     */
+    public function getApiVersion($store = null)
+    {
+        $mode = $this->getValue(self::API_CONFIG_PATH . '/api_version', $store);
+        if ($mode != ApiVersion::VERSION_STABLE) {
+            $mode = ApiVersion::VERSION_LATEST;
+        }
+
+        return $mode;
     }
 
     /**
