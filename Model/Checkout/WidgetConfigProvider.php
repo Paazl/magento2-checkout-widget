@@ -181,6 +181,7 @@ class WidgetConfigProvider implements ConfigProviderInterface
             "consigneeCountryCode"       => $countryId,
             "consigneePostalCode"        => $postcode,
             "numberOfProcessingDays"     => $numberOfProcessingDays,
+            "useCarrierLogoAsMapMarker"  => $this->scopeConfig->showCarrierLogo($this->getQuote()->getStoreId()),
             "deliveryDateOptions"        => [
                 "startDate"    => date("Y-m-d"),
                 "numberOfDays" => 10
