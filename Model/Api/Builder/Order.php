@@ -26,6 +26,7 @@ use Paazl\CheckoutWidget\Model\ExtInfoHandler;
 use Paazl\CheckoutWidget\Model\Handler\Item as ItemHandler;
 use Paazl\CheckoutWidget\Model\Order\WidgetConfigProvider;
 use Paazl\CheckoutWidget\Model\System\Config\Source\DimensionsMetric;
+use Paazl\CheckoutWidget\Helper\General;
 
 /**
  * Class Order
@@ -42,6 +43,7 @@ class Order
     private WidgetConfigProvider $widgetConfigProvider;
     private PaazlApiFactory $paazlApiFactory;
     private SerializerInterface $serializer;
+    private General $generalHelper;
 
     public function __construct(
         ExtInfoHandler $extInfoHandler,
@@ -52,7 +54,8 @@ class Order
         ItemHandler $itemHandler,
         WidgetConfigProvider $widgetConfigProvider,
         PaazlApiFactory $paazlApiFactory,
-        SerializerInterface $serializer
+        SerializerInterface $serializer,
+        General $generalHelper
     ) {
         $this->extInfoHandler = $extInfoHandler;
         $this->referenceBuilder = $referenceBuilder;
@@ -63,6 +66,7 @@ class Order
         $this->widgetConfigProvider = $widgetConfigProvider;
         $this->paazlApiFactory = $paazlApiFactory;
         $this->serializer = $serializer;
+        $this->generalHelper = $generalHelper;
     }
 
     /**
@@ -447,12 +451,14 @@ class Order
     */
     private function getShippingOption($identifier, OrderInterface $order)
     {
+        $this->generalHelper->addTolog('SHIPPING OPTION $identifier', $identifier);
         if ($identifier !== null) {
             return $identifier;
         }
 
         try {
             $quote = $this->quoteRepository->get((int)$order->getQuoteId());
+            $this->generalHelper->addTolog('SHIPPING OPTION $quoteId', $quote->getId());
         } catch (NoSuchEntityException $e) {
             return '';
         }
@@ -462,22 +468,28 @@ class Order
         }
 
         $extInformation = $this->extInfoHandler->getInfoFromQuote($quote);
+        $this->generalHelper->addTolog('SHIPPING OPTION $extInformation', $extInformation);
         if (($extInformation !== null) && ($identifier = $extInformation->getIdenfifier())) {
             return $identifier;
         }
 
         //get identifier from api using shipping description
         $shippingDescription = $order->getShippingDescription();
+        $this->generalHelper->addTolog('SHIPPING OPTION $shippingDescription', $shippingDescription);
         $carrierTitle = $this->config->getCarrierTitle() . ' - ';
+        $this->generalHelper->addTolog('SHIPPING OPTION $carrierTitle', $carrierTitle);
         $shippingDescription = str_replace($carrierTitle, '', $shippingDescription);
+        $this->generalHelper->addTolog('SHIPPING OPTION $shippingDescription', $shippingDescription);
 
         $orderData = $this->widgetConfigProvider
             ->setOrder($order)
             ->getConfig();
+        $this->generalHelper->addTolog('SHIPPING OPTION $orderData', $orderData);
         $shippingOptions = $this->serializer->unserialize(
             $this->paazlApiFactory->create($order->getStoreId())
                 ->getShippingOptions($orderData)
         );
+        $this->generalHelper->addTolog('SHIPPING OPTION $shippingOptions', $shippingOptions);
         $shippingOptions = $shippingOptions['shippingOptions'] ?? [];
         foreach ($shippingOptions as $shippingOption) {
             if (isset($shippingOption['name'], $shippingOption['identifier'])) {
