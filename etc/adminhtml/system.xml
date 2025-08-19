@@ -98,10 +98,14 @@
                     <comment><![CDATA[Limits the maximum number of pickup locations displayed on the widget's pickup location maps.]]></comment>
                     <validate>validate-not-negative-number</validate>
                 </field>
-                <field id="hide_method_select" translate="label" type="select" sortOrder="30" showInDefault="2" showInWebsite="1" showInStore="0">
+                <field id="hide_method_select" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Hide non-Paazl shipping options</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>Choose whether or not you want to display shipping options from sources other than Paazl.</comment>
+                </field>
+                <field id="show_carrier_logo" translate="label" type="select" sortOrder="31" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Show Carrier Logos</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
                 <field id="heading_defaults" translate="label comment" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Defaults</label>

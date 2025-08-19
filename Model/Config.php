@@ -311,6 +311,16 @@ class Config
     /**
      * @param null|Store|int|string $store
      *
+     * @return mixed
+     */
+    public function showCarrierLogo($store = null)
+    {
+        return (bool)$this->getValue(self::API_CONFIG_PATH . '/show_carrier_logo', $store);
+    }
+
+    /**
+     * @param null|Store|int|string $store
+     *
      * @return bool
      */
     public function isCarrierActive($store = null)
