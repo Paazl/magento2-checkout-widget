@@ -79,14 +79,24 @@ class ExtInfoHandler
      */
     private function getQuoteReference(Quote $quote)
     {
+        $quoteId = $quote->getId();
         try {
-            $reference = $this->quoteReferenceRepository->getByQuoteId($quote->getId());
+            $reference = $this->quoteReferenceRepository->getByQuoteId($quoteId);
+            $this->helper->addTolog('info', sprintf(
+                'Loaded existing quote reference for quote ID: %s (reference ID: %s)',
+                $quoteId,
+                $reference->getId()
+            ));
         } catch (NoSuchEntityException $e) {
             $reference = $this->quoteReferenceInterfaceFactory->create(
                 ['data' => [
-                    QuoteReferenceInterface::QUOTE_ID => $quote->getId(),
+                    QuoteReferenceInterface::QUOTE_ID => $quoteId,
                 ]]
             );
+            $this->helper->addTolog('info', sprintf(
+                'Created new quote reference for quote ID: %s',
+                $quoteId
+            ));
         }
 
         return $reference;
@@ -98,12 +108,42 @@ class ExtInfoHandler
      */
     public function setInfoToQuote(ShippingInfo $info, Quote $quote)
     {
+        $quoteId = $quote->getId();
+
         try {
             $reference = $this->getQuoteReference($quote);
-            $reference->setExtShippingInfo($info->toJson());
+            $isNewReference = !$reference->getId();
+
+            $shippingInfoData = $info->toJson();
+            $reference->setExtShippingInfo($shippingInfoData);
+
+            $this->helper->addTolog('info', sprintf(
+                'Saving shipping info to quote ID: %s | Operation: %s | Data: %s',
+                $quoteId,
+                $isNewReference ? 'CREATE' : 'UPDATE',
+                $shippingInfoData
+            ));
+
             $this->quoteReferenceRepository->save($reference);
+
+            $this->helper->addTolog('info', sprintf(
+                'Successfully saved quote reference for quote ID: %s (reference ID: %s)',
+                $quoteId,
+                $reference->getId()
+            ));
         } catch (CouldNotSaveException $e) {
-            $this->helper->addTolog('exception', $e->getMessage());
+            $this->helper->addTolog('exception', sprintf(
+                'Failed to save quote reference for quote ID: %s | Error: %s',
+                $quoteId,
+                $e->getMessage()
+            ));
+        } catch (\Exception $e) {
+            $this->helper->addTolog('exception', sprintf(
+                'Unexpected error saving quote reference for quote ID: %s | Error: %s | Trace: %s',
+                $quoteId,
+                $e->getMessage(),
+                $e->getTraceAsString()
+            ));
         }
     }
 
@@ -114,11 +154,24 @@ class ExtInfoHandler
      */
     public function getInfoFromQuote(Quote $quote)
     {
+        $quoteId = $quote->getId();
         $reference = $this->getQuoteReference($quote);
         $info = $reference->getExtShippingInfo();
+
         if (empty($info)) {
+            $this->helper->addTolog('info', sprintf(
+                'No shipping info found for quote ID: %s (reference ID: %s)',
+                $quoteId,
+                $reference->getId() ?: 'N/A'
+            ));
             return null;
         }
+
+        $this->helper->addTolog('info', sprintf(
+            'Retrieved shipping info for quote ID: %s | Data: %s',
+            $quoteId,
+            $info
+        ));
 
         /** @var ShippingInfo $shippingInfo */
         $shippingInfo = $this->shippingInfoFactory->create();
@@ -130,7 +183,11 @@ class ExtInfoHandler
             }
             return $shippingInfo;
         } catch (\Exception $e) {
-            $this->helper->addTolog('exception', $e->getMessage());
+            $this->helper->addTolog('exception', sprintf(
+                'Failed to unserialize shipping info for quote ID: %s | Error: %s',
+                $quoteId,
+                $e->getMessage()
+            ));
         }
 
         return null;
