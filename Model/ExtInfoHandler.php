@@ -11,6 +11,8 @@ use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Serialize\Serializer\Json;
 use Magento\Quote\Model\Quote;
 use Paazl\CheckoutWidget\Api\Data\Order\OrderReferenceInterface;
+use Paazl\CheckoutWidget\Api\Data\Quote\QuoteReferenceInterface;
+use Paazl\CheckoutWidget\Api\Data\Quote\QuoteReferenceInterfaceFactory;
 use Paazl\CheckoutWidget\Api\QuoteReferenceRepositoryInterface;
 use Paazl\CheckoutWidget\Helper\General as Helper;
 
@@ -43,39 +45,51 @@ class ExtInfoHandler
     private $quoteReferenceRepository;
 
     /**
+     * @var QuoteReferenceInterfaceFactory
+     */
+    private $quoteReferenceInterfaceFactory;
+
+    /**
      * ExtInfoHandler constructor.
      *
      * @param ShippingInfoFactory               $shippingInfoFactory
      * @param Json                              $json
      * @param Helper                            $helper
      * @param QuoteReferenceRepositoryInterface $quoteReferenceRepository
+     * @param QuoteReferenceInterfaceFactory    $quoteReferenceInterfaceFactory
      */
     public function __construct(
         ShippingInfoFactory $shippingInfoFactory,
         Json $json,
         Helper $helper,
-        QuoteReferenceRepositoryInterface $quoteReferenceRepository
+        QuoteReferenceRepositoryInterface $quoteReferenceRepository,
+        QuoteReferenceInterfaceFactory $quoteReferenceInterfaceFactory
     ) {
         $this->shippingInfoFactory = $shippingInfoFactory;
         $this->json = $json;
         $this->helper = $helper;
         $this->quoteReferenceRepository = $quoteReferenceRepository;
+        $this->quoteReferenceInterfaceFactory = $quoteReferenceInterfaceFactory;
     }
 
     /**
      * @param Quote $quote
      *
-     * @return \Paazl\CheckoutWidget\Api\Data\Quote\QuoteReferenceInterface|null
+     * @return \Paazl\CheckoutWidget\Api\Data\Quote\QuoteReferenceInterface
      */
     private function getQuoteReference(Quote $quote)
     {
         try {
-            return $this->quoteReferenceRepository->getByQuoteId($quote->getId());
+            $reference = $this->quoteReferenceRepository->getByQuoteId($quote->getId());
         } catch (NoSuchEntityException $e) {
-            $this->helper->addTolog('exception', $e->getMessage());
+            $reference = $this->quoteReferenceInterfaceFactory->create(
+                ['data' => [
+                    QuoteReferenceInterface::QUOTE_ID => $quote->getId(),
+                ]]
+            );
         }
 
-        return null;
+        return $reference;
     }
 
     /**
@@ -86,10 +100,8 @@ class ExtInfoHandler
     {
         try {
             $reference = $this->getQuoteReference($quote);
-            if ($reference) {
-                $reference->setExtShippingInfo($info->toJson());
-                $this->quoteReferenceRepository->save($reference);
-            }
+            $reference->setExtShippingInfo($info->toJson());
+            $this->quoteReferenceRepository->save($reference);
         } catch (CouldNotSaveException $e) {
             $this->helper->addTolog('exception', $e->getMessage());
         }
@@ -103,10 +115,6 @@ class ExtInfoHandler
     public function getInfoFromQuote(Quote $quote)
     {
         $reference = $this->getQuoteReference($quote);
-        if (!$reference) {
-            return null;
-        }
-
         $info = $reference->getExtShippingInfo();
         if (empty($info)) {
             return null;
