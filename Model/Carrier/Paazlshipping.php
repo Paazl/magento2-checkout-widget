@@ -240,10 +240,14 @@ class Paazlshipping extends AbstractCarrier implements CarrierInterface
 
             $info = $this->extInfoHandler->getInfoFromQuote($quote);
 
-            if ($info && $info->getType()) {
-                $shippingPrice = $info->getPrice();
-                if ($info->getOptionTitle()) {
-                    $method->setMethodTitle($info->getOptionTitle());
+            // Only use stored shipping info if it matches the current API calculation
+            // This prevents using stale prices when cart contents change after checkout
+            if ($info && $info->getType() && $quote->getShippingAddress()->getShippingMethod()) {
+                if (abs($info->getPrice() - $shippingPrice) < 0.01) {
+                    $shippingPrice = $info->getPrice();
+                    if ($info->getOptionTitle()) {
+                        $method->setMethodTitle($info->getOptionTitle());
+                    }
                 }
             }
 
