@@ -24,6 +24,7 @@ use Paazl\CheckoutWidget\Model\ExtInfoHandler;
 use Paazl\CheckoutWidget\Model\Config;
 use Magento\Framework\App\State as AppState;
 use Magento\Framework\App\Area;
+use Paazl\CheckoutWidget\Model\Api\Field\DeliveryType;
 use Paazl\CheckoutWidget\Model\TokenRetriever;
 use Psr\Log\LoggerInterface;
 
@@ -240,13 +241,27 @@ class Paazlshipping extends AbstractCarrier implements CarrierInterface
 
             $info = $this->extInfoHandler->getInfoFromQuote($quote);
 
-            // Only use stored shipping info if it matches the current API calculation
-            // This prevents using stale prices when cart contents change after checkout
+            // Use selected shipping option if it still exists in the current API response
             if ($info && $info->getType() && $quote->getShippingAddress()->getShippingMethod()) {
-                if (abs($info->getPrice() - $shippingPrice) < 0.01) {
+                if ($info->getType() === DeliveryType::PICKUP) {
+                    // Pickup locations are not in shippingOptions; trust the stored info
                     $shippingPrice = $info->getPrice();
                     if ($info->getOptionTitle()) {
                         $method->setMethodTitle($info->getOptionTitle());
+                    }
+                } else {
+                    // For home delivery, validate the selected option against current API response
+                    $selectedIdentifier = $info->getIdenfifier();
+                    if ($selectedIdentifier && isset($shippingOptions['shippingOptions'])) {
+                        foreach ($shippingOptions['shippingOptions'] as $option) {
+                            if (isset($option['identifier']) && $option['identifier'] === $selectedIdentifier) {
+                                $shippingPrice = (float)$option['rate'];
+                                if ($info->getOptionTitle()) {
+                                    $method->setMethodTitle($info->getOptionTitle());
+                                }
+                                break;
+                            }
+                        }
                     }
                 }
             }
