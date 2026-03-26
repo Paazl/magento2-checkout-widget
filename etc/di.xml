@@ -54,6 +54,9 @@
     <type name="Magento\Sales\Model\OrderRepository">
         <plugin name="paazl_order_repository"
                 type="Paazl\CheckoutWidget\Plugin\Sales\OrderRepositoryPlugin"/>
+        <plugin name="paazl_deferred_delivery"
+                type="Paazl\CheckoutWidget\Plugin\Sales\DeferredDeliveryPlugin"
+                sortOrder="10"/>
     </type>
 
     <type name="Magento\Framework\Console\CommandListInterface">
@@ -102,6 +105,8 @@
             <argument name="collections" xsi:type="array">
                 <item name="sales_order_grid_data_source"
                       xsi:type="string">Paazl\CheckoutWidget\Model\ResourceModel\Order\Grid\Collection</item>
+                <item name="paazl_deferred_queue_listing_data_source"
+                      xsi:type="string">Paazl\CheckoutWidget\Model\ResourceModel\DeferredQueue\Grid\Collection</item>
             </argument>
         </arguments>
     </type>

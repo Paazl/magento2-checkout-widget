@@ -39,6 +39,8 @@
                 <total_price>subtotal_incl_discount</total_price>
                 <use_local_js_for_widget>0</use_local_js_for_widget>
                 <dimensions_metric>cm</dimensions_metric>
+                <deferred_delivery_enabled>0</deferred_delivery_enabled>
+                <deferred_delivery_days_before>1</deferred_delivery_days_before>
             </paazlshipping>
         </carriers>
     </default>

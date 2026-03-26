@@ -618,4 +618,34 @@ class Config
     {
         return !!$this->getValue(self::API_CONFIG_PATH . '/allow_without_shipping_option', $store);
     }
+
+    /**
+     * Check if deferred delivery is enabled
+     *
+     * @param null|Store|int|string $store
+     * @return bool
+     */
+    public function isDeferredDeliveryEnabled($store = null)
+    {
+        return $this->scopeConfig->isSetFlag(
+            self::API_CONFIG_PATH . '/deferred_delivery_enabled',
+            ScopeInterface::SCOPE_STORE,
+            $store
+        );
+    }
+
+    /**
+     * Get number of days before scheduled delivery to transition order to processing
+     *
+     * @param null|Store|int|string $store
+     * @return int
+     */
+    public function getDeferredDeliveryDaysBefore($store = null)
+    {
+        $value = (int)$this->getValue(self::API_CONFIG_PATH . '/deferred_delivery_days_before', $store);
+        if ($value < 0) {
+            $value = 1;
+        }
+        return $value;
+    }
 }

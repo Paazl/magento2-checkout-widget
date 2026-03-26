@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!--
+  ~ Copyright © Paazl. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="Paazl_CheckoutWidget::paazl"
+             title="Paazl"
+             translate="title"
+             module="Paazl_CheckoutWidget"
+             sortOrder="100"
+             resource="Paazl_CheckoutWidget::paazl"/>
+        <add id="Paazl_CheckoutWidget::deferred_queue"
+             title="Deferred Queue"
+             translate="title"
+             module="Paazl_CheckoutWidget"
+             sortOrder="10"
+             parent="Paazl_CheckoutWidget::paazl"
+             action="paazl_checkoutwidget/deferredqueue/index"
+             resource="Paazl_CheckoutWidget::deferred_queue"/>
+    </menu>
+</config>

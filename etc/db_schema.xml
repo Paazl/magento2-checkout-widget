@@ -37,4 +37,24 @@
         </constraint>
         <constraint referenceId="MM_PAAZL_QUOTE_QUOTE_ID_QUOTE_ENTITY_ID" xsi:type="foreign" table="mm_paazl_quote" column="quote_id" referenceTable="quote" referenceColumn="entity_id" onDelete="CASCADE"/>
     </table>
+
+    <table name="mm_paazl_deferred_queue" engine="innodb" resource="sales" comment="Paazl Deferred Queue Table">
+        <column name="entity_id" xsi:type="int" identity="true" unsigned="true" nullable="false" comment="Entity ID"/>
+        <column name="order_id" xsi:type="int" padding="10" unsigned="true" nullable="false" comment="Order ID"/>
+        <column name="customer_name" xsi:type="varchar" length="255" nullable="true" comment="Customer Name"/>
+        <column name="scheduled_processing_date" xsi:type="datetime" nullable="true" comment="Scheduled Processing Date"/>
+        <column name="deferred_status" xsi:type="varchar" length="50" nullable="true" comment="Deferred Status"/>
+        <column name="created_at" xsi:type="timestamp" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Created At"/>
+        <column name="updated_at" xsi:type="timestamp" on_update="true" nullable="false" default="CURRENT_TIMESTAMP" comment="Updated At"/>
+        <constraint referenceId="PRIMARY" xsi:type="primary">
+            <column name="entity_id"/>
+        </constraint>
+        <index referenceId="MM_PAAZL_DEFERRED_QUEUE_SCHEDULED_PROCESSING_DATE" indexType="btree">
+            <column name="scheduled_processing_date"/>
+        </index>
+        <index referenceId="MM_PAAZL_DEFERRED_QUEUE_DEFERRED_STATUS" indexType="btree">
+            <column name="deferred_status"/>
+        </index>
+        <constraint referenceId="MM_PAAZL_DEFERRED_QUEUE_ORDER_ID_SALES_ORDER_ENTITY_ID" xsi:type="foreign" table="mm_paazl_deferred_queue" column="order_id" referenceTable="sales_order" referenceColumn="entity_id" onDelete="CASCADE"/>
+    </table>
 </schema>
