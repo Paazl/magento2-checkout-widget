@@ -9,5 +9,8 @@
         <job name="paazl_send_orders" instance="\Paazl\CheckoutWidget\Cron\SendOrders" method="execute">
             <schedule>*/5 * * * *</schedule>
         </job>
+        <job name="paazl_process_deferred_delivery" instance="\Paazl\CheckoutWidget\Cron\ProcessDeferredDelivery" method="execute">
+            <schedule>0 */1 * * *</schedule>
+        </job>
     </group>
 </config>

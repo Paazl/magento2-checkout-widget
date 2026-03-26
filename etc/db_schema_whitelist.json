@@ -8,7 +8,8 @@
       "invalid": true
     },
     "index": {
-      "MM_PAAZL_ORDER_EXT_SENT_AT": true
+      "MM_PAAZL_ORDER_EXT_SENT_AT": true,
+      "MM_PAAZL_ORDER_SENT_AT": true
     },
     "constraint": {
       "PRIMARY": true,
@@ -28,6 +29,25 @@
       "PRIMARY": true,
       "MM_PAAZL_QUOTE_QUOTE_ID": true,
       "MM_PAAZL_QUOTE_QUOTE_ID_QUOTE_ENTITY_ID": true
+    }
+  },
+  "mm_paazl_deferred_queue": {
+    "column": {
+      "entity_id": true,
+      "order_id": true,
+      "customer_name": true,
+      "scheduled_processing_date": true,
+      "deferred_status": true,
+      "created_at": true,
+      "updated_at": true
+    },
+    "index": {
+      "MM_PAAZL_DEFERRED_QUEUE_SCHEDULED_PROCESSING_DATE": true,
+      "MM_PAAZL_DEFERRED_QUEUE_DEFERRED_STATUS": true
+    },
+    "constraint": {
+      "PRIMARY": true,
+      "MM_PAAZL_DEFERRED_QUEUE_ORDER_ID_SALES_ORDER_ENTITY_ID": true
     }
   }
 }

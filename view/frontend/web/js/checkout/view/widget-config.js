@@ -34,7 +34,12 @@ define([
      * @return {Boolean}
      */
     function isCheckoutUrl(url) {
-        return shippingConfig.checkoutApiUrl && (shippingConfig.checkoutApiUrl.indexOf(url) === 0);
+        if (!shippingConfig.checkoutApiUrl) {
+            return false;
+        }
+        // Remove trailing slash for comparison
+        var baseUrl = shippingConfig.checkoutApiUrl.replace(/\/+$/, '');
+        return url.indexOf(baseUrl) === 0;
     }
 
     if (shippingConfig.saveShippingInfoInstantly === true) {
@@ -72,7 +77,7 @@ define([
         function isLocationUrl(url) {
             var locationsUrl = shippingConfig.baseApiUrl;
             locationsUrl += 'pickuplocations';
-            return (locationsUrl.indexOf(url) === 0);
+            return (url.indexOf(locationsUrl) === 0);
         }
 
         var openOrig = window.XMLHttpRequest.prototype.open;

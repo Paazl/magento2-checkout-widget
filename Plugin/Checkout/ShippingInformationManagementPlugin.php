@@ -154,6 +154,11 @@ class ShippingInformationManagementPlugin
             }
 
             $this->checkoutInfoToQuote->process($quote);
+
+            // Force shipping rates to be recollected with new Paazl data
+            $shippingAddress = $quote->getShippingAddress();
+            $shippingAddress->setCollectShippingRates(true);
+            $shippingAddress->collectShippingRates();
         }
 
         // Calling the observed method

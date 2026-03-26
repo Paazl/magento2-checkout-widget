@@ -186,3 +186,9 @@ section.paazl.method-select section.paazl__body.body form.options {
     margin-top: 1.5em;
     margin-bottom: 1.5em;
 }
+
+#menu-paazl-checkoutwidget-paazl > a:before {
+    content: '' !important;
+    background: url('../images/vector.svg') no-repeat center center !important;
+    background-size: 22px !important;
+}
