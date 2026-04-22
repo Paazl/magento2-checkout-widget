@@ -49,9 +49,9 @@ class LanguageProvider implements ConfigProviderInterface
         $languageCode = 'eng';
         if ($this->resolver->getLocale()) {
             $locale = $this->resolver->getLocale();
-            $languageCode = explode('_', $locale)[0];
-            if (isset($this->allowedCodes[$languageCode])) {
-                $languageCode = $this->allowedCodes[$languageCode];
+            $shortCode = explode('_', $locale)[0];
+            if (isset($this->allowedCodes[$shortCode])) {
+                $languageCode = $this->allowedCodes[$shortCode];
             }
         }
 

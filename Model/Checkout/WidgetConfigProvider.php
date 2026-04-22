@@ -197,8 +197,7 @@ class WidgetConfigProvider implements ConfigProviderInterface
             ],
             "shipmentParameters"         => [
                 "totalWeight"   => (float)$this->getTotalWeight($goods),
-                "totalPrice"    => (float)$this->getQuote()->getSubtotalWithDiscount() -
-                    $this->getQuote()->getShippingAddress()->getShippingAmount(),
+                "totalPrice"    => (float)$this->getQuote()->getSubtotalWithDiscount(),
                 "numberOfGoods" => (int)$this->getProductsCount(),
                 "goods"         => $goods
             ],
@@ -222,16 +221,12 @@ class WidgetConfigProvider implements ConfigProviderInterface
                     $this->getQuote()->getShippingAddress()->getShippingAmount();
                 break;
             case "subtotal_excl_discount":
-                $totalPriceValue = (float) $shippingAddress->getSubtotalInclTax() -
-                    $this->getQuote()->getShippingAddress()->getShippingAmount();
+                $totalPriceValue = (float) $shippingAddress->getSubtotalInclTax();
                 break;
             case "subtotal_incl_discount":
             default: // default from config.xml = "subtotal_incl_discount"
-                $totalPriceValue = (
-                    (float) $shippingAddress->getSubtotalInclTax() +
-                    (float) $shippingAddress->getDiscountAmount() -
-                    $this->getQuote()->getShippingAddress()->getShippingAmount()
-                );
+                $totalPriceValue = (float) $shippingAddress->getSubtotalInclTax() +
+                    (float) $shippingAddress->getDiscountAmount();
                 break;
         }
 
