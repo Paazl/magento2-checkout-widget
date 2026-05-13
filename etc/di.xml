@@ -19,6 +19,16 @@
                 type="Paazl\CheckoutWidget\Model\Webapi\CheckShippingOption"/>
     <preference for="Paazl\CheckoutWidget\Api\Webapi\GuestCheckShippingOptionInterface"
                 type="Paazl\CheckoutWidget\Model\Webapi\CheckShippingOption"/>
+    <preference for="Paazl\CheckoutWidget\Api\Webapi\MarkNextToPaymentInterface"
+                type="Paazl\CheckoutWidget\Model\Webapi\MarkNextToPayment"/>
+    <preference for="Paazl\CheckoutWidget\Api\Webapi\GuestMarkNextToPaymentInterface"
+                type="Paazl\CheckoutWidget\Model\Webapi\GuestMarkNextToPayment"/>
+    <preference for="Paazl\CheckoutWidget\Api\Webapi\MarkPickupOfferedInterface"
+                type="Paazl\CheckoutWidget\Model\Webapi\MarkPickupOffered"/>
+    <preference for="Paazl\CheckoutWidget\Api\Webapi\GuestMarkPickupOfferedInterface"
+                type="Paazl\CheckoutWidget\Model\Webapi\GuestMarkPickupOffered"/>
+    <preference for="Paazl\CheckoutWidget\Api\CheckoutSelection\RepositoryInterface" type="Paazl\CheckoutWidget\Model\CheckoutSelection\Repository"/>
+    <preference for="Paazl\CheckoutWidget\Api\CheckoutSelection\DataInterface" type="Paazl\CheckoutWidget\Model\CheckoutSelection\Data"/>
 
     <type name="Magento\Quote\Model\Cart\ShippingMethodConverter">
         <plugin name="add_infotext_to_carrier" type="Paazl\CheckoutWidget\Plugin\Carrier\Infotext" disabled="false"
@@ -107,6 +117,8 @@
                       xsi:type="string">Paazl\CheckoutWidget\Model\ResourceModel\Order\Grid\Collection</item>
                 <item name="paazl_deferred_queue_listing_data_source"
                       xsi:type="string">Paazl\CheckoutWidget\Model\ResourceModel\DeferredQueue\Grid\Collection</item>
+                <item name="paazl_checkout_selection_listing_data_source"
+                      xsi:type="string">Paazl\CheckoutWidget\Model\CheckoutSelection\Grid\Collection</item>
             </argument>
         </arguments>
     </type>

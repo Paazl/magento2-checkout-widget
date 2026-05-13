@@ -31,6 +31,31 @@
       "MM_PAAZL_QUOTE_QUOTE_ID_QUOTE_ENTITY_ID": true
     }
   },
+  "mm_paazl_checkout_selection": {
+    "column": {
+      "entity_id": true,
+      "quote_id": true,
+      "ext_shipping_info": true,
+      "was_sent": true,
+      "sent_at": true,
+      "next_to_payment": true,
+      "is_final": true,
+      "pickup_offered": true,
+      "created_at": true,
+      "updated_at": true
+    },
+    "index": {
+      "MM_PAAZL_CHECKOUT_SELECTION_WAS_SENT": true,
+      "MM_PAAZL_CHECKOUT_SELECTION_CREATED_AT": true,
+      "MM_PAAZL_CHECKOUT_SELECTION_UPDATED_AT": true,
+      "MM_PAAZL_CHECKOUT_SELECTION_IS_FINAL": true
+    },
+    "constraint": {
+      "PRIMARY": true,
+      "MM_PAAZL_SELECTIONS_QUOTE_ID": true,
+      "MM_PAAZL_SELECTION_QUOTE_ID_QUOTE_ENTITY_ID": true
+    }
+  },
   "mm_paazl_deferred_queue": {
     "column": {
       "entity_id": true,

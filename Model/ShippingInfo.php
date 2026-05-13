@@ -34,6 +34,7 @@ class ShippingInfo extends DataObject
     public const ESTIMATED_DELIVERY_RANGE = 'estimated_delivery_range';
     public const CARRIER_PICKUP_DATE = 'carrier_pickup_date';
     public const CARRIER_DESCRIPTION = 'carrier_description';
+    public const GREEN = 'green';
     /**#@- */
 
     /**
@@ -291,5 +292,22 @@ class ShippingInfo extends DataObject
     public function getCarrierDescription()
     {
         return $this->getData(self::CARRIER_DESCRIPTION);
+    }
+
+    /**
+     * @param bool $value
+     * @return $this
+     */
+    public function setGreen($value)
+    {
+        return $this->setData(self::GREEN, $value);
+    }
+
+    /**
+     * @return bool
+     */
+    public function getGreen()
+    {
+        return (bool)$this->getData(self::GREEN);
     }
 }

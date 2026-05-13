@@ -620,6 +620,77 @@ class Config
     }
 
     /**
+     * @param null|Store|int|string $store
+     * @return bool
+     */
+    public function saveCheckoutSelections($store = null)
+    {
+        return (bool)$this->getValue(self::API_CONFIG_PATH . '/save_checkout_selections', $store);
+    }
+
+    /**
+     * Get list of customer fields to exclude from checkout selections API
+     *
+     * @param null|Store|int|string $store
+     * @return array
+     */
+    public function getExcludedCustomerFields($store = null): array
+    {
+        $value = $this->getValue(self::API_CONFIG_PATH . '/exclude_customer_fields', $store);
+        if (empty($value)) {
+            return [];
+        }
+        return explode(',', $value);
+    }
+
+    /**
+     * @param null|Store|int|string $store
+     * @return int
+     */
+    public function getCheckoutSelectionsBatchSize($store = null): int
+    {
+        $value = (int)$this->getValue(self::API_CONFIG_PATH . '/checkout_selections_batch_size', $store);
+        return $value > 0 ? $value : 100;
+    }
+
+    /**
+     * Quiet-window in hours: rows are eligible to be sent once they have been
+     * untouched for at least this many hours (or sooner if marked final).
+     * Decimals are supported (e.g. 0.25 = 15 minutes).
+     *
+     * @param null|Store|int|string $store
+     * @return float
+     */
+    public function getCheckoutSelectionsSettleHours($store = null): float
+    {
+        $value = (float)$this->getValue(self::API_CONFIG_PATH . '/checkout_selections_settle_hours', $store);
+        return $value > 0 ? $value : 24.0;
+    }
+
+    /**
+     * @param null|Store|int|string $store
+     * @return bool
+     */
+    public function isCheckoutSelectionsCleanupEnabled($store = null): bool
+    {
+        return $this->scopeConfig->isSetFlag(
+            self::API_CONFIG_PATH . '/checkout_selections_cleanup_enabled',
+            ScopeInterface::SCOPE_STORE,
+            $store
+        );
+    }
+
+    /**
+     * @param null|Store|int|string $store
+     * @return int
+     */
+    public function getCheckoutSelectionsCleanupDays($store = null): int
+    {
+        $value = (int)$this->getValue(self::API_CONFIG_PATH . '/checkout_selections_cleanup_days', $store);
+        return $value > 0 ? $value : 10;
+    }
+
+    /**
      * Check if deferred delivery is enabled
      *
      * @param null|Store|int|string $store

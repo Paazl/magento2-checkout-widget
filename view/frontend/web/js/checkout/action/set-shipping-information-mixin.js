@@ -14,8 +14,10 @@ define([
     'widgetConfig',
     'mage/utils/wrapper',
     'Paazl_CheckoutWidget/js/checkout/model/shipping-locations',
-    'Magento_Customer/js/customer-data'
-], function (_, quote, widgetConfig, wrapper, shippingLocations, customerData) {
+    'Magento_Customer/js/customer-data',
+    'Magento_Checkout/js/model/resource-url-manager',
+    'mage/storage'
+], function (_, quote, widgetConfig, wrapper, shippingLocations, customerData, resourceUrl, storage) {
     'use strict';
 
     return function (target) {
@@ -94,6 +96,9 @@ define([
 
             return originalAction().done(function (res) {
                 var shippingMethod = quote.shippingMethod();
+
+                markNextToPayment();
+
                 if (widgetConfig.prototype.getCarrierCode() !== shippingMethod.carrier_code
                     || widgetConfig.prototype.getMethodCode() !== shippingMethod.method_code) {
                     return;
@@ -111,7 +116,25 @@ define([
                 });
 
                 found && quote.shippingMethod(found);
-            })
+            });
+
+            function markNextToPayment() {
+                var paazlConfig = window.checkoutConfig && window.checkoutConfig.paazlshipping;
+                if (!paazlConfig || !paazlConfig.saveCheckoutSelections) {
+                    return;
+                }
+
+                var params = (resourceUrl.getCheckoutMethod() === 'guest') ? {quoteId: quote.getQuoteId()} : {},
+                    urls = {
+                        'guest': '/guest-carts/' + quote.getQuoteId() + '/paazl-mark-next-to-payment',
+                        'customer': '/carts/mine/paazl-mark-next-to-payment'
+                    },
+                    url = resourceUrl.getUrl(urls, params);
+
+                storage.post(url, '{}', false).fail(function () {
+                    // fire-and-forget: cron quiet-window will still capture the row
+                });
+            }
         });
     }
 });

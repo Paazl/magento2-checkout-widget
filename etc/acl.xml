@@ -10,6 +10,7 @@
             <resource id="Magento_Backend::admin">
                 <resource id="Paazl_CheckoutWidget::paazl" title="Paazl" translate="title" sortOrder="100">
                     <resource id="Paazl_CheckoutWidget::deferred_queue" title="Deferred Queue" translate="title" sortOrder="10"/>
+                    <resource id="Paazl_CheckoutWidget::checkout_selection" title="Checkout Selections" translate="title" sortOrder="20"/>
                 </resource>
             </resource>
         </resources>
