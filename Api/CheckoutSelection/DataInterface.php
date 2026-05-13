@@ -32,9 +32,9 @@ interface DataInterface
      * Set entity ID
      *
      * @param $entityId
-     * @return $this
+     * @return DataInterface
      */
-    public function setEntityId($entityId): self;
+    public function setEntityId($entityId): DataInterface;
 
     /**
      * Get quote ID
@@ -47,9 +47,9 @@ interface DataInterface
      * Set quote ID
      *
      * @param int $quoteId
-     * @return $this
+     * @return DataInterface
      */
-    public function setQuoteId(int $quoteId): self;
+    public function setQuoteId(int $quoteId): DataInterface;
 
     /**
      * Get external shipping info (JSON or free text)
@@ -62,9 +62,9 @@ interface DataInterface
      * Set external shipping info (JSON or free text)
      *
      * @param array|null $extShippingInfo
-     * @return $this
+     * @return DataInterface
      */
-    public function setExtShippingInfo(?array $extShippingInfo): self;
+    public function setExtShippingInfo(?array $extShippingInfo): DataInterface;
 
     /**
      * @return bool
@@ -73,9 +73,9 @@ interface DataInterface
 
     /**
      * @param bool $wasSent
-     * @return $this
+     * @return DataInterface
      */
-    public function setWasSent(bool $wasSent): self;
+    public function setWasSent(bool $wasSent): DataInterface;
 
     /**
      * @return bool
@@ -84,9 +84,9 @@ interface DataInterface
 
     /**
      * @param bool $nextToPayment
-     * @return $this
+     * @return DataInterface
      */
-    public function setNextToPayment(bool $nextToPayment): self;
+    public function setNextToPayment(bool $nextToPayment): DataInterface;
 
     /**
      * @return bool
@@ -95,9 +95,9 @@ interface DataInterface
 
     /**
      * @param bool $isFinal
-     * @return $this
+     * @return DataInterface
      */
-    public function setIsFinal(bool $isFinal): self;
+    public function setIsFinal(bool $isFinal): DataInterface;
 
     /**
      * @return bool
@@ -106,7 +106,7 @@ interface DataInterface
 
     /**
      * @param bool $pickupOffered
-     * @return $this
+     * @return DataInterface
      */
-    public function setPickupOffered(bool $pickupOffered): self;
+    public function setPickupOffered(bool $pickupOffered): DataInterface;
 }

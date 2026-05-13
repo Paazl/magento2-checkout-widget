@@ -48,7 +48,7 @@ class MarkPickupOffered implements MarkPickupOfferedInterface
                 (bool)$offered
             );
             return true;
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->generalHelper->addTolog('MarkPickupOffered', $e->getMessage());
             return false;
         }

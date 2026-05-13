@@ -43,7 +43,7 @@ class MarkCheckoutSelectionFinal implements ObserverInterface
 
         try {
             $this->checkoutSelectionRepository->markAsFinal((int)$order->getQuoteId());
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->generalHelper->addTolog('MarkCheckoutSelectionFinal', $e->getMessage());
         }
     }

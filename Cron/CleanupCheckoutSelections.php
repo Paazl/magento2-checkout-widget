@@ -7,7 +7,6 @@ declare(strict_types=1);
 
 namespace Paazl\CheckoutWidget\Cron;
 
-use Exception;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\Stdlib\DateTime\DateTime;
 use Paazl\CheckoutWidget\Helper\General as GeneralHelper;
@@ -58,7 +57,7 @@ class CleanupCheckoutSelections
                     $threshold
                 ));
             }
-        } catch (Exception $e) {
+        } catch (\Throwable $e) {
             $this->generalHelper->addTolog('CleanupCheckoutSelections', $e->getMessage());
         }
     }

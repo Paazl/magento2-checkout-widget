@@ -53,6 +53,7 @@ class Actions extends Column
             foreach ($dataSource['data']['items'] as &$item) {
                 $name = $this->getData('name');
                 if (isset($item['entity_id'])) {
+                    $incrementId = $item['increment_id_raw'] ?? $item['increment_id'] ?? '';
                     if (($item['deferred_status'] ?? null) === 'pending') {
                         $item[$name]['process'] = [
                             'href' => $this->urlBuilder->getUrl(
@@ -60,8 +61,9 @@ class Actions extends Column
                                 ['id' => $item['entity_id']]
                             ),
                             'label' => __('Process Now'),
+                            'post' => true,
                             'confirm' => [
-                                'title' => __('Process Order #${ $.$data.increment_id }'),
+                                'title' => __('Process Order #%1', $incrementId),
                                 'message' => __('Move this deferred order to Processing immediately?')
                             ]
                         ];
@@ -72,8 +74,9 @@ class Actions extends Column
                             ['id' => $item['entity_id']]
                         ),
                         'label' => __('Delete'),
+                        'post' => true,
                         'confirm' => [
-                            'title' => __('Delete "${ $.$data.customer_name }"'),
+                            'title' => __('Delete Order #%1', $incrementId),
                             'message' => __('Are you sure you want to delete this entry?')
                         ]
                     ];

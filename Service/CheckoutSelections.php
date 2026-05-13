@@ -9,6 +9,7 @@ namespace Paazl\CheckoutWidget\Service;
 
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\DB\Select;
+use Magento\Framework\DB\Sql\Expression;
 use Magento\Framework\Serialize\SerializerInterface;
 use Paazl\CheckoutWidget\Helper\General;
 use Paazl\CheckoutWidget\Model\Config;
@@ -41,7 +42,7 @@ class CheckoutSelections
         $select = $this->buildQuery();
         $select->where('p.was_sent = ?', 0);
         $select->where(
-            new \Zend_Db_Expr(
+            new Expression(
                 '(p.is_final = 1 OR p.updated_at < (NOW() - INTERVAL ' . $settleSeconds . ' SECOND))'
             )
         );
@@ -152,8 +153,8 @@ class CheckoutSelections
             $table,
             [
                 'was_sent'   => 1,
-                'sent_at'    => new \Zend_Db_Expr('NOW()'),
-                'updated_at' => new \Zend_Db_Expr($connection->quoteIdentifier('updated_at')),
+                'sent_at'    => new Expression('NOW()'),
+                'updated_at' => new Expression($connection->quoteIdentifier('updated_at')),
             ],
             ['quote_id IN (?)' => $quoteIds]
         );
@@ -242,7 +243,7 @@ class CheckoutSelections
         try {
             $dt = new \DateTimeImmutable((string)$value, new \DateTimeZone('UTC'));
             return $dt->format('Y-m-d\TH:i:s\Z');
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             return (string)$value;
         }
     }

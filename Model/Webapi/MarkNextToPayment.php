@@ -45,7 +45,7 @@ class MarkNextToPayment implements MarkNextToPaymentInterface
         try {
             $this->checkoutSelectionRepository->markNextToPayment((int)$quote->getId());
             return true;
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->generalHelper->addTolog('MarkNextToPayment', $e->getMessage());
             return false;
         }

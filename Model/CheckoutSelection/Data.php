@@ -36,7 +36,7 @@ class Data extends AbstractModel implements CheckoutSelection
     /**
      * @inheritDoc
      */
-    public function setEntityId($entityId): self
+    public function setEntityId($entityId): CheckoutSelection
     {
         return $this->setData(self::ENTITY_ID, $entityId);
     }
@@ -52,7 +52,7 @@ class Data extends AbstractModel implements CheckoutSelection
     /**
      * @inheritDoc
      */
-    public function setQuoteId(int $quoteId): self
+    public function setQuoteId(int $quoteId): CheckoutSelection
     {
         return $this->setData(self::QUOTE_ID, $quoteId);
     }
@@ -68,7 +68,7 @@ class Data extends AbstractModel implements CheckoutSelection
     /**
      * @inheritDoc
      */
-    public function setExtShippingInfo(?array $extShippingInfo): self
+    public function setExtShippingInfo(?array $extShippingInfo): CheckoutSelection
     {
         return $this->setData(self::EXT_SHIPPING_INFO, $extShippingInfo);
     }
@@ -84,7 +84,7 @@ class Data extends AbstractModel implements CheckoutSelection
     /**
      * @inheritDoc
      */
-    public function setWasSent(bool $wasSent): self
+    public function setWasSent(bool $wasSent): CheckoutSelection
     {
         return $this->setData(self::WAS_SENT, $wasSent);
     }
@@ -100,7 +100,7 @@ class Data extends AbstractModel implements CheckoutSelection
     /**
      * @inheritDoc
      */
-    public function setNextToPayment(bool $nextToPayment): self
+    public function setNextToPayment(bool $nextToPayment): CheckoutSelection
     {
         return $this->setData(self::NEXT_TO_PAYMENT, $nextToPayment);
     }
@@ -116,7 +116,7 @@ class Data extends AbstractModel implements CheckoutSelection
     /**
      * @inheritDoc
      */
-    public function setIsFinal(bool $isFinal): self
+    public function setIsFinal(bool $isFinal): CheckoutSelection
     {
         return $this->setData(self::IS_FINAL, $isFinal);
     }
@@ -132,7 +132,7 @@ class Data extends AbstractModel implements CheckoutSelection
     /**
      * @inheritDoc
      */
-    public function setPickupOffered(bool $pickupOffered): self
+    public function setPickupOffered(bool $pickupOffered): CheckoutSelection
     {
         return $this->setData(self::PICKUP_OFFERED, $pickupOffered);
     }

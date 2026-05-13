@@ -46,7 +46,7 @@ class SendCheckoutSelections
 
         try {
             $this->sendToPaazl->send($selections);
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->generalHelper->addTolog('SendCheckoutSelections', $e->getMessage());
         }
     }

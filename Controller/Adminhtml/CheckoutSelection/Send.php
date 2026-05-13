@@ -69,7 +69,7 @@ class Send extends Action implements HttpGetActionInterface
             }
             $sent = $this->sendToPaazl->send($selections);
             $this->messageManager->addSuccessMessage(__('Sent %1 selection(s) to Paazl.', $sent));
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->messageManager->addErrorMessage(__('Failed to send to Paazl: %1', $e->getMessage()));
         }
 

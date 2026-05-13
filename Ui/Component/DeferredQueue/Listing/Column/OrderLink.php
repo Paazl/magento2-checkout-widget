@@ -47,6 +47,7 @@ class OrderLink extends Column
             if (!$orderId || $incrementId === '') {
                 continue;
             }
+            $item[$fieldName . '_raw'] = (string)$incrementId;
             $url = $this->urlBuilder->getUrl('sales/order/view', ['order_id' => (int)$orderId]);
             $item[$fieldName] = sprintf(
                 '<a href="%s">%s</a>',

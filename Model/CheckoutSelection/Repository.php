@@ -46,7 +46,7 @@ class Repository implements RepositoryInterface
         try {
             $checkoutSelection->setWasSent(false);
             $this->resource->save($checkoutSelection);
-        } catch (\Exception $exception) {
+        } catch (\Throwable $exception) {
             $exceptionMsg = self::COULD_NOT_SAVE_EXCEPTION;
             throw new CouldNotSaveException(__(
                 $exceptionMsg,

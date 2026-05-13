@@ -245,8 +245,8 @@ class Paazlshipping extends AbstractCarrier implements CarrierInterface
                         }
                         $checkoutSelection->setExtShippingInfo($shippingOptions);
                         $this->checkoutSelectionRepository->save($checkoutSelection);
-                    } catch (\Exception $e) {
-                        // do nothing
+                    } catch (\Throwable $e) {
+                        $this->logger->add('exception', $e->getMessage());
                     }
                 }
                 if (isset($shippingOptions['shippingOptions'][0])) {
