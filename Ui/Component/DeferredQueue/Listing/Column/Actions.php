@@ -53,6 +53,19 @@ class Actions extends Column
             foreach ($dataSource['data']['items'] as &$item) {
                 $name = $this->getData('name');
                 if (isset($item['entity_id'])) {
+                    if (($item['deferred_status'] ?? null) === 'pending') {
+                        $item[$name]['process'] = [
+                            'href' => $this->urlBuilder->getUrl(
+                                'paazl_checkoutwidget/deferredqueue/process',
+                                ['id' => $item['entity_id']]
+                            ),
+                            'label' => __('Process Now'),
+                            'confirm' => [
+                                'title' => __('Process Order #${ $.$data.increment_id }'),
+                                'message' => __('Move this deferred order to Processing immediately?')
+                            ]
+                        ];
+                    }
                     $item[$name]['delete'] = [
                         'href' => $this->urlBuilder->getUrl(
                             'paazl_checkoutwidget/deferredqueue/delete',
