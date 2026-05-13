@@ -359,6 +359,15 @@ class Config
 
     /**
      * @param null|Store|int|string $store
+     * @return bool
+     */
+    public function isShippingPriceInDisplayCurrency($store = null)
+    {
+        return (bool)$this->getValue(self::API_CONFIG_PATH . '/shipping_price_in_display_currency', $store);
+    }
+
+    /**
+     * @param null|Store|int|string $store
      *
      * @return mixed
      */
