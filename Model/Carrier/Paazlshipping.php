@@ -289,8 +289,6 @@ class Paazlshipping extends AbstractCarrier implements CarrierInterface
                 }
             }
 
-            $shippingPrice = $this->normalizeShippingPrice($shippingPrice, $quote);
-
             $method->setCarrier($this->getCarrierCode());
             $method->setCarrierTitle($this->getConfigData('title'));
             $method->setPrice($shippingPrice);
@@ -302,30 +300,6 @@ class Paazlshipping extends AbstractCarrier implements CarrierInterface
         }
 
         return null;
-    }
-
-    /**
-     * When Paazl returns rates in the storefront display currency (e.g., a DKK-configured
-     * matrix on a DKK storefront) Magento's core still multiplies Rate\Method::setPrice()
-     * by the base-to-quote rate when storing shipping_amount. Pre-divide by the same rate
-     * so the multiplication cancels out and the displayed amount equals the Paazl rate.
-     *
-     * @param float $shippingPrice
-     * @param \Magento\Quote\Model\Quote $quote
-     * @return float
-     */
-    private function normalizeShippingPrice($shippingPrice, $quote)
-    {
-        if (!$this->config->isShippingPriceInDisplayCurrency($quote->getStoreId())) {
-            return (float)$shippingPrice;
-        }
-
-        $rate = (float)$quote->getBaseToQuoteRate();
-        if ($rate <= 0) {
-            return (float)$shippingPrice;
-        }
-
-        return (float)$shippingPrice / $rate;
     }
 
     /**

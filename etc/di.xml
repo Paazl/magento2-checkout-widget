@@ -40,6 +40,11 @@
                 type="Paazl\CheckoutWidget\Plugin\Quote\BeforeQuoteSave" sortOrder="1" disabled="false" />
     </type>
 
+    <type name="Magento\Quote\Model\Quote\Address\Total\Shipping">
+        <plugin name="paazl_shipping_display_currency"
+                type="Paazl\CheckoutWidget\Plugin\Quote\Address\Total\ShippingPlugin" disabled="false" />
+    </type>
+
     <type name="Magento\Tax\Model\Config">
         <plugin name="tax_config_plugin" type="Paazl\CheckoutWidget\Plugin\Tax\Config" disabled="false"/>
     </type>
