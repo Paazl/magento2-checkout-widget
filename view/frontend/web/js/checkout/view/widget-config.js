@@ -10,13 +10,16 @@ define([
     'domReady',
     'Magento_Checkout/js/model/shipping-save-processor',
     'Magento_Checkout/js/model/quote',
-    'Paazl_CheckoutWidget/js/checkout/model/shipping-locations'
-    ], function (ko, Component, $, domReady, shippingSaveProcessor, quote, shippingLocations) {
+    'Paazl_CheckoutWidget/js/checkout/model/shipping-locations',
+    'Magento_Checkout/js/model/resource-url-manager',
+    'mage/storage'
+    ], function (ko, Component, $, domReady, shippingSaveProcessor, quote, shippingLocations, resourceUrl, storage) {
     'use strict';
 
     var shippingConfig = window.checkoutConfig.paazlshipping || {};
     var widgetConfig = shippingConfig.widgetConfig || {};
     var mapActive = false;
+    var lastPickupOfferedSent = null;
 
     domReady(function () {
         /**
@@ -34,12 +37,7 @@ define([
      * @return {Boolean}
      */
     function isCheckoutUrl(url) {
-        if (!shippingConfig.checkoutApiUrl) {
-            return false;
-        }
-        // Remove trailing slash for comparison
-        var baseUrl = shippingConfig.checkoutApiUrl.replace(/\/+$/, '');
-        return url.indexOf(baseUrl) === 0;
+        return shippingConfig.checkoutApiUrl && (shippingConfig.checkoutApiUrl.indexOf(url) === 0);
     }
 
     if (shippingConfig.saveShippingInfoInstantly === true) {
@@ -77,7 +75,7 @@ define([
         function isLocationUrl(url) {
             var locationsUrl = shippingConfig.baseApiUrl;
             locationsUrl += 'pickuplocations';
-            return (url.indexOf(locationsUrl) === 0);
+            return (locationsUrl.indexOf(url) === 0);
         }
 
         var openOrig = window.XMLHttpRequest.prototype.open;
@@ -107,10 +105,36 @@ define([
             if (ready) {
                 // shippingLocations.locationsList([]);
                 var locations = JSON.parse(event.target.response);
-                if (locations && locations.pickupLocations.length) {
+                var hasPickup = !!(locations && locations.pickupLocations && locations.pickupLocations.length);
+                if (hasPickup) {
                     shippingLocations.locationsList([...shippingLocations.locationsList(), ...locations.pickupLocations]);
                 }
+                markPickupOffered(hasPickup);
             }
+        }
+
+        function markPickupOffered(offered) {
+            if (!shippingConfig.saveCheckoutSelections) {
+                return;
+            }
+            if (lastPickupOfferedSent === offered) {
+                return;
+            }
+            var quoteId = quote.getQuoteId();
+            if (!quoteId) {
+                return;
+            }
+            lastPickupOfferedSent = offered;
+            var params = (resourceUrl.getCheckoutMethod() === 'guest') ? {quoteId: quoteId} : {},
+                urls = {
+                    'guest': '/guest-carts/' + quoteId + '/paazl-mark-pickup-offered',
+                    'customer': '/carts/mine/paazl-mark-pickup-offered'
+                },
+                url = resourceUrl.getUrl(urls, params);
+
+            storage.post(url, JSON.stringify({offered: offered}), false).fail(function () {
+                lastPickupOfferedSent = null;
+            });
         }
 
         function onLocationSelect(body, event) {

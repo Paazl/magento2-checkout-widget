@@ -18,4 +18,39 @@
             <parameter name="cartId" force="true">%cart_id%</parameter>
         </data>
     </route>
+
+    <route url="/V1/guest-carts/:cartId/paazl-mark-next-to-payment" method="POST">
+        <service class="Paazl\CheckoutWidget\Api\Webapi\GuestMarkNextToPaymentInterface" method="execute"/>
+        <resources>
+            <resource ref="anonymous" />
+        </resources>
+    </route>
+
+    <route url="/V1/carts/mine/paazl-mark-next-to-payment" method="POST">
+        <service class="Paazl\CheckoutWidget\Api\Webapi\MarkNextToPaymentInterface" method="execute"/>
+        <resources>
+            <resource ref="self" />
+        </resources>
+        <data>
+            <parameter name="cartId" force="true">%cart_id%</parameter>
+        </data>
+    </route>
+
+    <route url="/V1/guest-carts/:cartId/paazl-mark-pickup-offered" method="POST">
+        <service class="Paazl\CheckoutWidget\Api\Webapi\GuestMarkPickupOfferedInterface" method="execute"/>
+        <resources>
+            <resource ref="anonymous" />
+        </resources>
+    </route>
+
+    <route url="/V1/carts/mine/paazl-mark-pickup-offered" method="POST">
+        <service class="Paazl\CheckoutWidget\Api\Webapi\MarkPickupOfferedInterface" method="execute"/>
+        <resources>
+            <resource ref="self" />
+        </resources>
+        <data>
+            <parameter name="cartId" force="true">%cart_id%</parameter>
+        </data>
+    </route>
+
 </routes>

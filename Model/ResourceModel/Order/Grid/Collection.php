@@ -6,7 +6,7 @@
 
 namespace Paazl\CheckoutWidget\Model\ResourceModel\Order\Grid;
 
-use Zend_Db_Expr;
+use Magento\Framework\DB\Sql\Expression;
 use Magento\Sales\Model\ResourceModel\Order\Grid\Collection as OriginalCollection;
 use Paazl\CheckoutWidget\Model\ResourceModel\Order\OrderReference;
 use Paazl\CheckoutWidget\Ui\Component\Order\Listing\Column\Status\Options;
@@ -52,7 +52,7 @@ class Collection extends OriginalCollection
         $select = parent::getSelectCountSql();
         $select->columns(
             [
-                'paazl_status' => new Zend_Db_Expr($this->getSelect()->getConnection()->getCheckSql(
+                'paazl_status' => new Expression($this->getSelect()->getConnection()->getCheckSql(
                     'mpo.entity_id IS NOT NULL',
                     $this->getSelect()->getConnection()->getCheckSql(
                         'mpo.ext_sent_at IS NOT NULL',

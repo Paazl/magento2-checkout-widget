@@ -75,6 +75,7 @@ class PaazlConfigProvider implements ConfigProviderInterface
         $config['version'] = $this->config->getApiVersion();
         $config['showOnFirstLoad'] = $this->config->showWidgetOnFirstLoad();
         $config['useLocalCopyOfWidgetJs'] = $this->config->isUseLocalCopyOfWidgetJs();
+        $config['saveCheckoutSelections'] = $this->config->saveCheckoutSelections();
 
         if (empty($config['widgetConfig']['token'])) {
             // We were unable to obtain a token - enabling other methods if they're available

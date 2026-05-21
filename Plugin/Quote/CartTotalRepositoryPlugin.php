@@ -12,9 +12,15 @@ use Magento\Framework\Exception\StateException;
 use Magento\Quote\Api\CartTotalRepositoryInterface;
 use Magento\Quote\Api\Data\TotalsInterface;
 use Paazl\CheckoutWidget\Model\Quote\Totals\AppendShippingMethods;
+use Paazl\CheckoutWidget\Model\Config;
 
 class CartTotalRepositoryPlugin
 {
+    /**
+     * @var Config
+     */
+    private $config;
+
     /**
      * @var AppendShippingMethods
      */
@@ -26,9 +32,11 @@ class CartTotalRepositoryPlugin
      * @param AppendShippingMethods $appendShippingMethods
      */
     public function __construct(
-        AppendShippingMethods $appendShippingMethods
+        AppendShippingMethods $appendShippingMethods,
+        Config $config
     ) {
         $this->appendShippingMethods = $appendShippingMethods;
+        $this->config = $config;
     }
 
     /**
@@ -44,8 +52,10 @@ class CartTotalRepositoryPlugin
         TotalsInterface $totals,
         $cartId
     ) {
-        $this->appendShippingMethods->append($totals, $cartId);
-
+        if ($this->config->isEnabled()) {
+            $this->appendShippingMethods->append($totals, $cartId);
+        }
+        
         return $totals;
     }
 }

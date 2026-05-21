@@ -16,6 +16,7 @@ use Magento\Shipping\Model\Rate\ResultFactory;
 use Magento\Quote\Model\Quote\Address\RateResult\ErrorFactory;
 use Magento\Quote\Model\Quote\Address\RateResult\MethodFactory;
 use Magento\Quote\Model\Quote\Address\RateRequest;
+use Paazl\CheckoutWidget\Api\CheckoutSelection\RepositoryInterface as CheckoutSelectionRepository;
 use Paazl\CheckoutWidget\Logger\PaazlLogger;
 use Paazl\CheckoutWidget\Model\Api\Converter\ShippingOptions;
 use Paazl\CheckoutWidget\Model\Api\PaazlApiFactory;
@@ -104,6 +105,8 @@ class Paazlshipping extends AbstractCarrier implements CarrierInterface
      */
     private $configProvider;
 
+    private CheckoutSelectionRepository $checkoutSelectionRepository;
+
     /**
      * Paazlshipping constructor.
      *
@@ -133,6 +136,7 @@ class Paazlshipping extends AbstractCarrier implements CarrierInterface
         PaazlApiFactory $apiFactory,
         ShippingOptions $shippingOptionsConverter,
         WidgetConfigProvider $configProvider,
+        CheckoutSelectionRepository $checkoutSelectionRepository,
         array $data = []
     ) {
         $this->rateResultFactory = $rateResultFactory;
@@ -146,6 +150,7 @@ class Paazlshipping extends AbstractCarrier implements CarrierInterface
         $this->config = $config;
         $this->appState = $appState;
         $this->tokenRetriever = $tokenRetriever;
+        $this->checkoutSelectionRepository = $checkoutSelectionRepository;
     }
 
     /**
@@ -214,18 +219,36 @@ class Paazlshipping extends AbstractCarrier implements CarrierInterface
         }
 
         try {
-            $countryId = $quote->getShippingAddress()->getCountryId() ?
-                $quote->getShippingAddress()->getCountryId() :
-                $this->configProvider->getDefaultCountry();
-            $postcode = $quote->getShippingAddress()->getPostcode() ?
-                $quote->getShippingAddress()->getPostcode() :
-                $this->configProvider->getDefaultPostcode();
+            $customerCountryId = $quote->getShippingAddress()->getCountryId();
+            $customerPostcode  = $quote->getShippingAddress()->getPostcode();
+            $countryId = $customerCountryId ?: $this->configProvider->getDefaultCountry();
+            $postcode  = $customerPostcode  ?: $this->configProvider->getDefaultPostcode();
             if ($countryId && $postcode) {
                 $api = $this->apiFactory->create($quote->getStoreId());
                 $config = $this->configProvider->setQuote($quote)->getConfig();
                 $shippingOptions = $this->shippingOptionsConverter->convert(
                     $api->getShippingOptions($config)
                 );
+                // Only persist a checkout selection once the customer has
+                // entered both country and postcode themselves. Otherwise the
+                // row would reflect store-config defaults, not consumer behaviour.
+                if ($customerCountryId
+                    && $customerPostcode
+                    && $this->config->saveCheckoutSelections($quote->getStoreId())
+                ) {
+                    try {
+                        $quoteId = (int)$quote->getId();
+                        $checkoutSelection = $this->checkoutSelectionRepository->getByQuoteId($quoteId);
+                        if ($checkoutSelection === null) {
+                            $checkoutSelection = $this->checkoutSelectionRepository->create();
+                            $checkoutSelection->setQuoteId($quoteId);
+                        }
+                        $checkoutSelection->setExtShippingInfo($shippingOptions);
+                        $this->checkoutSelectionRepository->save($checkoutSelection);
+                    } catch (\Throwable $e) {
+                        $this->logger->add('exception', $e->getMessage());
+                    }
+                }
                 if (isset($shippingOptions['shippingOptions'][0])) {
                     $firstOption = $shippingOptions['shippingOptions'][0];
                     $shippingPrice = $firstOption['rate'];

@@ -87,6 +87,21 @@ class ToShippingInfo
         }
         $info->setCarrierPickupDate($pickupDate);
 
+        // Find rateReason for the selected delivery date
+        $green = false;
+        $deliveryDates = $this->arrayManager->get('shippingOption/deliveryDates', $result) ?? [];
+        foreach ($deliveryDates as $deliveryDate) {
+            if (isset($deliveryDate['deliveryDate'])
+                && $deliveryDate['deliveryDate'] === $prefferedDeliveryDate
+                && isset($deliveryDate['rateReason'])
+                && $deliveryDate['rateReason'] === 'GREEN'
+            ) {
+                $green = true;
+                break;
+            }
+        }
+        $info->setGreen($green);
+
         if ($info->getType() === DeliveryType::PICKUP) {
             $info->setPickupDate($this->arrayManager->get('pickupDate', $result));
             $info->setLocationCode($this->arrayManager->get('pickupLocation/code', $result));
