@@ -20,5 +20,13 @@
              parent="Paazl_CheckoutWidget::paazl"
              action="paazl_checkoutwidget/deferredqueue/index"
              resource="Paazl_CheckoutWidget::deferred_queue"/>
+        <add id="Paazl_CheckoutWidget::checkout_selection"
+             title="Checkout Selections"
+             translate="title"
+             module="Paazl_CheckoutWidget"
+             sortOrder="20"
+             parent="Paazl_CheckoutWidget::paazl"
+             action="paazl_checkoutwidget/checkoutselection/index"
+             resource="Paazl_CheckoutWidget::checkout_selection"/>
     </menu>
 </config>

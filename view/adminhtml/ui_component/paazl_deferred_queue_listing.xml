@@ -100,9 +100,10 @@
                 <sorting>asc</sorting>
             </settings>
         </column>
-        <column name="increment_id">
+        <column name="increment_id" class="Paazl\CheckoutWidget\Ui\Component\DeferredQueue\Listing\Column\OrderLink">
             <settings>
                 <filter>text</filter>
+                <bodyTmpl>ui/grid/cells/html</bodyTmpl>
                 <label translate="true">Order #</label>
             </settings>
         </column>

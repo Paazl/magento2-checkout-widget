@@ -17,6 +17,9 @@ define([], function () {
                 },
                 'country_id': {
                     'required': true
+                },
+                'street.0': {
+                    'required': true
                 }
             };
         }

@@ -348,6 +348,11 @@
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>If yes - shipping price will always includes tax regardless Magento settings</comment>
                 </field>
+                <field id="shipping_price_in_display_currency" translate="label comment" type="select" sortOrder="872" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Paazl Rate Is in Storefront Currency</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment><![CDATA[Enable only when the Paazl shipping matrix is configured in the same currency as the storefront display currency. When enabled, Magento's automatic base-to-display currency conversion is bypassed so the amount shown in the widget matches the amount charged on the order. Leave disabled if the Paazl matrix is in the base currency.]]></comment>
+                </field>
                 <field id="debug" translate="label" type="select" sortOrder="875" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Debug</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
@@ -366,6 +371,45 @@
                     <label>Use local JS file for widget initialization?</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>Local copy will be used instead of external JS (from *.paazl.com).</comment>
+                </field>
+                <field id="heading_checkout_selections" translate="label comment" type="text" sortOrder="900" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Checkout Selections</label>
+                    <frontend_model>Paazl\CheckoutWidget\Block\Adminhtml\Paazl\Heading</frontend_model>
+                </field>
+                <field id="save_checkout_selections" translate="label" type="select" sortOrder="910" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Save Checkout Selections</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Save all checkout shipping options.</comment>
+                </field>
+                <field id="checkout_selections_batch_size" translate="label comment" type="text" sortOrder="920" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Checkout Selections Batch Size</label>
+                    <validate>validate-digits validate-not-negative-number</validate>
+                    <comment>Maximum number of checkout selections to send per cron run. Default: 100.</comment>
+                </field>
+                <field id="checkout_selections_settle_hours" translate="label comment" type="text" sortOrder="922" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Checkout Selections Settle Window (hours)</label>
+                    <validate>validate-number validate-greater-than-zero</validate>
+                    <comment>Only send a checkout selection once it has been untouched for at least this many hours (or sooner when an order is placed). Decimals allowed (e.g. 0.25 = 15 minutes). Default: 24.</comment>
+                </field>
+                <field id="checkout_selections_cleanup_enabled" translate="label comment" type="select" sortOrder="925" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable Checkout Selections Cleanup</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Periodically delete sent checkout selection records older than the configured number of days.</comment>
+                </field>
+                <field id="checkout_selections_cleanup_days" translate="label comment" type="text" sortOrder="926" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Delete Sent Checkout Selections Older Than (days)</label>
+                    <validate>validate-digits validate-greater-than-zero</validate>
+                    <depends>
+                        <field id="checkout_selections_cleanup_enabled">1</field>
+                    </depends>
+                    <comment>Retention period in days for sent checkout selection records. Default: 10.</comment>
+                </field>
+                <field id="exclude_customer_fields" translate="label comment" type="multiselect" sortOrder="930"
+                       showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Exclude Customer Fields from Checkout Selections API</label>
+                    <source_model>Paazl\CheckoutWidget\Model\System\Config\Source\ExcludeCustomerFields</source_model>
+                    <backend_model>Paazl\CheckoutWidget\Model\Config\Backend\Multiselect</backend_model>
+                    <comment>Select the customer fields that should NOT be sent to the external checkout-selection endpoint.</comment>
                 </field>
             </group>
         </section>

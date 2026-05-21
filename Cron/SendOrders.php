@@ -13,8 +13,8 @@ use Paazl\CheckoutWidget\Helper\General as GeneralHelper;
 use Paazl\CheckoutWidget\Model\Api\Processor\SendToService;
 use Paazl\CheckoutWidget\Model\Config;
 use Paazl\CheckoutWidget\Model\ResourceModel\Order\OrderReference;
+use Magento\Framework\DB\Sql\Expression;
 use Paazl\CheckoutWidget\Model\System\Config\Source\SyncMethod;
-use Zend_Db_Expr;
 
 /**
  * Class SendOrders
@@ -86,7 +86,7 @@ class SendOrders
                 []
             )
             ->where('mpo.ext_sent_at IS NULL')
-            ->where(new Zend_Db_Expr(
+            ->where(new Expression(
                 'TIME_TO_SEC(TIMEDIFF(CURRENT_TIMESTAMP, `updated_at`)) < ' . self::RETRY_TIME_SECONDS
             ));
 

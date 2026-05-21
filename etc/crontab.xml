@@ -9,6 +9,12 @@
         <job name="paazl_send_orders" instance="\Paazl\CheckoutWidget\Cron\SendOrders" method="execute">
             <schedule>*/5 * * * *</schedule>
         </job>
+        <job name="paazl_send_checkout_selections" instance="Paazl\CheckoutWidget\Cron\SendCheckoutSelections" method="execute">
+            <schedule>*/5 * * * *</schedule>
+        </job>
+        <job name="paazl_cleanup_checkout_selections" instance="Paazl\CheckoutWidget\Cron\CleanupCheckoutSelections" method="execute">
+            <schedule>0 3 * * *</schedule>
+        </job>
         <job name="paazl_process_deferred_delivery" instance="\Paazl\CheckoutWidget\Cron\ProcessDeferredDelivery" method="execute">
             <schedule>0 */1 * * *</schedule>
         </job>

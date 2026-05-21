@@ -38,6 +38,38 @@
         <constraint referenceId="MM_PAAZL_QUOTE_QUOTE_ID_QUOTE_ENTITY_ID" xsi:type="foreign" table="mm_paazl_quote" column="quote_id" referenceTable="quote" referenceColumn="entity_id" onDelete="CASCADE"/>
     </table>
 
+    <table name="mm_paazl_checkout_selection" engine="innodb" resource="sales" comment="Paazl Checkout Selections Table">
+        <column name="entity_id" xsi:type="int" identity="true" unsigned="true" nullable="false" comment="Entity ID"/>
+        <column name="quote_id" xsi:type="int" padding="10" unsigned="true" nullable="false" comment="Quote Id"/>
+        <column name="ext_shipping_info" xsi:type="text" nullable="true" comment="Shipping information"/>
+        <column name="was_sent" xsi:type="smallint" unsigned="true" nullable="false" default="0" comment="Was sent to external endpoint"/>
+        <column name="sent_at" xsi:type="datetime" nullable="true" comment="When the selection was sent to external endpoint"/>
+        <column name="next_to_payment" xsi:type="smallint" unsigned="true" nullable="false" default="0" comment="Customer proceeded to payment step"/>
+        <column name="is_final" xsi:type="smallint" unsigned="true" nullable="false" default="0" comment="Selection is final (e.g. order placed)"/>
+        <column name="pickup_offered" xsi:type="smallint" unsigned="true" nullable="false" default="0" comment="Pickup locations were available for the customer's address"/>
+        <column name="created_at" xsi:type="timestamp" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Created At"/>
+        <column name="updated_at" xsi:type="timestamp" on_update="true" nullable="false" default="CURRENT_TIMESTAMP" comment="Updated At"/>
+        <constraint referenceId="PRIMARY" xsi:type="primary">
+            <column name="entity_id"/>
+        </constraint>
+        <constraint referenceId="MM_PAAZL_SELECTIONS_QUOTE_ID" xsi:type="unique">
+            <column name="quote_id"/>
+        </constraint>
+        <constraint referenceId="MM_PAAZL_SELECTION_QUOTE_ID_QUOTE_ENTITY_ID" xsi:type="foreign" table="mm_paazl_checkout_selection" column="quote_id" referenceTable="quote" referenceColumn="entity_id" onDelete="CASCADE"/>
+        <index referenceId="MM_PAAZL_CHECKOUT_SELECTION_WAS_SENT" indexType="btree">
+            <column name="was_sent"/>
+        </index>
+        <index referenceId="MM_PAAZL_CHECKOUT_SELECTION_CREATED_AT" indexType="btree">
+            <column name="created_at"/>
+        </index>
+        <index referenceId="MM_PAAZL_CHECKOUT_SELECTION_UPDATED_AT" indexType="btree">
+            <column name="updated_at"/>
+        </index>
+        <index referenceId="MM_PAAZL_CHECKOUT_SELECTION_IS_FINAL" indexType="btree">
+            <column name="is_final"/>
+        </index>
+    </table>
+
     <table name="mm_paazl_deferred_queue" engine="innodb" resource="sales" comment="Paazl Deferred Queue Table">
         <column name="entity_id" xsi:type="int" identity="true" unsigned="true" nullable="false" comment="Entity ID"/>
         <column name="order_id" xsi:type="int" padding="10" unsigned="true" nullable="false" comment="Order ID"/>

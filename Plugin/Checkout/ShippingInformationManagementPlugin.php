@@ -24,6 +24,7 @@ use Paazl\CheckoutWidget\Model\Carrier\Paazlshipping;
 use Paazl\CheckoutWidget\Model\Api\ApiException;
 use Paazl\CheckoutWidget\Model\Api\Field\DeliveryType;
 use Paazl\CheckoutWidget\Model\Quote\Totals\AppendShippingMethods;
+use Paazl\CheckoutWidget\Model\Config;
 
 /**
  * Class ShippingInformationManagementPlugin
@@ -68,6 +69,11 @@ class ShippingInformationManagementPlugin
     private $appendShippingMethods;
 
     /**
+     * @var Config
+     */
+    private $config;
+
+    /**
      * ShippingInformationManagementPlugin constructor.
      *
      * @param PaazlApiFactory                   $paazlApiFactory
@@ -85,7 +91,8 @@ class ShippingInformationManagementPlugin
         CheckoutInfoToQuote $checkoutInfoToQuote,
         ShipmentEstimationInterface $shipmentEstimation,
         ArrayManager $arrayManager,
-        AppendShippingMethods $appendShippingMethods
+        AppendShippingMethods $appendShippingMethods,
+        Config $config
     ) {
         $this->paazlApiFactory = $paazlApiFactory;
         $this->referenceBuilder = $referenceBuilder;
@@ -94,6 +101,7 @@ class ShippingInformationManagementPlugin
         $this->shipmentEstimation = $shipmentEstimation;
         $this->arrayManager = $arrayManager;
         $this->appendShippingMethods = $appendShippingMethods;
+        $this->config = $config;
     }
 
     /**
@@ -178,7 +186,9 @@ class ShippingInformationManagementPlugin
         PaymentDetailsInterface $paymentDetails,
         $cartId
     ) {
-        $this->appendShippingMethods->append($paymentDetails->getTotals(), $cartId);
+        if ($this->config->isEnabled()) {
+            $this->appendShippingMethods->append($paymentDetails->getTotals(), $cartId);
+        }
 
         return $paymentDetails;
     }
