@@ -76,6 +76,9 @@ class CheckoutSelections
             $quoteId = (int)$row['quote_id'];
             $extShippingInfo = $this->json->unserialize($row['ext_shipping_info']);
             $selectedOption = $row['selected_option'] ? $this->json->unserialize($row['selected_option']) : null;
+            if (is_array($selectedOption)) {
+                $selectedOption['nominated_date'] = !empty($selectedOption['preferred_delivery_date']);
+            }
             $isGuest = $row['customer_is_guest'] ?? '';
             $storeId = isset($row['store_id']) && $row['store_id'] ? (int)$row['store_id'] : null;
             $prefix  = $this->getReferencePrefix($storeId);
