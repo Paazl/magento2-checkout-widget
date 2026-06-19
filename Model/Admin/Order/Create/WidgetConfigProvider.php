@@ -373,6 +373,16 @@ class WidgetConfigProvider implements ConfigProviderInterface
     }
 
     /**
+     * Gets the free shipping matrix letter from store config
+     *
+     * @return string
+     */
+    public function getFreeShippingMatrixLetter()
+    {
+        return $this->scopeConfig->getFreeShippingMatrixLetter($this->getQuote()->getStoreId());
+    }
+
+    /**
      * Gets delivery matrix from product
      *
      * @param AbstractItem $item
