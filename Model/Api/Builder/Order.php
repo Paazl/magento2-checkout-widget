@@ -390,22 +390,23 @@ class Order
                 $k = 1;
         }
 
-        if ($widthAttribute = $this->config->getProductAttributeWidth()) {
-            if ($width = $this->reformatVolumeData($product->getData($widthAttribute)) * $k) {
-                $dimensionArray['width'] = (int)$width;
-            }
-        }
+        $attributes = [
+            'width'  => $this->config->getProductAttributeWidth(),
+            'height' => $this->config->getProductAttributeHeight(),
+            'length' => $this->config->getProductAttributeLength(),
+        ];
 
-        if ($heightAttribute = $this->config->getProductAttributeHeight()) {
-            if ($height = $this->reformatVolumeData($product->getData($heightAttribute)) * $k) {
-                $dimensionArray['height'] = (int)$height;
+        foreach ($attributes as $dimension => $attribute) {
+            if (!$attribute) {
+                continue;
             }
-        }
-
-        if ($lengthAttribute = $this->config->getProductAttributeLength()) {
-            if ($length = $this->reformatVolumeData($product->getData($lengthAttribute)) * $k) {
-                $dimensionArray['length'] = (int)$length;
+            $value = $product->getData($attribute);
+            if ($value === null || $value === '') {
+                continue;
             }
+            // Paazl expects whole centimetres. Round up rather than truncate: casting to int
+            // turned anything below 1 cm into a 0 and understated every other parcel.
+            $dimensionArray[$dimension] = (int)ceil($this->reformatVolumeData($value) * $k);
         }
 
         return $dimensionArray;
