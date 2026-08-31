@@ -25,7 +25,10 @@ class LanguageProvider implements ConfigProviderInterface
         'en' => 'eng',
         'nl' => 'nld',
         'de' => 'deu',
-        'pl' => 'pol'
+        'pl' => 'pol',
+        'fr' => 'fra',
+        'it' => 'ita',
+        'es' => 'spa'
     ];
 
     /**
