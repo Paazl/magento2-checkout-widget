@@ -35,6 +35,7 @@ class ShippingInfo extends DataObject
     public const CARRIER_PICKUP_DATE = 'carrier_pickup_date';
     public const CARRIER_DESCRIPTION = 'carrier_description';
     public const GREEN = 'green';
+    public const NOMINATED_DATE = 'nominated_date';
     /**#@- */
 
     /**
@@ -309,5 +310,25 @@ class ShippingInfo extends DataObject
     public function getGreen()
     {
         return (bool)$this->getData(self::GREEN);
+    }
+
+    /**
+     * Whether the delivery date was nominated by the shopper
+     * instead of defaulting to the first date of the shipping option.
+     *
+     * @param bool $value
+     * @return $this
+     */
+    public function setNominatedDate($value)
+    {
+        return $this->setData(self::NOMINATED_DATE, $value);
+    }
+
+    /**
+     * @return bool
+     */
+    public function getNominatedDate()
+    {
+        return (bool)$this->getData(self::NOMINATED_DATE);
     }
 }

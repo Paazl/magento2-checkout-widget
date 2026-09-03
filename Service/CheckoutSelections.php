@@ -77,10 +77,11 @@ class CheckoutSelections
             $extShippingInfo = $this->json->unserialize($row['ext_shipping_info']);
             $selectedOption = $row['selected_option'] ? $this->json->unserialize($row['selected_option']) : null;
             if (is_array($selectedOption)) {
-                $selectedOption['nominated_date'] = !empty($selectedOption['preferred_delivery_date']);
+                // Stored on the quote at selection time; rows predating the flag default to false.
+                $selectedOption['nominated_date'] = !empty($selectedOption['nominated_date']);
             }
             $isGuest = $row['customer_is_guest'] ?? '';
-            $storeId = isset($row['store_id']) && $row['store_id'] ? (int)$row['store_id'] : null;
+            $storeId = $this->resolveStoreId($row);
             $prefix  = $this->getReferencePrefix($storeId);
             $incrementId = !empty($row['increment_id']) ? $prefix . $row['increment_id'] : '';
             $excludedFields = $this->config->getExcludedCustomerFields($storeId);
@@ -207,7 +208,8 @@ class CheckoutSelections
                     'customer_is_guest',
                     'customer_email',
                     'customer_firstname',
-                    'customer_lastname'
+                    'customer_lastname',
+                    'quote_store_id' => 'store_id'
                 ]
             )
             ->joinLeft(['so' => $orderTable], 'so.quote_id = p.quote_id', ['increment_id', 'store_id'])
@@ -236,6 +238,22 @@ class CheckoutSelections
             ->where('p.ext_shipping_info IS NOT NULL')
             ->where('p.ext_shipping_info != ?', '')
             ->order('p.quote_id DESC');
+    }
+
+    /**
+     * Resolve the store of a selection.
+     *
+     * Prefers the placed order and falls back to the quote for carts that have no order (yet).
+     */
+    private function resolveStoreId(array $row): ?int
+    {
+        foreach (['store_id', 'quote_store_id'] as $key) {
+            if (!empty($row[$key])) {
+                return (int)$row[$key];
+            }
+        }
+
+        return null;
     }
 
     private function formatUtcTimestamp($value): string
