@@ -75,10 +75,14 @@ class ToShippingInfo
         $info->setOptionTitle($this->arrayManager->get('shippingOption/name', $result));
         $info->setCarrierDescription($this->arrayManager->get('shippingOption/carrier/description', $result));
 
-        if (!$prefferedDeliveryDate = $this->arrayManager->get('preferredDeliveryDate', $result)) {
+        // A nominated date is only returned on the root level; without one we fall back to
+        // the first delivery date of the option, which is not a shopper nominated date.
+        $nominatedDeliveryDate = $this->arrayManager->get('preferredDeliveryDate', $result);
+        if (!$prefferedDeliveryDate = $nominatedDeliveryDate) {
             $prefferedDeliveryDate = $this->arrayManager->get('shippingOption/deliveryDates/0/deliveryDate', $result);
         }
         $info->setPreferredDeliveryDate($prefferedDeliveryDate);
+        $info->setNominatedDate(!empty($nominatedDeliveryDate));
 
         $info->setEstimatedDeliveryRange($this->arrayManager->get('shippingOption/estimatedDeliveryRange', $result));
 
