@@ -280,7 +280,7 @@
                 <field id="dimensions_metric" translate="label" type="select" sortOrder="660" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Dimensions Metric</label>
                     <source_model>Paazl\CheckoutWidget\Model\System\Config\Source\DimensionsMetric</source_model>
-                    <comment>Please specify the metric you us, as we will automatically calculate values based on your selection.</comment>
+                    <comment>The unit your Length/Width/Height attributes are stored in. Values are converted automatically for both the checkout delivery matrix and the order export.</comment>
                 </field>
 
                 <field id="heading_deferred_delivery" translate="label comment" type="text" sortOrder="700" showInDefault="1" showInWebsite="0" showInStore="0">
