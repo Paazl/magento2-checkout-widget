@@ -139,9 +139,16 @@ class WidgetConfigProvider implements ConfigProviderInterface
                     "price" => $this->itemHandler->getPriceValue($item)
                 ];
                 if ($useDimensions) {
-                    $goodsItem["length"] = $this->getDimensionValue($product, $lengthAttribute);
-                    $goodsItem["width"] = $this->getDimensionValue($product, $widthAttribute);
-                    $goodsItem["height"] = $this->getDimensionValue($product, $heightAttribute);
+                    $dimensions = [
+                        "length" => $this->getDimensionValue($product, $lengthAttribute),
+                        "width"  => $this->getDimensionValue($product, $widthAttribute),
+                        "height" => $this->getDimensionValue($product, $heightAttribute),
+                    ];
+                    // Omit dimensions we could not resolve; a genuine 0 is valid and still sent.
+                    $goodsItem = array_merge(
+                        $goodsItem,
+                        array_filter($dimensions, static fn ($value) => $value !== null)
+                    );
                 }
                 if ($this->scopeConfig->addVolume()) {
                     $goodsItem["volume"] = $this->getProductVolume($product);
@@ -558,6 +565,10 @@ class WidgetConfigProvider implements ConfigProviderInterface
         $heightAttribute = $this->scopeConfig->getProductAttributeHeight();
         $lengthAttribute = $this->scopeConfig->getProductAttributeLength();
 
+        if (!$widthAttribute || !$heightAttribute || !$lengthAttribute) {
+            return 0.00;
+        }
+
         return $this->reformatVolumeData($product->getData($widthAttribute)) *
             $this->reformatVolumeData($product->getData($heightAttribute)) *
             $this->reformatVolumeData($product->getData($lengthAttribute)) *
@@ -580,18 +591,24 @@ class WidgetConfigProvider implements ConfigProviderInterface
     /**
      * Calculate dimension value based on attribute and metric.
      *
+     * Paazl expects dimensions as whole centimetres, so the converted value is rounded up:
+     * rounding down would understate the parcel and could select a too-small matrix tier.
+     *
      * @param ProductInterface $product
-     * @param string $attribute
-     * @return float
+     * @param string|null $attribute
+     * @return int|null Null when the dimension cannot be resolved, so callers can omit it.
      */
-    private function getDimensionValue(ProductInterface $product, string $attribute): float
+    private function getDimensionValue(ProductInterface $product, ?string $attribute): ?int
     {
         if (!$attribute) {
-            return 0.0;
+            return null;
         }
         $value = $product->getData($attribute);
-        $k = $this->getMetricFactor();
-        return $value !== null ? (float)str_replace(',', '.', $value) * $k : 0.0;
+        if ($value === null || $value === '') {
+            return null;
+        }
+
+        return (int)ceil((float)str_replace(',', '.', $value) * $this->getMetricFactor());
     }
 
     /**
