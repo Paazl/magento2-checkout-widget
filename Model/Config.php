@@ -7,6 +7,8 @@
 namespace Paazl\CheckoutWidget\Model;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\App\ObjectManager;
+use Magento\Framework\Serialize\Serializer\Json;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Store\Model\Store;
 use Paazl\CheckoutWidget\Model\Carrier\Paazlshipping;
@@ -35,14 +37,22 @@ class Config
     private $scopeConfig;
 
     /**
+     * @var Json
+     */
+    private $serializer;
+
+    /**
      * Config constructor.
      *
      * @param ScopeConfigInterface $scopeConfig
+     * @param Json|null            $serializer
      */
     public function __construct(
-        ScopeConfigInterface $scopeConfig
+        ScopeConfigInterface $scopeConfig,
+        ?Json $serializer = null
     ) {
         $this->scopeConfig = $scopeConfig;
+        $this->serializer = $serializer ?: ObjectManager::getInstance()->get(Json::class);
     }
 
     /**
@@ -555,6 +565,61 @@ class Config
     public function getProductAttributeDeliveryMatrix($store = null)
     {
         return $this->getValue(self::API_CONFIG_PATH . '/delivery_matrix_attribute', $store);
+    }
+
+    /**
+     * @param null|Store|int|string $store
+     *
+     * @return bool
+     */
+    public function isCustomerTagMatrixEnabled($store = null)
+    {
+        return (bool)$this->getValue(self::API_CONFIG_PATH . '/customer_tag_enabled', $store);
+    }
+
+    /**
+     * Customer attribute code holding the customer tags.
+     *
+     * @param null|Store|int|string $store
+     *
+     * @return string
+     */
+    public function getCustomerTagAttribute($store = null)
+    {
+        return trim((string)$this->getValue(self::API_CONFIG_PATH . '/customer_tag_attribute', $store));
+    }
+
+    /**
+     * Customer tag -> delivery matrix position mapping, keyed by lower-cased tag.
+     *
+     * @param null|Store|int|string $store
+     *
+     * @return string[]
+     */
+    public function getCustomerTagMatrix($store = null)
+    {
+        $value = $this->getValue(self::API_CONFIG_PATH . '/customer_tag_matrix', $store);
+        if (is_string($value) && $value !== '') {
+            try {
+                $value = $this->serializer->unserialize($value);
+            } catch (\InvalidArgumentException $e) {
+                $value = [];
+            }
+        }
+        if (!is_array($value)) {
+            return [];
+        }
+
+        $mapping = [];
+        foreach ($value as $row) {
+            $tag = mb_strtolower(trim((string)($row['tag'] ?? '')));
+            $letter = strtoupper(trim((string)($row['matrix_letter'] ?? '')));
+            if ($tag !== '' && $letter !== '') {
+                $mapping[$tag] = $letter;
+            }
+        }
+
+        return $mapping;
     }
 
     /**

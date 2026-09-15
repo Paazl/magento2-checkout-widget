@@ -46,6 +46,8 @@
                 <checkout_selections_cleanup_days>10</checkout_selections_cleanup_days>
                 <deferred_delivery_enabled>0</deferred_delivery_enabled>
                 <deferred_delivery_days_before>1</deferred_delivery_days_before>
+                <customer_tag_enabled>0</customer_tag_enabled>
+                <customer_tag_attribute>paazl_customer_tag</customer_tag_attribute>
             </paazlshipping>
         </carriers>
     </default>

@@ -9,6 +9,7 @@ namespace Paazl\CheckoutWidget\Model\Admin\Order\Create;
 use Magento\Backend\Model\Session\Quote as SessionQuote;
 use Magento\Catalog\Model\ProductRepository;
 use Magento\Checkout\Model\ConfigProviderInterface;
+use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Quote\Model\Quote;
@@ -16,6 +17,7 @@ use Magento\Quote\Model\Quote\Item\AbstractItem;
 use Magento\Sales\Model\OrderFactory;
 use Paazl\CheckoutWidget\Helper\General as GeneralHelper;
 use Paazl\CheckoutWidget\Model\Config;
+use Paazl\CheckoutWidget\Model\CustomerTag\MatrixResolver as CustomerTagMatrixResolver;
 use Paazl\CheckoutWidget\Model\TokenRetriever;
 
 /**
@@ -67,6 +69,11 @@ class WidgetConfigProvider implements ConfigProviderInterface
     private $productRepository;
 
     /**
+     * @var CustomerTagMatrixResolver
+     */
+    private $customerTagMatrixResolver;
+
+    /**
      * Widget constructor.
      *
      * @param Config           $scopeConfig
@@ -76,6 +83,7 @@ class WidgetConfigProvider implements ConfigProviderInterface
      * @param TokenRetriever   $tokenRetriever
      * @param LanguageProvider $languageProvider
      * @param ProductRepository $productRepository
+     * @param CustomerTagMatrixResolver|null $customerTagMatrixResolver
      */
     public function __construct(
         Config $scopeConfig,
@@ -84,7 +92,8 @@ class WidgetConfigProvider implements ConfigProviderInterface
         GeneralHelper $generalHelper,
         TokenRetriever $tokenRetriever,
         LanguageProvider $languageProvider,
-        ProductRepository $productRepository
+        ProductRepository $productRepository,
+        ?CustomerTagMatrixResolver $customerTagMatrixResolver = null
     ) {
         $this->scopeConfig = $scopeConfig;
         $this->sessionQuote = $sessionQuote;
@@ -93,6 +102,8 @@ class WidgetConfigProvider implements ConfigProviderInterface
         $this->tokenRetriever = $tokenRetriever;
         $this->languageProvider = $languageProvider;
         $this->productRepository = $productRepository;
+        $this->customerTagMatrixResolver = $customerTagMatrixResolver
+            ?: ObjectManager::getInstance()->get(CustomerTagMatrixResolver::class);
     }
 
     /**
@@ -172,6 +183,11 @@ class WidgetConfigProvider implements ConfigProviderInterface
 
         if ($this->isFreeShippingEnabled() && $shippingAddress->getFreeShipping()) {
             $config['shipmentParameters']['startMatrix'] = $this->getFreeShippingMatrixLetter();
+        } elseif ($customerTagMatrixLetter = $this->getCustomerTagMatrixLetter()) {
+            $config['shipmentParameters'] = $this->applyCustomerTagMatrix(
+                $config['shipmentParameters'],
+                $customerTagMatrixLetter
+            );
         }
 
         $config = array_merge($config, $this->languageProvider->getConfig());
@@ -380,6 +396,36 @@ class WidgetConfigProvider implements ConfigProviderInterface
     public function getFreeShippingMatrixLetter()
     {
         return $this->scopeConfig->getFreeShippingMatrixLetter($this->getQuote()->getStoreId());
+    }
+
+    /**
+     * Delivery matrix position resolved from the customer's tags, if any.
+     *
+     * @return string|null
+     */
+    public function getCustomerTagMatrixLetter()
+    {
+        return $this->customerTagMatrixResolver->resolve($this->getQuote());
+    }
+
+    /**
+     * Customer tags take priority over the product delivery matrix: the letter
+     * is set on the shipment and any per-item startMatrix is removed so the
+     * product attribute can no longer influence the matrix position.
+     *
+     * @param array  $shipmentParameters
+     * @param string $matrixLetter
+     * @return array
+     */
+    protected function applyCustomerTagMatrix(array $shipmentParameters, string $matrixLetter)
+    {
+        $shipmentParameters['startMatrix'] = $matrixLetter;
+        foreach ($shipmentParameters['goods'] as &$goodsItem) {
+            unset($goodsItem['startMatrix']);
+        }
+        unset($goodsItem);
+
+        return $shipmentParameters;
     }
 
     /**

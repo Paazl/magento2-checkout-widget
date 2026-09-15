@@ -301,6 +301,33 @@
                     </depends>
                 </field>
 
+                <field id="heading_customer_tag" translate="label comment" type="text" sortOrder="750" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Customer Tag Matrix</label>
+                    <frontend_model>Paazl\CheckoutWidget\Block\Adminhtml\Paazl\Heading</frontend_model>
+                    <comment><![CDATA[Give tagged customers (for example loyalty levels) a different delivery matrix position. When a customer carries a mapped tag, that position is sent to the widget instead of the product delivery matrix. When several of the customer's tags are mapped, the highest position wins (from "A" to "Z", followed by "AA" to "ZZ"). Free shipping still takes priority over customer tags.]]></comment>
+                </field>
+                <field id="customer_tag_enabled" translate="label" type="select" sortOrder="760" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Customer Tag Matrix Enabled</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="customer_tag_attribute" translate="label comment" type="select" sortOrder="770" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Customer Tag Attribute</label>
+                    <source_model>Paazl\CheckoutWidget\Model\System\Config\Source\CustomerAttributes</source_model>
+                    <comment><![CDATA[Customer attribute that holds the tags. The module ships a "Paazl Customer Tags" attribute (comma-separated, admin-only); select a different text, select or multiselect attribute to reuse an existing one.]]></comment>
+                    <depends>
+                        <field id="customer_tag_enabled">1</field>
+                    </depends>
+                </field>
+                <field id="customer_tag_matrix" translate="label comment" sortOrder="780" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Customer Tag Matrix</label>
+                    <frontend_model>Paazl\CheckoutWidget\Block\Adminhtml\System\Config\Form\Field\CustomerTagMatrix</frontend_model>
+                    <backend_model>Paazl\CheckoutWidget\Model\System\Config\Backend\CustomerTagMatrix</backend_model>
+                    <comment><![CDATA[Each line maps a customer tag to a delivery matrix start position. Tags are matched case-insensitively.]]></comment>
+                    <depends>
+                        <field id="customer_tag_enabled">1</field>
+                    </depends>
+                </field>
+
                 <field id="heading_fallback" translate="label comment" type="text" sortOrder="800" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Advanced Settings</label>
                     <frontend_model>Paazl\CheckoutWidget\Block\Adminhtml\Paazl\Heading</frontend_model>
