@@ -9,6 +9,7 @@ namespace Paazl\CheckoutWidget\Plugin\Quote;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Quote\Api\Data\CartInterface;
 use Magento\Quote\Model\QuoteRepository;
+use Magento\Store\Model\ScopeInterface;
 use Paazl\CheckoutWidget\Model\Config;
 
 /**
@@ -53,9 +54,10 @@ class BeforeQuoteSave
         QuoteRepository $subject,
         CartInterface $quote
     ) {
+        $storeId = $quote->getStoreId();
         $shippingAddress = $quote->getShippingAddress();
-        if (!$shippingAddress->getCountryId() && $this->config->isEnabled()) {
-            $origin = $this->scopeConfig->getValue(self::ORIGIN);
+        if (!$shippingAddress->getCountryId() && $this->config->isEnabled($storeId)) {
+            $origin = $this->scopeConfig->getValue(self::ORIGIN, ScopeInterface::SCOPE_STORE, $storeId);
             $shippingAddress = $quote->getShippingAddress();
             $billingAddress = $quote->getBillingAddress();
             $billingAddress->setCountryId($origin);

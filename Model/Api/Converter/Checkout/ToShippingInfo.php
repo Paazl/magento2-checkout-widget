@@ -6,7 +6,6 @@
 
 namespace Paazl\CheckoutWidget\Model\Api\Converter\Checkout;
 
-use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Serialize\Serializer\Json;
 use Magento\Framework\Stdlib\ArrayManager;
 use Paazl\CheckoutWidget\Model\Api\Field\DeliveryType;
@@ -58,7 +57,7 @@ class ToShippingInfo
      * @param string|array $response
      *
      * @return ShippingInfo
-     * @throws LocalizedException
+     * @throws \InvalidArgumentException
      */
     public function convert($response)
     {
@@ -67,6 +66,12 @@ class ToShippingInfo
         $result = $response;
         if (!is_array($result) && !empty($result)) {
             $result = $this->json->unserialize($response);
+        }
+
+        // A response without a selection converts to an empty selection (no identifier), which
+        // clears any earlier one; CartManagementPlugin blocks placing an order without an identifier.
+        if (!is_array($result)) {
+            $result = [];
         }
 
         $info->setType($this->arrayManager->get('deliveryType', $result));

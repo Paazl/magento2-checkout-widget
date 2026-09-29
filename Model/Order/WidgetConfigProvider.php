@@ -93,7 +93,7 @@ class WidgetConfigProvider implements ConfigProviderInterface
 
         foreach ($this->getOrder()->getAllVisibleItems() as $item) {
             $goods[] = [
-                'quantity' => (int)$item->getQty(),
+                'quantity' => (int)$item->getQtyOrdered(),
                 'weight'   => doubleval($item->getWeight()),
                 'price'    => $this->itemHandler->getPriceValue($item)
             ];
@@ -184,7 +184,7 @@ class WidgetConfigProvider implements ConfigProviderInterface
         $order = $this->getOrder();
 
         foreach ($order->getAllVisibleItems() as $_item) {
-            $weight += $_item->getWeight();
+            $weight += $_item->getWeight() * $_item->getQtyOrdered();
         }
 
         return $weight;
@@ -201,7 +201,7 @@ class WidgetConfigProvider implements ConfigProviderInterface
         $order = $this->getOrder();
 
         foreach ($order->getAllVisibleItems() as $_item) {
-            $count += $_item->getQty();
+            $count += (int)$_item->getQtyOrdered();
         }
 
         return $count;
