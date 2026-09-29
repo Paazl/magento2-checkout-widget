@@ -86,8 +86,10 @@ class SendOrders
                 []
             )
             ->where('mpo.ext_sent_at IS NULL')
+            // Measured from order creation: updated_at moves on every order change,
+            // which would keep retrying an order that Paazl keeps rejecting forever.
             ->where(new Expression(
-                'TIME_TO_SEC(TIMEDIFF(CURRENT_TIMESTAMP, `updated_at`)) < ' . self::RETRY_TIME_SECONDS
+                'TIME_TO_SEC(TIMEDIFF(CURRENT_TIMESTAMP, `main_table`.`created_at`)) < ' . self::RETRY_TIME_SECONDS
             ));
 
         foreach ($collection as $item) {
