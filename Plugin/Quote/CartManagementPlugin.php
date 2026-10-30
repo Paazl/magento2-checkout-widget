@@ -71,7 +71,7 @@ class CartManagementPlugin
         }
 
         $info = $this->infoHandler->getInfoFromQuote($quote);
-        if (!$info) {
+        if (!$info || !$info->getIdenfifier()) {
             throw new CouldNotSaveException(__('Shipping information not found'));
         }
 
