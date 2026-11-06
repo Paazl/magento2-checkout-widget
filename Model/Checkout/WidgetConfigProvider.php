@@ -135,7 +135,7 @@ class WidgetConfigProvider implements ConfigProviderInterface
                     "quantity" => $item->getParentItem()
                         ? (int)($item->getParentItem()->getQty())
                         : (int)$item->getQty(),
-                    "weight" => doubleval($item->getWeight()),
+                    "weight" => floatval($item->getWeight()),
                     "price" => $this->itemHandler->getPriceValue($item)
                 ];
                 if ($useDimensions) {
