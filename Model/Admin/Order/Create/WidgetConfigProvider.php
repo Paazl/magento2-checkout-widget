@@ -115,7 +115,7 @@ class WidgetConfigProvider implements ConfigProviderInterface
         foreach ($this->getQuote()->getAllVisibleItems() as $item) {
             $goodsItem = [
                 "quantity" => (int)$item->getQty(),
-                "weight"   => doubleval($item->getWeight()),
+                "weight"   => floatval($item->getWeight()),
                 "price"    => $item->getPrice()
             ];
 
