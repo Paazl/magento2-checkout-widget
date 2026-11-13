@@ -11,6 +11,7 @@ use Magento\Quote\Api\CartManagementInterface;
 use Magento\Quote\Api\Data\PaymentInterface;
 use Paazl\CheckoutWidget\Helper\Order;
 use Paazl\CheckoutWidget\Model\ExtInfoHandler;
+use Paazl\CheckoutWidget\Model\Quote\MissingSelectionResolver;
 
 class CartManagementPlugin
 {
@@ -30,20 +31,28 @@ class CartManagementPlugin
     private $infoHandler;
 
     /**
+     * @var MissingSelectionResolver
+     */
+    private $missingSelectionResolver;
+
+    /**
      * CartManagementPlugin constructor.
      *
      * @param \Magento\Quote\Api\CartRepositoryInterface $quoteRepository
      * @param Order                                      $orderHelper
      * @param ExtInfoHandler                             $infoHandler
+     * @param MissingSelectionResolver                   $missingSelectionResolver
      */
     public function __construct(
         \Magento\Quote\Api\CartRepositoryInterface $quoteRepository,
         Order $orderHelper,
-        ExtInfoHandler $infoHandler
+        ExtInfoHandler $infoHandler,
+        MissingSelectionResolver $missingSelectionResolver
     ) {
         $this->quoteRepository = $quoteRepository;
         $this->orderHelper = $orderHelper;
         $this->infoHandler = $infoHandler;
+        $this->missingSelectionResolver = $missingSelectionResolver;
     }
 
     /**
@@ -71,10 +80,16 @@ class CartManagementPlugin
         }
 
         $info = $this->infoHandler->getInfoFromQuote($quote);
-        if (!$info || !$info->getIdenfifier()) {
-            throw new CouldNotSaveException(__('Shipping information not found'));
+        if ($info && $info->getIdenfifier()) {
+            return null;
         }
 
-        return null;
+        if ($this->missingSelectionResolver->isAllowedWithoutSelection($quote)) {
+            return null;
+        }
+
+        throw new CouldNotSaveException(
+            __('No delivery option selected. Please go back to the shipping step and choose a delivery option.')
+        );
     }
 }
