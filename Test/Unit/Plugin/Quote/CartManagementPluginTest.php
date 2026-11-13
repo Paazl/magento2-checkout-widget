@@ -14,6 +14,7 @@ use Magento\Quote\Model\Quote;
 use Magento\Quote\Model\Quote\Address;
 use Paazl\CheckoutWidget\Helper\Order;
 use Paazl\CheckoutWidget\Model\ExtInfoHandler;
+use Paazl\CheckoutWidget\Model\Quote\MissingSelectionResolver;
 use Paazl\CheckoutWidget\Model\ShippingInfo;
 use Paazl\CheckoutWidget\Plugin\Quote\CartManagementPlugin;
 use Paazl\CheckoutWidget\Test\Unit\UnitTestCase;
@@ -32,6 +33,11 @@ class CartManagementPluginTest extends UnitTestCase
      * @var ExtInfoHandler|Stub
      */
     private $infoHandler;
+
+    /**
+     * @var MissingSelectionResolver|Stub
+     */
+    private $missingSelectionResolver;
 
     /**
      * @var CartManagementInterface|Stub
@@ -54,9 +60,15 @@ class CartManagementPluginTest extends UnitTestCase
         $orderHelper->method('isPaazlShippingMethod')->willReturn(true);
 
         $this->infoHandler = $this->createStub(ExtInfoHandler::class);
+        $this->missingSelectionResolver = $this->createStub(MissingSelectionResolver::class);
         $this->subject = $this->createStub(CartManagementInterface::class);
 
-        $this->entity = new CartManagementPlugin($quoteRepository, $orderHelper, $this->infoHandler);
+        $this->entity = new CartManagementPlugin(
+            $quoteRepository,
+            $orderHelper,
+            $this->infoHandler,
+            $this->missingSelectionResolver
+        );
     }
 
     public function testAllowsOrderWithSelectedShippingOption()
@@ -79,6 +91,24 @@ class CartManagementPluginTest extends UnitTestCase
         $this->infoHandler->method('getInfoFromQuote')->willReturn(new ShippingInfo(['identifier' => null]));
 
         $this->expectException(CouldNotSaveException::class);
+        $this->entity->beforePlaceOrder($this->subject, self::CART_ID);
+    }
+
+    public function testAllowsOrderWithoutSelectionWhenPaazlReturnsNoOptionsAndConfigAllowsIt()
+    {
+        $this->infoHandler->method('getInfoFromQuote')->willReturn(new ShippingInfo(['identifier' => null]));
+        $this->missingSelectionResolver->method('isAllowedWithoutSelection')->willReturn(true);
+
+        $this->assertNull($this->entity->beforePlaceOrder($this->subject, self::CART_ID));
+    }
+
+    public function testBlockedOrderTellsCustomerToChooseDeliveryOption()
+    {
+        $this->infoHandler->method('getInfoFromQuote')->willReturn(new ShippingInfo(['identifier' => null]));
+        $this->missingSelectionResolver->method('isAllowedWithoutSelection')->willReturn(false);
+
+        $this->expectException(CouldNotSaveException::class);
+        $this->expectExceptionMessage('choose a delivery option');
         $this->entity->beforePlaceOrder($this->subject, self::CART_ID);
     }
 }
