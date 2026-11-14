@@ -186,7 +186,7 @@ class Save extends Order
             $this->messageManager->addErrorMessage($message);
 
             return $this->returnResult('sales/order/view', ['_current' => true], ['error' => true]);
-        } finally {
+        } catch (\Exception $e) {
             $message = __("Order data couldn't be sent to Paazl due to an error. Please try again later. "
                 . "If the error persists, please try again later.");
             $this->messageManager->addErrorMessage($message);
