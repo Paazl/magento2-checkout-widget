@@ -16,6 +16,7 @@ use Magento\Framework\Stdlib\ArrayManager;
 use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Quote\Api\Data\CartInterface;
 use Magento\Quote\Api\ShipmentEstimationInterface;
+use Magento\Quote\Model\Quote;
 use Paazl\CheckoutWidget\Model\Api\Builder\Reference;
 use Paazl\CheckoutWidget\Model\Api\PaazlApi;
 use Paazl\CheckoutWidget\Model\Api\PaazlApiFactory;
@@ -25,6 +26,8 @@ use Paazl\CheckoutWidget\Model\Api\ApiException;
 use Paazl\CheckoutWidget\Model\Api\Field\DeliveryType;
 use Paazl\CheckoutWidget\Model\Quote\Totals\AppendShippingMethods;
 use Paazl\CheckoutWidget\Model\Config;
+use Paazl\CheckoutWidget\Model\ExtInfoHandler;
+use Paazl\CheckoutWidget\Model\Quote\MissingSelectionResolver;
 
 /**
  * Class ShippingInformationManagementPlugin
@@ -74,6 +77,16 @@ class ShippingInformationManagementPlugin
     private $config;
 
     /**
+     * @var ExtInfoHandler
+     */
+    private $extInfoHandler;
+
+    /**
+     * @var MissingSelectionResolver
+     */
+    private $missingSelectionResolver;
+
+    /**
      * ShippingInformationManagementPlugin constructor.
      *
      * @param PaazlApiFactory                   $paazlApiFactory
@@ -83,6 +96,9 @@ class ShippingInformationManagementPlugin
      * @param ShipmentEstimationInterface       $shipmentEstimation
      * @param ArrayManager                      $arrayManager
      * @param AppendShippingMethods             $appendShippingMethods
+     * @param Config                            $config
+     * @param ExtInfoHandler                    $extInfoHandler
+     * @param MissingSelectionResolver          $missingSelectionResolver
      */
     public function __construct(
         PaazlApiFactory $paazlApiFactory,
@@ -92,7 +108,9 @@ class ShippingInformationManagementPlugin
         ShipmentEstimationInterface $shipmentEstimation,
         ArrayManager $arrayManager,
         AppendShippingMethods $appendShippingMethods,
-        Config $config
+        Config $config,
+        ExtInfoHandler $extInfoHandler,
+        MissingSelectionResolver $missingSelectionResolver
     ) {
         $this->paazlApiFactory = $paazlApiFactory;
         $this->referenceBuilder = $referenceBuilder;
@@ -102,6 +120,8 @@ class ShippingInformationManagementPlugin
         $this->arrayManager = $arrayManager;
         $this->appendShippingMethods = $appendShippingMethods;
         $this->config = $config;
+        $this->extInfoHandler = $extInfoHandler;
+        $this->missingSelectionResolver = $missingSelectionResolver;
     }
 
     /**
@@ -162,6 +182,7 @@ class ShippingInformationManagementPlugin
             }
 
             $this->checkoutInfoToQuote->process($quote);
+            $this->assertDeliveryOptionSelected($quote);
 
             // Force shipping rates to be recollected with new Paazl data
             $shippingAddress = $quote->getShippingAddress();
@@ -171,6 +192,35 @@ class ShippingInformationManagementPlugin
 
         // Calling the observed method
         return null;
+    }
+
+    /**
+     * Require a selected Paazl delivery option before leaving the shipping step.
+     *
+     * Without this check, the customer only runs into a failing order placement on the payment step.
+     *
+     * One-step checkouts save the address before an option is chosen, so they are skipped;
+     * CartManagementPlugin still guards order placement there.
+     *
+     * @param Quote $quote
+     * @throws LocalizedException
+     */
+    private function assertDeliveryOptionSelected(Quote $quote): void
+    {
+        if ($this->config->saveShippingInformationInstantly($quote->getStoreId())) {
+            return;
+        }
+
+        $info = $this->extInfoHandler->getInfoFromQuote($quote);
+        if ($info && $info->getIdenfifier()) {
+            return;
+        }
+
+        if ($this->missingSelectionResolver->isAllowedWithoutSelection($quote)) {
+            return;
+        }
+
+        throw new LocalizedException(__('Please select a delivery option.'));
     }
 
     /**
