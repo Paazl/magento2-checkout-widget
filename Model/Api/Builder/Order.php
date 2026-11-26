@@ -94,6 +94,7 @@ class Order
         }
         $address = $this->parseAddress($shippingAddress);
         $defaultHouseNumber = $this->config->getHouseNumberDefaultOption() ? 0 : '';
+        $products = $this->getProducts($order);
 
         $result = [
             'additionalInstruction' => '',
@@ -114,7 +115,7 @@ class Order
             ],
             'customsValue'          => [
                 'currency' => $order->getOrderCurrencyCode(),
-                'value'    => $order->getGrandTotal(),
+                'value'    => $this->getGoodsValue($products),
             ],
             'codValue'              => [
                 'currency' => $order->getOrderCurrencyCode(),
@@ -125,7 +126,7 @@ class Order
                 'value'    => $this->config->getInsuranceValue($order->getStoreId()),
             ],
             'requestedDeliveryDate' => $extInformation->getPreferredDeliveryDate(),
-            'products'              => [],
+            'products'              => $products,
             'reference'             => $this->referenceBuilder->getOrderReference($order),
             'invoiceNumber'         => $this->referenceBuilder->getOrderReference($order),
             'shipping'              => [
@@ -156,8 +157,6 @@ class Order
         if ($order->getWeight()) {
             $result['weight'] = $order->getWeight();
         }
-
-        $result['products'] = $this->getProducts($order);
 
         return $result;
     }
@@ -318,6 +317,23 @@ class Order
         }
 
         return $products;
+    }
+
+    /**
+     * The value of the goods in the product lines: carriers that check customs (Spring, Colissimo)
+     * refuse a shipment whose customs value differs from the sum of its lines, so shipping and
+     * discounts on the order total stay out.
+     *
+     * @param list<array<string, mixed>> $products
+     */
+    private function getGoodsValue(array $products): float
+    {
+        $value = 0.0;
+        foreach ($products as $product) {
+            $value += (float)$product['quantity'] * (float)$product['unitPrice']['value'];
+        }
+
+        return round($value, 2);
     }
 
     /**

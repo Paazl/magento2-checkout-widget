@@ -43,6 +43,11 @@ class OrderTest extends UnitTestCase
      */
     private $configMock;
 
+    /**
+     * @var MockObject
+     */
+    private $itemHandlerMock;
+
     protected function setUpWithoutVoid()
     {
         $extInfoHandlerMock = $this->getMockBuilder(ExtInfoHandler::class)->disableOriginalConstructor()->getMock();
@@ -58,6 +63,7 @@ class OrderTest extends UnitTestCase
 
         $itemHandlerMock = $this->getMockBuilder(Item::class)
             ->disableOriginalConstructor()->getMock();
+        $this->itemHandlerMock = $itemHandlerMock;
 
         $this->entity = $this->objectManager->getObject(
             Order::class,
@@ -281,5 +287,48 @@ class OrderTest extends UnitTestCase
             [20.19, 'USD'],
             [201.36363, 'USD'],
         ];
+    }
+
+    /**
+     * Spring and Colissimo (through Wuunder) refuse a shipment whose customs value is not the sum of
+     * its product lines. The grand total includes shipping, so it was refused whenever the customer
+     * paid for shipping.
+     */
+    public function testCustomsValueIsTheValueOfTheProductLinesWithoutShipping()
+    {
+        $address = $this->createMock(Address::class);
+        $address->method('getStreet')->willReturn(['Test str. 189']);
+
+        $items = [];
+        foreach ([2, 1] as $qty) {
+            $item = $this->getMockBuilder(\Magento\Sales\Model\Order\Item::class)
+                ->disableOriginalConstructor()
+                ->onlyMethods(['getProduct', 'getProductType', 'getQtyOrdered', 'getName', 'getWeight', 'getParentItemId'])
+                ->getMock();
+            $item->method('getProductType')->willReturn('simple');
+            $item->method('getQtyOrdered')->willReturn($qty);
+            $item->method('getName')->willReturn('Product');
+            $item->method('getParentItemId')->willReturn(null);
+            $items[] = $item;
+        }
+        $this->itemHandlerMock->method('getPriceValue')->willReturnOnConsecutiveCalls(20.0, 5.555);
+
+        $order = $this->createMock(\Magento\Sales\Model\Order::class);
+        $order->method('getEntityId')->willReturn(1);
+        $order->method('getShippingAddress')->willReturn($address);
+        $order->method('getBillingAddress')->willReturn($address);
+        $order->method('getOrderCurrencyCode')->willReturn('EUR');
+        $order->method('getItems')->willReturn($items);
+        $order->method('getGrandTotal')->willReturn(51.51);
+
+        $this->orderReferenceRepositoryMock->method('getByOrderId')
+            ->willReturn($this->createMock(OrderReferenceInterface::class));
+        $this->extInfoHandlerMock->method('getInfoFromOrderReference')
+            ->willReturn($this->createMock(ShippingInfo::class));
+
+        $result = $this->entity->getCreateOrderData($order);
+
+        $this->assertSame(['currency' => 'EUR', 'value' => 45.56], $result['customsValue']);
+        $this->assertSame(51.51, $result['codValue']['value'], 'cash on delivery is still the order total');
     }
 }
